@@ -1,20 +1,20 @@
 import React from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
-import Home from './Pages/Home/Home.jsx';
+import Home from './Pages/Home.jsx';
 import Navbar from './components/Navbar/Navbar.jsx';
 
-import BinarySearchTreePage from './Pages/BinarySearchTreePage/BinarySearchTreePage.jsx';
-import BinaryTreeTraversalPage from './Pages/BinaryTreeTraversalPage/BinaryTreeTraversalPage.jsx';
-import Queue from './Pages/Queue/Queue.jsx';
-import Stacks from './Pages/Stacks/Stacks.jsx';
-import TicTacToe from './Pages/TicTacToe/TicTacToe.jsx';
+import BinarySearchTreePage from './Pages/BinarySearchTreePage.jsx';
+import BinaryTreeTraversalPage from './Pages/BinaryTreeTraversalPage.jsx';
+import Queue from './Pages/Queue.jsx';
+import Stacks from './Pages/Stacks.jsx';
+import TicTacToe from './Pages/TicTacToe.jsx';
 import './App.css';
 
 const App = () => {
 
 
   return (
-    <div className="h-full w-full -mt-16">
+    <div className="h-full w-full"> {/* deprecate: -mt-16 */}
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />

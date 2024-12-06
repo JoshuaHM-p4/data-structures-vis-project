@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
-import './Queue.css';
 // import { Queue } from '../../components';
-
-
 
 const Queue = () => {
   const [queue, setQueue] = useState([]);

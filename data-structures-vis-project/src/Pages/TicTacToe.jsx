@@ -1,5 +1,5 @@
 import React from 'react';
-import Board from '../../components/TicTacToe/Board/Board.jsx';
+import Board from '../components/TicTacToe/Board/Board.jsx';
 
 const TicTacToe = () => {
   return (
