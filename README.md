@@ -3,7 +3,7 @@
 ## Prerequisites (Download)
 - [Node.js](https://nodejs.org/en/download/prebuilt-installer)
 
-## Recomended Extensions (for devs)
+## Recomended VSCode Extensions (for devs)
 - Tailwind CSS IntelliSense
 - Auto Rename Tag
 - GitLens
