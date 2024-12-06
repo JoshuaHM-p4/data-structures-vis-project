@@ -1,16 +1,28 @@
 # DSA Project
 
+## Prerequisites (Download)
+- [Node.js](https://nodejs.org/en/download/prebuilt-installer)
+
+## Recomended Extensions (for devs)
+- Tailwind CSS IntelliSense
+- Auto Rename Tag
+- GitLens
+- Material Icon Theme
+- Tailwind Shades
+- Unused CSS Classes for Javascript/Angular/React
+
 ## Installation
 
-To install the necessary packages, run the following command:
+To install the necessary packages, open the command prompt/bash in the root folder and run the following command:
 
 ```bash
+cd data-structures-vis-project
 npm install
 ```
 
 ## Running the Project
 
-To start the project, use the following command:
+Then to start the project, use the following command:
 
 ```bash
 cd data-structures-vis-project
