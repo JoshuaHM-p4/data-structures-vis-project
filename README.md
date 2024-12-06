@@ -13,6 +13,7 @@ npm install
 To start the project, use the following command:
 
 ```bash
+cd data-structures-vis-project
 npm run dev
 ```
 
