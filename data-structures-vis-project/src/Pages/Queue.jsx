@@ -29,19 +29,37 @@ const Queue = () => {
   }
 
   return (
-    <div className="w-ful h-full pt-16">
+    <div className="w-ful h-full">
       <h1>Queue</h1>
-      <div className='flex gap-2 justify-center'>
-        <button onClick={() => addQueue(`Car ${queue.length}`)}>Add Car</button>
-        <button onClick={() => removeQueue()}>Remove</button>
-        <button onClick={() => clearQueue()}>Clear</button>
+      <div className='flex gap-2 justify-center m-4'>
+        <button 
+            onClick={() => addQueue(`Car ${queue.length}`)} 
+            className="px-4 py-2 bg-blue-500 text-white rounded"
+          >
+            Add Car
+        </button>
+
+        <button 
+          onClick={() => removeQueue()}
+          className="px-4 py-2 bg-red-500 text-white rounded"
+        >
+          Remove
+        </button>
+
+        <button 
+          onClick={() => clearQueue()}
+          className="px-4 py-2 bg-gray-500 text-white rounded"
+          >
+            Clear
+          </button> 
       </div>
       
-      <div className='flex'>
+      <div className='grid grid-cols-10 gap-5 m-5'>
         {queue.map((car, index) => (
-          <div key={index}>
-            {car.name}
+          <div key={index} className='flex flex-col p-5 items-center justify-center border rounded-lg'>
             <FontAwesomeIcon className={car.color} icon={faCarSide} flip="horizontal" size="2xl" />
+            
+            {car.name}
           </div>
         ))}
       </div>
