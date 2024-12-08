@@ -6,13 +6,15 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navLinks = [
-    { Link: '/', title: 'Home' },
-    { Link: '/tic-tac-toe', title: 'Tic Tac Toe' },
-    { Link: '/stacks', title: 'Stacks' },
-    { Link: '/queue', title: 'Queue' },
-    { Link: '/binary-tree-traversal', title: 'Binary Tree Traversal' },
-    { Link: '/binary-search-tree', title: 'Binary Search Tree' },
-  ];
+    {Link: '/', title: 'Home'},
+    {Link: '/tic-tac-toe', title: 'Tic Tac Toe'},
+    {Link: '/stacks', title: 'Stacks'},
+    {Link: '/queue', title: 'Queue'},
+    {Link: '/binary-tree-traversal', title: 'Binary Tree Traversal'},
+    {Link: '/binary-search-tree', title: 'Binary Search Tree'},
+    {Link: '/towers-of-hanoi', title: 'Towers of Hanoi'},
+    {Link: '/sorting', title: 'Sorting'},
+  ]
 
   return (
     <nav className="absolute w-screen bg-stone-900 z-50 top-0 p-5 text-white shadow-md">
