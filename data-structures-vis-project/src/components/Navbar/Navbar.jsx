@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBurger } from '@fortawesome/free-solid-svg-icons'
 import { Link } from 'react-router-dom';
 import './Navbar.css';
 
 const Navbar = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(true);
 
   const navLinks = [
     {Link: '/', title: 'Home'},
@@ -19,29 +21,23 @@ const Navbar = () => {
   return (
     <nav className="absolute w-screen bg-stone-900 z-50 top-0 p-5 text-white shadow-md">
       <div className="flex items-center justify-between px-8">
-        <h1 className="text-neutral-100">MyApp</h1>
+
+        {/* Logo */}
+        <h1 className="text-neutral-100">MyApp.dev</h1>
 
         {/* Hamburger Icon */}
         <div className="lg:hidden">
           <button onClick={() => setIsMenuOpen(!isMenuOpen)}>
             {/* Simple Hamburger Icon */}
-            <div className="space-y-1">
-              <div className="w-6 h-0.5 bg-white"></div>
-              <div className="w-6 h-0.5 bg-white"></div>
-              <div className="w-6 h-0.5 bg-white"></div>
-            </div>
+            <FontAwesomeIcon icon={faBurger} size="xl" />
           </button>
         </div>
 
         {/* Menu Links */}
-        <ul
-          className={`${
-            isMenuOpen ? 'block' : 'hidden'
-          } absolute lg:static top-16 left-0 w-full lg:w-auto lg:flex gap-2 bg-stone-900 lg:bg-transparent p-5 lg:p-0`}
-        >
+        <ul className={`${isMenuOpen ? 'flex flex-col' : 'hidden'} absolute lg:static top-16 left-0 w-full lg:flex lg:flex-row lg:w-auto gap-2 bg-stone-900 lg:bg-transparent px-5 py-5 rounded-br-xl rounded-bl-xl lg:p-0`}>
           {navLinks.map((navLink, index) => (
-            <li key={index} className="mr-6">
-              <Link className="text-neutral-100 block md:inline" to={navLink.Link}>
+            <li key={index}>
+              <Link className="text-neutral-100 flex text-center align-middle justify-center lg:inline min-w-fit lg:m-0 bg-stone-800 lg:bg-transparent rounded-lg p-2" to={navLink.Link}>
                 {navLink.title}
               </Link>
             </li>
