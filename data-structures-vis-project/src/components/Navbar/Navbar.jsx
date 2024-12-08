@@ -8,9 +8,9 @@ const Navbar = () => {
     {Link: '/stacks', title: 'Stacks'},
     {Link: '/queue', title: 'Queue'},
     {Link: '/binary-tree-traversal', title: 'Binary Tree Traversal'},
-    {Link: '/binary-search-tree', title: 'Binary Search Tree'}//,
-    // {Link: '/towers-of-hanoi', title: 'Towers of Hanoi'},
-    // {Link: '/sorting', title: 'Sorting'},
+    {Link: '/binary-search-tree', title: 'Binary Search Tree'},
+    {Link: '/towers-of-hanoi', title: 'Towers of Hanoi'},
+    {Link: '/sorting', title: 'Sorting'},
   ]
 
   return (
