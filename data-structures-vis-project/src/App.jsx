@@ -14,15 +14,15 @@ const App = () => {
 
 
   return (
-    <div className="h-full w-full"> {/* deprecate: -mt-16 */}
+    <div className="h-full w-full pt-[64px]"> {/* deprecate: -mt-16 */}
       <Navbar />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/stacks" element={<Stacks />} />
-        <Route path="/queue" element={<Queue />} />
-        <Route path="/binary-tree-traversal" element={<BinaryTreeTraversalPage />} />
-        <Route path="/binary-search-tree" element={<BinarySearchTreePage />} />
-        <Route path="/tic-tac-toe" element={<TicTacToe />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/stacks" element={<Stacks />} />
+          <Route path="/queue" element={<Queue />} />
+          <Route path="/binary-tree-traversal" element={<BinaryTreeTraversalPage />} />
+          <Route path="/binary-search-tree" element={<BinarySearchTreePage />} />
+          <Route path="/tic-tac-toe" element={<TicTacToe />} />
       </Routes>
     </div>
   );

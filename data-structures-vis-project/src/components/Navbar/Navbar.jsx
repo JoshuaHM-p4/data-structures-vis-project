@@ -14,7 +14,7 @@ const Navbar = () => {
   ]
 
   return (
-    <nav className=" sticky bg-stone-900 z-50 top-0 p-5 text-white shadow-md">
+    <nav className="absolute w-screen bg-stone-900 z-50 top-0 p-5 text-white shadow-md ">
       <ul className="flex gap-2 px-[10rem] align-center justify-between" >
         {navLinks.map((navLink, index) => (
           <li key={index} className="mr-6">
