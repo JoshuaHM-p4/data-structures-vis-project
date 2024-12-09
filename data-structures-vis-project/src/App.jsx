@@ -10,13 +10,14 @@ import Stacks from './Pages/Stacks.jsx';
 import TicTacToe from './Pages/TicTacToe.jsx';
 import TowerOfHanoi from './Pages/TowerOfHanoi.jsx';
 import Sorting from './Pages/Sorting.jsx';
+import Play from './Pages/Play.jsx'
 import './App.css';
 
 const App = () => {
 
 
   return (
-    <div className="h-full w-full pt-[64px]"> {/* deprecate: -mt-16 */}
+    <div className="h-full w-full pt-[64px]"> {/* deprecate: -mb-16 */}
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -27,6 +28,7 @@ const App = () => {
         <Route path="/tic-tac-toe" element={<TicTacToe />} />
         <Route path="/towers-of-hanoi" element={<TowerOfHanoi />} />
         <Route path="/sorting" element={<Sorting />} />
+        <Route path="/play" element={<Play />} />
       </Routes>
     </div>
   );
