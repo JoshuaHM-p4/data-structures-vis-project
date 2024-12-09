@@ -1,28 +1,21 @@
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBurger } from '@fortawesome/free-solid-svg-icons'
-import { Link, useLocation } from 'react-router-dom';
+import { faBurger } from '@fortawesome/free-solid-svg-icons';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [activeLink, setActiveLink] = useState('');
-  const location = useLocation();
 
   const navLinks = [
-    {Link: '/', title: 'Home'},
-    {Link: '/tic-tac-toe', title: 'Tic Tac Toe'},
-    {Link: '/stacks', title: 'Stacks'},
-    {Link: '/queue', title: 'Queue'},
-    {Link: '/binary-tree-traversal', title: 'Binary Tree Traversal'},
-    {Link: '/binary-search-tree', title: 'Binary Search Tree'},
-    {Link: '/towers-of-hanoi', title: 'Towers of Hanoi'},
-    {Link: '/sorting', title: 'Sorting'},
+    { Link: '/', title: 'Home' },
+    { Link: '/tic-tac-toe', title: 'Tic Tac Toe' },
+    { Link: '/stacks', title: 'Stacks' },
+    { Link: '/queue', title: 'Queue' },
+    { Link: '/binary-tree-traversal', title: 'Binary Tree Traversal' },
+    { Link: '/binary-search-tree', title: 'Binary Search Tree' },
+    { Link: '/towers-of-hanoi', title: 'Towers of Hanoi' },
+    { Link: '/sorting', title: 'Sorting' },
   ];
-
-    // Set the active link
-    useState(() => {
-      setActiveLink(location.pathname);
-    }, [location.pathname]);
 
   return (
     <nav className="fixed w-screen bg-stone-900 z-50 top-0 p-5 text-white shadow-md">
@@ -34,7 +27,6 @@ const Navbar = () => {
         {/* Hamburger Icon */}
         <div className="lg:hidden">
           <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="focus:outline-none">
-            {/* Simple Hamburger Icon */}
             <FontAwesomeIcon icon={faBurger} size="xl" />
           </button>
         </div>
@@ -43,14 +35,11 @@ const Navbar = () => {
         <ul className={`${isMenuOpen ? 'flex flex-col' : 'hidden'} absolute lg:static top-16 left-0 w-full lg:flex lg:flex-row lg:w-auto gap-2 bg-stone-900 lg:bg-transparent px-5 py-5 rounded-br-xl rounded-bl-xl lg:p-0 transition-all duration-300 ease-in-out`}>
           {navLinks.map((navLink, index) => (
             <li key={index}>
-              <Link 
-                  className={`text-neutral-100 flex text-center align-middle justify-center lg:inline min-w-fit lg:m-0 bg-stone-800 lg:bg-transparent rounded-lg p-2 hover:text-blue-400 transition-colors duration-300 ${activeLink === navLink.Link ? 'text-blue-400' : ''}`}
-                  to={navLink.Link}
-                  onClick={() => {
-                    setIsMenuOpen(false);
-                    setActiveLink(navLink.Link);
-                  }}
-                >
+              <Link
+                className="text-neutral-100 flex text-center align-middle justify-center lg:inline min-w-fit lg:m-0 bg-stone-800 lg:bg-transparent rounded-lg p-2 hover:text-blue-400 transition-colors duration-300"
+                to={navLink.Link}
+                onClick={() => setIsMenuOpen(false)}
+              >
                 {navLink.title}
               </Link>
             </li>
