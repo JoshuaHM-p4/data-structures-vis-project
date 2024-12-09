@@ -32,7 +32,7 @@ const Navbar = () => {
         </div>
 
         {/* Menu Links */}
-        <ul className={`${isMenuOpen ? 'flex flex-col' : 'hidden'} absolute lg:static top-16 left-0 w-full lg:flex lg:flex-row lg:w-auto gap-2 bg-stone-900 lg:bg-transparent px-5 py-5 rounded-br-xl rounded-bl-xl lg:p-0 transition-all duration-300 ease-in-out`}>
+        <ul className={`${isMenuOpen ? 'flex flex-col' : 'hidden'} fixed lg:static top-16 left-0 right w-full lg:flex lg:flex-row lg:w-auto gap-2 bg-stone-900 lg:bg-transparent px-5 py-5 rounded-br-xl rounded-bl-xl lg:p-0 transition-all duration-300 ease-in-out`}>
           {navLinks.map((navLink, index) => (
             <li key={index}>
               <Link
