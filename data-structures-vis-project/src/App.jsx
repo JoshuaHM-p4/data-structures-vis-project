@@ -10,7 +10,8 @@ import Stacks from './Pages/Stacks.jsx';
 import TicTacToe from './Pages/TicTacToe.jsx';
 import TowerOfHanoi from './Pages/TowerOfHanoi.jsx';
 import Sorting from './Pages/Sorting.jsx';
-import Play from './Pages/Play.jsx'
+import Play from './Pages/Play.jsx';
+
 import './App.css';
 
 const App = () => {
