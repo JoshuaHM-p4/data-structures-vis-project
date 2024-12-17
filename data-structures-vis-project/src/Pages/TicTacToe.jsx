@@ -31,6 +31,7 @@ const TicTacToe = () => {
     }
     return board.every((cell) => cell !== null) ? "Draw" : null; // Return "Draw" if all cells are filled, otherwise null
   };
+  
 
   // Handle cell click
   const handleCellClick = (index) => {
@@ -43,11 +44,13 @@ const TicTacToe = () => {
     const result = checkWinner(updatedBoard); // Check for a winner
 
     if (result) {
-      const { winner, combination } = result;
-      setWinningCombo(combination); // Set the winning combination
-      setGameStatus(
-        winner === "Draw" ? "It's a Draw!" : `Player ${winner} wins!`
-      );
+      if (result === "Draw") {
+        setGameStatus("It's a Draw!");
+      } else {
+        const { winner, combination } = result;
+        setWinningCombo(combination); // Set the winning combination
+        setGameStatus(`Player ${winner} wins!`);
+      }
     } else {
       const nextPlayer = currentPlayer === "X" ? "O" : "X";
       setCurrentPlayer(nextPlayer);
@@ -73,7 +76,9 @@ const TicTacToe = () => {
           <button
             key={index}
             className={`w-20 h-20 flex items-center justify-center text-2xl font-bold border border-gray-300 rounded shadow hover:bg-gray-200 hover:text-black active:opacity-90 ${
-              winningCombo.includes(index) ? "bg-red-600 text-black hover:bg-red-800 hover:text-white" : ""
+              Array.isArray(winningCombo) && winningCombo.includes(index)
+              ? "bg-red-600 text-black hover:bg-red-800 hover:text-white" 
+              : "bg-black"
             }`}
             onClick={() => handleCellClick(index)}
           >
@@ -87,7 +92,7 @@ const TicTacToe = () => {
       >
         Restart Game
       </button>
-      {winningCombo.length > 0 && <Confetti className="w-full h-full"/>}
+      {gameStatus.includes("wins") && <Confetti className="w-full h-full"/>}
     </div>
   );
 };
