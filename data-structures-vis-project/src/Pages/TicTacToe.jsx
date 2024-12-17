@@ -73,7 +73,7 @@ const TicTacToe = () => {
           <button
             key={index}
             className={`w-20 h-20 flex items-center justify-center text-2xl font-bold border border-gray-300 rounded shadow hover:bg-gray-200 hover:text-black active:opacity-90 ${
-              winningCombo.includes(index) ? "bg-red-500 text-white" : "bg-black"
+              winningCombo.includes(index) ? "bg-red-600 text-black hover:bg-red-800 hover:text-white" : ""
             }`}
             onClick={() => handleCellClick(index)}
           >
