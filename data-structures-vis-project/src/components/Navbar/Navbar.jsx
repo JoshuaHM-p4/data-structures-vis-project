@@ -37,7 +37,7 @@ const Navbar = () => {
           {navLinks.map((navLink, index) => (
             <li key={index}>
               <Link
-                className={`${isActive === navLink.title ? 'text-blue-300 ' : ''} text-neutral-100 flex text-center align-middle justify-center lg:inline min-w-fit lg:m-0 bg-stone-800 lg:bg-transparent rounded-lg p-2 transition-all duration-300 ease-in-out hover:text-blue-300 hover:bg-stone-700 active:opacity-80`}                
+                className={`${isActive === navLink.title ? 'text-cyan-400 ' : ''} text-neutral-100 flex text-center align-middle justify-center lg:inline min-w-fit lg:m-0 bg-stone-800 lg:bg-transparent rounded-lg p-2 transition-all duration-300 ease-in-out hover:text-cyan-400 hover:bg-stone-700 active:opacity-80`}                
                 to={navLink.Link}
                 onClick={() => {
                   setIsMenuOpen(false);
