@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import StackOverlay from '../components/StacksComponents/StackOverlay.jsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCarSide } from '@fortawesome/free-solid-svg-icons';
+import Modal from '../components/StackQueueModal/Modal.jsx';
 
 const Stacks = () => {
   const [stack, setStack] = useState([]);
@@ -140,12 +141,22 @@ const Stacks = () => {
 
   // Handle the arrival button click
   const handleArrivalClick = () => {
+    if (stack.length >= 10) {
+      alert('Garage is full! Cannot add more cars.');
+      return;
+    }
+
     setMode('arrival');
     setIsModalOpen(true);
   };
 
   // Handle the departure button click
   const handleDepartureClick = () => {
+    if (stack.length === 0) {
+      alert('Garage is empty! Cannot remove any cars.');
+      return;
+    }
+    
     setMode('departure');
     setIsModalOpen(true);
   };
@@ -170,15 +181,15 @@ const Stacks = () => {
   return (
     <div className="w-full h-full pt-3">
       <div className='flex gap-2 justify-center'>
-        <button onClick={handleArrivalClick} className="px-4 py-2 bg-blue-500 text-white rounded">
+        <button onClick={handleArrivalClick} className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 active:opacity-80">
           Arrival
         </button>
 
-        <button onClick={handleDepartureClick} className="px-4 py-2 bg-red-500 text-white rounded">
+        <button onClick={handleDepartureClick} className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 active:opacity-80">
           Departure
         </button>
 
-        <button onClick={() => clearStack()} className="px-4 py-2 bg-gray-500 text-white rounded">
+        <button onClick={() => clearStack()} className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 active:opacity-80">
           Clear
         </button>
       </div>
@@ -198,35 +209,14 @@ const Stacks = () => {
 
       {poppedItem && <StackOverlay car={poppedItem} />}
 
-      {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-5 rounded shadow-lg">
-            <h2 className="text-xl mb-4 text-black">Enter Plate Number</h2>
-            <form onSubmit={handleModalSubmit}>
-              <input
-                type="text"
-                value={plateNumber}
-                onChange={(e) => setPlateNumber(e.target.value)}
-                placeholder="Plate Number"
-                className="px-4 py-2 border rounded mb-4 w-full text-black"
-                required
-              />
-              <div className="flex justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={handleModalClose}
-                  className="px-4 py-2 bg-gray-500 text-white rounded"
-                >
-                  Cancel
-                </button>
-                <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded">
-                  {mode === 'arrival' ? 'Add Car' : 'Remove Car'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={handleModalClose}
+        onSubmit={handleModalSubmit}
+        plateNumber={plateNumber}
+        setPlateNumber={setPlateNumber}
+        mode={mode}
+      />  
     </div>
   );
 };
