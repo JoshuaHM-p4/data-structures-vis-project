@@ -210,12 +210,13 @@ const Stacks = () => {
       {poppedItem && <StackOverlay car={poppedItem} />}
 
       <Modal
-        isOpen={isModalOpen}
+        isModalOpen={isModalOpen}
         onClose={handleModalClose}
         onSubmit={handleModalSubmit}
         plateNumber={plateNumber}
         setPlateNumber={setPlateNumber}
         mode={mode}
+        cars={stack}
       />  
     </div>
   );
