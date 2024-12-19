@@ -140,12 +140,22 @@ const Stacks = () => {
 
   // Handle the arrival button click
   const handleArrivalClick = () => {
+    if (stack.length >= 10) {
+      alert('Garage is full! Cannot add more cars.');
+      return;
+    }
+
     setMode('arrival');
     setIsModalOpen(true);
   };
 
   // Handle the departure button click
   const handleDepartureClick = () => {
+    if (stack.length === 0) {
+      alert('Garage is empty! Cannot remove any cars.');
+      return;
+    }
+    
     setMode('departure');
     setIsModalOpen(true);
   };
@@ -170,15 +180,15 @@ const Stacks = () => {
   return (
     <div className="w-full h-full pt-3">
       <div className='flex gap-2 justify-center'>
-        <button onClick={handleArrivalClick} className="px-4 py-2 bg-blue-500 text-white rounded">
+        <button onClick={handleArrivalClick} className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 active:opacity-80">
           Arrival
         </button>
 
-        <button onClick={handleDepartureClick} className="px-4 py-2 bg-red-500 text-white rounded">
+        <button onClick={handleDepartureClick} className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 active:opacity-80">
           Departure
         </button>
 
-        <button onClick={() => clearStack()} className="px-4 py-2 bg-gray-500 text-white rounded">
+        <button onClick={() => clearStack()} className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 active:opacity-80">
           Clear
         </button>
       </div>
@@ -215,11 +225,11 @@ const Stacks = () => {
                 <button
                   type="button"
                   onClick={handleModalClose}
-                  className="px-4 py-2 bg-gray-500 text-white rounded"
+                  className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 active:opacity-80"
                 >
                   Cancel
                 </button>
-                <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded">
+                <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 active:opacity-80">
                   {mode === 'arrival' ? 'Add Car' : 'Remove Car'}
                 </button>
               </div>
