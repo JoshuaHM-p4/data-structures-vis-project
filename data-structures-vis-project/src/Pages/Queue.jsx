@@ -155,7 +155,7 @@ const Queue = () => {
       alert('Garage is empty! Cannot remove any cars');
       return;
     }
-    
+
     setMode('departure');
     setIsModalOpen(true);
   };
@@ -180,15 +180,15 @@ const Queue = () => {
   return (
     <div className="w-full h-full flex flex-col">      
       <div className='flex gap-2 justify-center py-3'>
-        <button onClick={handleArrivalClick } className="px-4 py-2 bg-blue-500 text-white rounded">
+        <button onClick={handleArrivalClick } className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 active:opacity-80">
           Arrival
         </button>
 
-        <button onClick={handleDepartureClick} className="px-4 py-2 bg-red-500 text-white rounded">
+        <button onClick={handleDepartureClick} className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 active:opacity-80">
           Departure
         </button>
 
-        <button onClick={() => clearQueue()} className="px-4 py-2 bg-gray-500 text-white rounded">
+        <button onClick={() => clearQueue()} className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 active:opacity-80">
           Clear
         </button>
       </div>
@@ -224,11 +224,11 @@ const Queue = () => {
                 <button
                   type="button"
                   onClick={handleModalClose}
-                  className="px-4 py-2 bg-gray-500 text-white rounded"
+                  className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 active:opacity-80"
                 >
                   Cancel
                 </button>
-                <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded">
+                <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 active:opacity-80">
                   {mode === 'arrival' ? 'Add Car' : 'Remove Car'}
                 </button>
               </div>
