@@ -3,6 +3,7 @@ import StackOverlay from '../components/StacksComponents/StackOverlay.jsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCarSide } from '@fortawesome/free-solid-svg-icons';
 import Modal from '../components/StackQueueModal/Modal.jsx';
+import Tooltip from '../components/Tooltip/Tooltip.jsx';
 
 const Queue = () => {
   const [queue, setQueue] = useState([]);
@@ -197,11 +198,16 @@ const Queue = () => {
       <div className='grid grid-cols-10 gap-5 mx-5 flex-grow'>
         {queue.map((car, index) => (
           <div key={index} className='flex flex-col p-5 my-auto items-center justify-center border rounded-lg'>
-            <FontAwesomeIcon className={car.color} icon={faCarSide} flip="horizontal" size="2xl" />
-            {car.plateNumber}
-            <div className="text-sm">
-              Arrivals: {car.arrivalCount} | Departures: {car.departureCount}
+            <Tooltip key={index} 
+          text={`Plate number: ${car.plateNumber}`}
+          optionalText={`Arrival: ${car.arrivalCount} | Departure: ${car.departureCount}`}
+          position='top'>
+            <div className='p-2 inline-block text-center'>
+              <FontAwesomeIcon className={car.color} icon={faCarSide} flip="horizontal" size="xl" />
+              <br />
+              {car.plateNumber}
             </div>
+          </Tooltip>
           </div>
         ))}
       </div>
