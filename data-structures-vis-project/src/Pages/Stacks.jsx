@@ -182,15 +182,15 @@ const Stacks = () => {
   return (
     <div className="w-full h-full pt-3">
       <div className='flex gap-2 justify-center'>
-        <button onClick={handleArrivalClick} className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 active:opacity-80">
+        <button onClick={handleArrivalClick} className="nes-btn is-primary rounded">
           Arrival
         </button>
 
-        <button onClick={handleDepartureClick} className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 active:opacity-80">
+        <button onClick={handleDepartureClick} className="nes-btn is-error rounded">
           Departure
         </button>
 
-        <button onClick={() => clearStack()} className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 active:opacity-80">
+        <button onClick={() => clearStack()} className="nes-btn ">
           Clear
         </button>
       </div>

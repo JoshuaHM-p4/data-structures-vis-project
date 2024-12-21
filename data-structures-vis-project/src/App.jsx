@@ -18,7 +18,7 @@ const App = () => {
 
 
   return (
-    <div className="h-full w-full pt-[64px]"> {/* deprecate: -mb-16 */}
+<div className="h-full w-full pt-[64px] text-[11px] 2xl:text-[14px] text-border"> {/* deprecate: -mb-16 */}      
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />

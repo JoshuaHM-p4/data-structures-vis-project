@@ -101,7 +101,7 @@ const TicTacToe = () => {
         ))}
       </div>
       <button
-        className="px-4 py-2 bg-blue-500 text-white font-semibold rounded shadow hover:bg-blue-600 active:opacity-80"
+        className="nes-btn is-primary mt-4"
         onClick={restartGame}
       >
         Restart Game

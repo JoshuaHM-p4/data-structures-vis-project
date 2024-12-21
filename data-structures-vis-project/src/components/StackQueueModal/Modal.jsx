@@ -15,9 +15,9 @@ const Modal = ({ isModalOpen, onClose, onSubmit, plateNumber, setPlateNumber, mo
   if (!isModalOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-5 rounded shadow-lg">
-        <h2 className="text-xl mb-4 text-black">Enter Plate Number</h2>
+    <div className="fixed inset-0 flex items-center justify-center ">
+      <div className="nes-container is-rounded is-dark">
+        <h2 className="text-xl mb-4">Enter Plate Number</h2>
         <form onSubmit={onSubmit}>
           {mode === 'arrival' ? (
             <input
@@ -25,19 +25,19 @@ const Modal = ({ isModalOpen, onClose, onSubmit, plateNumber, setPlateNumber, mo
               value={plateNumber}
               onChange={(e) => setPlateNumber(e.target.value)}
               placeholder="Plate Number"
-              className="px-4 py-2 border rounded mb-4 w-full text-black"
+              className="px-4 py-2 border rounded w-full text-black"
               required
               ref={inputRef}
             />
           ) : (
-            <div className="flex items-center gap-2">
-              <select
+            <div className="nes-select flex flex-col justify-center">
+              <select 
                 value={plateNumber}
                 onChange={(e) => setPlateNumber(e.target.value)}
-                className="px-4 py-2 border rounded mb-4 w-[251.33px] text-black"
+                className="default_select w-full text-black"
                 required
               >
-                <option value="" disabled>Select Car</option>
+                <option value="" disabled selected hidden>Select Car</option>
                 {cars.map((car, index) => (
                   <option key={index} value={car.plateNumber}>
                     {car.plateNumber}
@@ -46,15 +46,15 @@ const Modal = ({ isModalOpen, onClose, onSubmit, plateNumber, setPlateNumber, mo
               </select>
             </div>
           )}
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-2 mt-4">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 active:opacity-80"
+              className="nes-btn "
             >
               Cancel
             </button>
-            <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 active:opacity-80">
+            <button type="submit" className="nes-btn is-primary">
               {mode === 'arrival' ? 'Add Car' : 'Remove Car'}
             </button>
           </div>

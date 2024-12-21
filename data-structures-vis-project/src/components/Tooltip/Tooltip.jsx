@@ -30,7 +30,7 @@ const Tooltip = ({ children, text, optionalText = "", position = "top" }) => {
     <div className="relative inline-block group">
       {children}
       <div className={`absolute invisible z-50 opacity-0 group-hover:visible group-hover:opacity-100 ${positionClasses} transition-all duration-300 ease-in-out` }>
-        <div className="relative px-4 py-2 text-sm text-white bg-gray-900 rounded-lg backdrop-blur-sm bg-opacity-90 border border-gray-700/50 shadow-xl w-60 text-center">
+        <div className="relative px-4 py-2 text-[10px] text-white bg-gray-900 rounded-lg backdrop-blur-sm bg-opacity-90 border border-gray-700/50 shadow-xl w-60 text-center">
           <div className="flex items-center space-x-2 flex-col">
             <span>{text}</span>
             <span>{optionalText}</span>
