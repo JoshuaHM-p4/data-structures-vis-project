@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from 'react';
 const Modal = ({ isModalOpen, onClose, onSubmit, plateNumber, setPlateNumber, mode, cars }) => {
   // Reference to the input field
 	const inputRef = useRef(null);
-	
+
 	// Focus on the input field when the modal is open
   useEffect(() => {
     if (isModalOpen && mode === 'arrival' && inputRef.current) {
@@ -20,6 +20,7 @@ const Modal = ({ isModalOpen, onClose, onSubmit, plateNumber, setPlateNumber, mo
         <h2 className="text-xl mb-4 text-black">Enter Plate Number</h2>
         <form onSubmit={onSubmit}>
           {mode === 'arrival' ? (
+            // Render input field for arrival mode
             <input
               type="text"
               value={plateNumber}
@@ -30,6 +31,7 @@ const Modal = ({ isModalOpen, onClose, onSubmit, plateNumber, setPlateNumber, mo
               ref={inputRef}
             />
           ) : (
+            // Render select field for departure mode (Creating Car)
             <div className="flex items-center gap-2">
               <select
                 value={plateNumber}

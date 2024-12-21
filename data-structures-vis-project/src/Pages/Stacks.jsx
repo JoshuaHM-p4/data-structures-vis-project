@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import StackOverlay from '../components/StacksComponents/StackOverlay.jsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCarSide } from '@fortawesome/free-solid-svg-icons';
 import Modal from '../components/StackQueueModal/Modal.jsx';
 import Tooltip from '../components/Tooltip/Tooltip.jsx';
+import StacksCanvas from '../components/StacksCanvas/StacksCanvas.jsx';
 
 const Stacks = () => {
   const [stack, setStack] = useState([]);
@@ -42,15 +43,20 @@ const Stacks = () => {
       return;
     }
 
+    const newType = typeClasses[Math.floor(Math.random() * typeClasses.length)]
+    const isUtility = newType === 'Ambulance' || newType === 'Taxi' || newType === 'Police';
+
     // Create a new car object
     const newCar = {
       plateNumber,
       color: colorGenerator(),
+      type: newType,
+      isUtility: isUtility,
       arrivalCount: 1,
       departureCount: 0
     };
 
-    console.log(newCar.plateNumber, "has arrived");
+    console.log(newCar);
 
     // Add the new car to the stack
     setStack([newCar, ...stack]);
@@ -117,7 +123,6 @@ const Stacks = () => {
 
     // Adding the removed car to the past car state
     setPastCars(prevPastCars => [removedCar, ...prevPastCars]);
-    console.log(pastCars);
   };
 
   // Clear the stack
@@ -129,11 +134,8 @@ const Stacks = () => {
   };
 
   // Color classes for the cars
-  const colorClasses = [
-    'text-red-800', 'text-blue-800', 'text-green-800', 'text-yellow-800',
-    'text-purple-800', 'text-pink-800', 'text-indigo-800', 'text-gray-800',
-    'text-black-800', 'text-white-800'
-  ];
+  const colorClasses = ['Black', 'Blue', 'Brown', 'Green', 'Magenta', 'Red', 'White', 'Yellow'];
+  const typeClasses = ['Ambulance', 'Taxi', 'Police', 'Bus','BoxTruck','Camper', 'Civic', 'Hatchback', 'Jeep', 'Limo', 'Luxury', 'MediumTruck', 'Micro', 'Minivan', 'Musclecar', 'Pickup', 'Sedan', 'Sport', 'Supercar', 'SUV', 'Van', 'Wagon']
 
   // Generate a random color class
   const colorGenerator = () => {
@@ -157,7 +159,7 @@ const Stacks = () => {
       alert('Garage is empty! Cannot remove any cars.');
       return;
     }
-    
+
     setMode('departure');
     setIsModalOpen(true);
   };
@@ -180,8 +182,8 @@ const Stacks = () => {
   };
 
   return (
-    <div className="w-full h-full pt-3">
-      <div className='flex gap-2 justify-center'>
+    <div className="w-full h-full">
+      <div className='flex gap-2 justify-center top-20 left-0 absolute w-full h-fit'>
         <button onClick={handleArrivalClick} className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 active:opacity-80">
           Arrival
         </button>
@@ -195,9 +197,9 @@ const Stacks = () => {
         </button>
       </div>
 
-      <div className='flex flex-col items-center justify-center mt-4'>
+      {/* <div className='flex flex-col items-center justify-center mt-4'>
         {stack.map((car, index) => (
-          <Tooltip key={index} 
+          <Tooltip key={index}
           text={`Plate number: ${car.plateNumber}`}
           optionalText={`Arrival: ${car.arrivalCount} | Departure: ${car.departureCount}`}
           position='right'>
@@ -208,7 +210,9 @@ const Stacks = () => {
             </div>
           </Tooltip>
         ))}
-      </div>
+      </div> */}
+
+      <StacksCanvas stack={stack}/>
 
       {poppedItem && <StackOverlay car={poppedItem} />}
 
@@ -220,7 +224,7 @@ const Stacks = () => {
         setPlateNumber={setPlateNumber}
         mode={mode}
         cars={stack}
-      />  
+      />
     </div>
   );
 };

@@ -9,6 +9,7 @@ const Canvas = forwardRef(function Canvas({ gameState, setGameState }, ref) {
     y: 100,
     velocity: 0,
     acceleration: 0,
+    image: '',
     direction: 0, // Angle in degrees
   };
   const [vehicleState, setVehicleState] = useState(initialVehicleState);
