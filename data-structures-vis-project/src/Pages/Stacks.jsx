@@ -3,6 +3,7 @@ import StackOverlay from '../components/StacksComponents/StackOverlay.jsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCarSide } from '@fortawesome/free-solid-svg-icons';
 import Modal from '../components/StackQueueModal/Modal.jsx';
+import Tooltip from '../components/Tooltip/Tooltip.jsx';
 
 const Stacks = () => {
   const [stack, setStack] = useState([]);
@@ -196,14 +197,16 @@ const Stacks = () => {
 
       <div className='flex flex-col items-center justify-center mt-4'>
         {stack.map((car, index) => (
-          <div key={index} className='p-2 inline-block text-center'>
-            <FontAwesomeIcon className={car.color} icon={faCarSide} flip="horizontal" size="xl" />
-            <br />
-            {car.plateNumber}
-            <div className="text-sm">
-              Arrivals: {car.arrivalCount} | Departures: {car.departureCount}
+          <Tooltip key={index} 
+          text={`Plate number: ${car.plateNumber}`}
+          optionalText={`Arrival: ${car.arrivalCount} | Departure: ${car.departureCount}`}
+          position='right'>
+            <div className='p-2 inline-block text-center'>
+              <FontAwesomeIcon className={car.color} icon={faCarSide} flip="horizontal" size="xl" />
+              <br />
+              {car.plateNumber}
             </div>
-          </div>
+          </Tooltip>
         ))}
       </div>
 
