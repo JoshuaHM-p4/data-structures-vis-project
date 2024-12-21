@@ -1,5 +1,12 @@
 import React, { useState } from "react";
 import Confetti from "react-confetti";
+import useSound from "../hooks/useSound.js"
+
+import pingSound from "../assets/sounds/ping.wav";
+import resetSound from "../assets/sounds/move-up.wav";
+import explodeSound from "../assets/sounds/explode.mp3";
+import failSound from "../assets/sounds/fail.wav";
+import jingleWin from "../assets/sounds/jingle-win.wav";
 
 // Define the TicTacToe component
 const TicTacToe = () => {
@@ -8,6 +15,9 @@ const TicTacToe = () => {
   const [currentPlayer, setCurrentPlayer] = useState("X"); // X goes first
   const [gameStatus, setGameStatus] = useState("Player X's Turn"); // Initial game status
   const [winningCombo, setWinningCombo] = useState([]); // State to store the winning combination
+
+  // Custom hook to play sound
+  const { playSound } = useSound();
 
   // Winning combinations
   const WINNING_COMBOS = [
@@ -31,12 +41,11 @@ const TicTacToe = () => {
     }
     return board.every((cell) => cell !== null) ? "Draw" : null; // Return "Draw" if all cells are filled, otherwise null
   };
-  
+
 
   // Handle cell click
   const handleCellClick = (index) => {
     if (board[index] || gameStatus.includes("wins")) return; // Ignore click if cell is already filled or game is over
-
     const updatedBoard = [...board];
     updatedBoard[index] = currentPlayer; // Update the clicked cell with the current player's symbol
     setBoard(updatedBoard); // Update the board state
@@ -46,15 +55,19 @@ const TicTacToe = () => {
     if (result) {
       if (result === "Draw") {
         setGameStatus("It's a Draw!");
+        playSound(failSound);
       } else {
         const { winner, combination } = result;
         setWinningCombo(combination); // Set the winning combination
         setGameStatus(`Player ${winner} wins!`);
+        playSound(explodeSound);
+        playSound(jingleWin);
       }
     } else {
       const nextPlayer = currentPlayer === "X" ? "O" : "X";
       setCurrentPlayer(nextPlayer);
       setGameStatus(`Player ${nextPlayer}'s Turn`);
+      playSound(pingSound); // Play the sound
     }
   };
 
@@ -64,6 +77,7 @@ const TicTacToe = () => {
     setCurrentPlayer("X"); // Set X as the starting player
     setGameStatus("Player X's Turn"); // Reset the game status
     setWinningCombo([]); // Reset the winning combination
+    playSound(resetSound);
   };
 
 
@@ -77,7 +91,7 @@ const TicTacToe = () => {
             key={index}
             className={`w-20 h-20 flex items-center justify-center text-2xl font-bold border border-gray-300 rounded shadow hover:bg-gray-200 hover:text-black active:opacity-90 ${
               Array.isArray(winningCombo) && winningCombo.includes(index)
-              ? "bg-red-600 text-black hover:bg-red-800 hover:text-white" 
+              ? "bg-red-600 text-black hover:bg-red-800 hover:text-white"
               : "bg-black"
             }`}
             onClick={() => handleCellClick(index)}
