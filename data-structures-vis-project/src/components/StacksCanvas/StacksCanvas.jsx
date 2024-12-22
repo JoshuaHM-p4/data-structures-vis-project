@@ -93,7 +93,6 @@ const StacksCanvas = ({ stack }) => {
     window.addEventListener('mousemove', (event) => {
       mouse.x = event.x;
       mouse.y = event.y;
-      console.log(mouse);
     });
 
     // Update Car Position

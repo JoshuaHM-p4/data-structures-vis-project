@@ -2,12 +2,20 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCarSide } from '@fortawesome/free-solid-svg-icons';
 
-const StackOverlay = ({ car }) => {
+const StackOverlay = ({ car, colorMap }) => {
+  const getImagePath = (type, color, isUtility) => {
+    if (isUtility) {
+      return `/vehicles/UTILITY/${type.toUpperCase()}.png`;
+    } else {
+      return `/vehicles/${type.toUpperCase()}/${color.toUpperCase()}.png`;
+    }
+  };
+
   return (
     <div className='p-5 absolute bottom-3 left-3 text-center flex flex-col'>
       <p>Recent Car:</p>
-      <FontAwesomeIcon className={car?.color} icon={faCarSide} flip="horizontal" size="2xl" />
-      {car?.plateNumber}
+      <div className='h-20'></div>
+      <img src={getImagePath(car?.type, car?.color, car?.isUtility)} alt={car?.type} className='absolute top-0 left-7 w-40 h-40 mx-auto p-[-5rem]' />
       <p>Arrivals: {car?.arrivalCount} | Departures: {car?.departureCount}</p>
     </div>
   );

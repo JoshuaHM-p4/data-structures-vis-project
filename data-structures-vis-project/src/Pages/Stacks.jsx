@@ -67,6 +67,15 @@ const Stacks = () => {
     setIsModalOpen(false);
   };
 
+  // Function for getting image paths
+  const getImagePath = (type, color, isUtility) => {
+    if (isUtility) {
+      return `/vehicles/UTILITY/${type.toUpperCase()}.png`;
+    } else {
+      return `/vehicles/${type.toUpperCase()}/${color.toUpperCase()}.png`;
+    }
+  };
+
   // Remove a car from the stack
   const removeStack = (plateNumber) => {
     // Check if the stack is empty
@@ -230,16 +239,15 @@ const Stacks = () => {
         </button>
       }
 
-      <div className={`fixed w-fit top-28 left-0 h-full bg-transparent shadow-lg transition-transform ${isToolbarCollapsed ? '-translate-x-full' : 'translate-x-0'}`}>
-        <div className='flex flex-col pl-5 items-center justify-center mt-4'>
+      <div className={`fixed w-fit min-w-32 top-32 left-0 h-full bg-transparent shadow-lg transition-transform ${isToolbarCollapsed ? '-translate-x-full' : 'translate-x-0'}`}>
+        <div className='flex flex-col pl-5 items-center justify-center mt-4 relative'>
           {stack.map((car, index) => (
             <Tooltip key={index}
               text={`Plate number: ${car.plateNumber}`}
               optionalText={`Arrival: ${car.arrivalCount} | Departure: ${car.departureCount}`}
               position='right'>
               <div className='p-2 inline-block text-center'>
-                <FontAwesomeIcon className={fasIconColorMap(car.color)} icon={faCarSide} flip="horizontal" size="xl" />
-                <br />
+                <img src={getImagePath(car?.type, car?.color, car?.isUtility)} alt={car?.type} className='w-10 h-10 mx-auto p-[-5rem]' />
                 {car.plateNumber}
               </div>
             </Tooltip>
@@ -249,7 +257,7 @@ const Stacks = () => {
 
       <StacksCanvas stack={stack} />
 
-      {poppedItem && <StackOverlay car={poppedItem} />}
+      {poppedItem && <StackOverlay car={poppedItem} colorMap={fasIconColorMap} />}
 
       <Modal
         isModalOpen={isModalOpen}
