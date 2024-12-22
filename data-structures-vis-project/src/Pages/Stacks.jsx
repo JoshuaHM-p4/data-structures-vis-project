@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import StackOverlay from '../components/StacksComponents/StackOverlay.jsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCarSide } from '@fortawesome/free-solid-svg-icons';
+import { faTableList } from '@fortawesome/free-solid-svg-icons';
 import Modal from '../components/StackQueueModal/Modal.jsx';
 import Tooltip from '../components/Tooltip/Tooltip.jsx';
 import StacksCanvas from '../components/StacksCanvas/StacksCanvas.jsx';
@@ -14,6 +15,7 @@ const Stacks = () => {
   const [mode, setMode] = useState(''); // 'arrival' or 'departure'
   const [tempContainer, setTempContainer] = useState([]);
   const [pastCars, setPastCars] = useState([]); // Changed to an array to hold multiple past cars
+  const [isToolbarCollapsed, setIsToolbarCollapsed] = useState(true);
 
   // Add a car to the stack
   const addStack = (plateNumber) => {
@@ -135,11 +137,34 @@ const Stacks = () => {
 
   // Color classes for the cars
   const colorClasses = ['Black', 'Blue', 'Brown', 'Green', 'Magenta', 'Red', 'White', 'Yellow'];
-  const typeClasses = ['Ambulance', 'Taxi', 'Police', 'Bus','BoxTruck','Camper', 'Civic', 'Hatchback', 'Jeep', 'Limo', 'Luxury', 'MediumTruck', 'Micro', 'Minivan', 'Musclecar', 'Pickup', 'Sedan', 'Sport', 'Supercar', 'SUV', 'Van', 'Wagon']
+  const typeClasses = ['Ambulance', 'Taxi', 'Police', 'Bus', 'BoxTruck', 'Camper', 'Civic', 'Hatchback', 'Jeep', 'Limo', 'Luxury', 'MediumTruck', 'Micro', 'Minivan', 'Musclecar', 'Pickup', 'Sedan', 'Sport', 'Supercar', 'SUV', 'Van', 'Wagon']
 
   // Generate a random color class
   const colorGenerator = () => {
     return colorClasses[Math.floor(Math.random() * colorClasses.length)];
+  };
+
+  const fasIconColorMap = (color) => {
+    switch (color) {
+      case 'Black':
+        return 'text-black';
+      case 'Blue':
+        return 'text-blue-500';
+      case 'Brown':
+        return 'text-yellow-800';
+      case 'Green':
+        return 'text-green-500';
+      case 'Magenta':
+        return 'text-pink-500';
+      case 'Red':
+        return 'text-red-500';
+      case 'White':
+        return 'text-white';
+      case 'Yellow':
+        return 'text-yellow-500';
+      default:
+        return 'text-gray-500';
+    }
   };
 
   // Handle the arrival button click
@@ -197,22 +222,32 @@ const Stacks = () => {
         </button>
       </div>
 
-      {/* <div className='flex flex-col items-center justify-center mt-4'>
-        {stack.map((car, index) => (
-          <Tooltip key={index}
-          text={`Plate number: ${car.plateNumber}`}
-          optionalText={`Arrival: ${car.arrivalCount} | Departure: ${car.departureCount}`}
-          position='right'>
-            <div className='p-2 inline-block text-center'>
-              <FontAwesomeIcon className={car.color} icon={faCarSide} flip="horizontal" size="xl" />
-              <br />
-              {car.plateNumber}
-            </div>
-          </Tooltip>
-        ))}
-      </div> */}
+      {stack &&
+        <button
+          onClick={() => setIsToolbarCollapsed(!isToolbarCollapsed)}
+          className="fixed top-20 left-5 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 active:opacity-80">
+          {isToolbarCollapsed ? <FontAwesomeIcon icon={faTableList} /> : 'Hide Map'}
+        </button>
+      }
 
-      <StacksCanvas stack={stack}/>
+      <div className={`fixed w-fit top-28 left-0 h-full bg-transparent shadow-lg transition-transform ${isToolbarCollapsed ? '-translate-x-full' : 'translate-x-0'}`}>
+        <div className='flex flex-col pl-5 items-center justify-center mt-4'>
+          {stack.map((car, index) => (
+            <Tooltip key={index}
+              text={`Plate number: ${car.plateNumber}`}
+              optionalText={`Arrival: ${car.arrivalCount} | Departure: ${car.departureCount}`}
+              position='right'>
+              <div className='p-2 inline-block text-center'>
+                <FontAwesomeIcon className={fasIconColorMap(car.color)} icon={faCarSide} flip="horizontal" size="xl" />
+                <br />
+                {car.plateNumber}
+              </div>
+            </Tooltip>
+          ))}
+        </div>
+      </div>
+
+      <StacksCanvas stack={stack} />
 
       {poppedItem && <StackOverlay car={poppedItem} />}
 
