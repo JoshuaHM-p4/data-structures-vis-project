@@ -4,6 +4,7 @@ const StacksCanvas = ({ stack }) => {
   const canvasRef = useRef(null);
   const imagesRef = useRef({});
   const carsRef = useRef([]);
+  const carSize = 250;
 
   // Function for getting image paths
   const getImagePath = (type, color, isUtility) => {
@@ -15,7 +16,7 @@ const StacksCanvas = ({ stack }) => {
   };
 
   useEffect(() => {
-    const initializeCars = (stack) => {
+    const initializeCars = (stack, canvas) => {
       if (stack.length === 0) {
         carsRef.current = [];
         imagesRef.current = {};
@@ -37,9 +38,10 @@ const StacksCanvas = ({ stack }) => {
             color: car.color,
             isUtility: car.isUtility,
             image: null,
-            x: 500,
+            x: canvas.width / 2 - 125,
             y: 10 + index * 260, // Space out cars by 260 pixels
-            dy: 1
+            dy: 1,
+            hovered: false
           };
         }
       });
@@ -66,17 +68,20 @@ const StacksCanvas = ({ stack }) => {
       });
     };
 
-    initializeCars(stack);
-
     const canvas = canvasRef.current;
     const gravity = 0.5;
-    const friction = 0.7;
+    const friction = 0.5;
     const context = canvas.getContext('2d');
     let lastUpdateTime = 0;
     const controlSpeedMultiplier = 0.1;
     const fixedDeltaTime = 16; // Fixed time step in milliseconds (60 FPS)
     const energyThreshold = 1; // Threshold to stop the car
     let animationFrameId;
+    const groundCollisionBuffer = 200;
+    const carCollisionBuffer = 50;
+    let mouse = { x: undefined, y: undefined };
+
+    initializeCars(stack, canvas);
 
     // Canvas Resize
     const resizeCanvas = () => {
@@ -85,10 +90,18 @@ const StacksCanvas = ({ stack }) => {
     };
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('mousemove', (event) => {
+      mouse.x = event.x;
+      mouse.y = event.y;
+      console.log(mouse);
+    });
 
     // Update Car Position
     const update = () => {
       carsRef.current = carsRef.current.map((car, index) => {
+        // Skip updating if the image is not loaded
+        if (!car.image) return car;
+
         // Limit dy to a reasonable value
         const maxDy = 10;
         car.dy = Math.min(Math.max(car.dy, -maxDy), maxDy);
@@ -97,8 +110,8 @@ const StacksCanvas = ({ stack }) => {
         let newY = car.y + car.dy * fixedDeltaTime * controlSpeedMultiplier;
 
         // Ensure y position doesn't go beyond the canvas height
-        if (newY + 250 > canvas.height) {
-          newY = canvas.height - 250;
+        if (newY + groundCollisionBuffer > canvas.height) {
+          newY = canvas.height - groundCollisionBuffer;
           car.dy = -car.dy * friction; // Reverse direction and apply damping from friction
           if (Math.abs(car.dy) < energyThreshold) {
             car.dy = 0; // Stop the car if energy is below the threshold
@@ -109,14 +122,18 @@ const StacksCanvas = ({ stack }) => {
 
         // Check for collision with other cars
         carsRef.current.forEach((otherCar, otherIndex) => {
-          if (index !== otherIndex && newY + 50 > otherCar.y && car.y < otherCar.y) {
-            newY = otherCar.y - 50;
+          if (index !== otherIndex && newY + carCollisionBuffer > otherCar.y && car.y < otherCar.y) {
+            newY = otherCar.y - carCollisionBuffer;
             car.dy = -car.dy * friction; // Reverse direction and apply damping from friction
             if (Math.abs(car.dy) < energyThreshold) {
               car.dy = 0; // Stop the car if energy is below the threshold
             }
           }
         });
+
+        // Check for mouse hover
+        const isHovered = (mouse.x > car.x) && (mouse.x < car.x + carSize * 1.5) && (mouse.y > car.y + carSize / 2) && (mouse.y < car.y + carSize);
+        car.hovered = isHovered;
 
         return {
           ...car,
@@ -133,10 +150,41 @@ const StacksCanvas = ({ stack }) => {
       [...carsRef.current].reverse().forEach((car) => {
         const image = imagesRef.current[car.plateNumber];
         if (!image) return; // Ensure images are loaded
+
+        let textPosition = { x: car.x + 10 + carSize, y: car.y + carSize / 2 + 25 };
+
+        // Draw line for guide on hover
+        if (car.hovered) {
+          context.beginPath();
+          context.moveTo(car.x + carSize / 2, textPosition.y);
+          context.lineTo(textPosition.x, textPosition.y);
+          context.strokeStyle = 'white';
+          context.stroke();
+        }
+
+        // Draw car plate number on hover
+        if (car.hovered) {
+          context.font = "18px Arial bold";
+          context.fillStyle = 'white';
+          context.fillText(car.plateNumber, textPosition.x, textPosition.y);
+        }
+
+        // Draw car image
         context.save();
         context.imageSmoothingEnabled = false; // Disable image smoothing
-        context.drawImage(image, car.x, car.y, 250, 250); // Center the image on the vehicle's position and make it bigger
+        context.drawImage(image, car.x, car.y, carSize, carSize); // Center the image on the vehicle's position and make it bigger
         context.restore();
+
+        // // Draw car boxes
+        // context.beginPath();
+        // context.rect(car.x, car.y, carSize, carSize); // bound by carSize
+        // context.strokeStyle = 'red';
+        // context.stroke();
+
+        // context.beginPath();
+        // context.rect(car.x, car.y + (carSize) / 5, carSize, carSize / 2);
+        // context.strokeStyle = car.hovered ? 'white' : 'transparent';
+        // context.stroke();
       });
     };
 
