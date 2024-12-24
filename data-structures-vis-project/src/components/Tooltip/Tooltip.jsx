@@ -19,7 +19,7 @@ const Tooltip = ({ children, text, optionalText = "", position = "top" }) => {
       break;
     case "right":
       positionClasses = "left-full top-1/2 transform -translate-y-1/2 ml-2";
-      arrowClasses = "top-1/2 transform -translate-y-1/2 -left-1 -rotate-[225deg]";
+      arrowClasses = "top-1/2 transform -translate-y-1/2 -left-1 rotate-[135deg]";
       break;
     default:
       positionClasses = "bottom-full left-1/2 transform -translate-x-1/2 mb-2";
