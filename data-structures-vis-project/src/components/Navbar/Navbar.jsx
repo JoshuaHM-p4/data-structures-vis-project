@@ -32,18 +32,18 @@ const Navbar = () => {
         <h1 className="text-neutral-">MyApp.dev</h1>
         </Link>
         {/* Hamburger Icon */}
-        <div className="lg:hidden">
+        <div className="xl:hidden">
           <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="focus:outline-none">
             <FontAwesomeIcon icon={faBurger} size="xl" />
           </button>
         </div>
 
         {/* Menu Links */}
-        <ul className={`${isMenuOpen ? 'flex flex-col' : 'hidden'} fixed lg:static top-16 left-0 right w-full lg:flex lg:flex-row lg:w-auto gap-2 bg-stone-900 lg:bg-transparent px-5 py-5 rounded-br-xl rounded-bl-xl lg:p-0 transition-all duration-300 ease-in-out`}>
+        <ul className={`${isMenuOpen ? 'flex flex-col' : 'hidden'} fixed xl:static top-16 left-0 right w-full xl:flex xl:flex-row xl:w-auto gap-2 bg-stone-900 xl:bg-transparent px-5 py-5 rounded-br-xl rounded-bl-xl xl:p-0 transition-all duration-300 ease-in-out`}>
           {navLinks.map((navLink, index) => (
             <li key={index}>
               <Link
-                className={`${isActive === navLink.link ? 'text-cyan-400 ' : ''} text-neutral-100 flex p-2 text-center align-middle justify-center lg:inline min-w-fit lg:m-0 bg-stone-800 lg:bg-transparent rounded-lg transition-all duration-300 ease-in-out hover:text-cyan-400 hover:bg-stone-700 active:opacity-80`}                
+                className={`${isActive === navLink.link ? 'text-cyan-400 ' : ''} text-neutral-100 flex p-2 text-center align-middle justify-center xl:inline min-w-fit xl:m-0 bg-stone-800 xl:bg-transparent rounded-lg transition-all duration-300 ease-in-out hover:text-cyan-400 hover:bg-stone-700 active:opacity-80`}                
                 to={navLink.link}
                 onClick={() => {
                   setIsMenuOpen(false);
