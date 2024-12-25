@@ -28,8 +28,8 @@ const Navbar = () => {
       <div className="flex items-center justify-between h-full">
 
         {/* Logo */}
-        <Link to="/">
-        <h1 className="text-neutral-">MyApp.dev</h1>
+        <Link to="/" onClick={() => setIsMenuOpen(false)}>
+        <h1 className="text-neutral">MyApp.dev</h1>
         </Link>
         {/* Hamburger Icon */}
         <div className="xl:hidden">
