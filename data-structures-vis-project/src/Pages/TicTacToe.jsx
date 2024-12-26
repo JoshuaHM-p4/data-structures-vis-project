@@ -87,7 +87,7 @@ const TicTacToe = () => {
         {board.map((cell, index) => (
           <button
             key={index}
-            className={`w-20 h-20 flex items-center text-center justify-center text-2xl font-bold hover:bg-gray-200 hover:text-black active:opacity-90 focus:outline-none   
+            className={`w-24 h-24 flex items-center text-center justify-center text-4xl font-["Gluten"] hover:bg-gray-200 hover:text-black active:opacity-90 focus:outline-none   
             ${
               Array.isArray(winningCombo) && winningCombo.includes(index)
               ? "bg-red-600 text-black hover:bg-red-800 hover:text-white"
