@@ -12,8 +12,8 @@ const Navbar = () => {
     setIsActive(location.pathname);
   }, [location]);
 
-  const navLinks = [
 
+  const navLinks = [
     { link: '/tic-tac-toe', title: 'Tic-Tac-Toe' },
     { link: '/stacks', title: 'Stacks' },
     { link: '/queue', title: 'Queue' },
@@ -43,11 +43,10 @@ const Navbar = () => {
           {navLinks.map((navLink, index) => (
             <li key={index}>
               <Link
-                className={`${isActive === navLink.link ? 'text-cyan-400 ' : ''} text-neutral-100 flex p-2 text-center align-middle justify-center xl:inline min-w-fit xl:m-0 bg-stone-800 xl:bg-transparent rounded-lg transition-all duration-300 ease-in-out hover:text-cyan-400 hover:bg-stone-700 active:opacity-80`}                
+                className={` ${isActive === navLink.link ? 'text-cyan-400' : "text-neutral-100"} flex p-2 text-center align-middle justify-center xl:inline min-w-fit xl:m-0 bg-stone-800 xl:bg-transparent rounded-lg transition-all duration-300 ease-in-out hover:text-cyan-400 hover:bg-stone-700 active:opacity-80`}                
                 to={navLink.link}
                 onClick={() => {
                   setIsMenuOpen(false);
-                  setIsActive(navLink.link);
                 }}
               >
                 {navLink.title}
