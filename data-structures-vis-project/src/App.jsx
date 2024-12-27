@@ -1,5 +1,5 @@
-import React from 'react';
-import { Routes, Route, Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import Home from './Pages/Home.jsx';
 import Navbar from './components/Navbar/Navbar.jsx';
 
@@ -15,10 +15,27 @@ import Play from './Pages/Play.jsx';
 import './App.css';
 
 const App = () => {
+  const location = useLocation();
 
+  const routeTitles = {
+    '/': 'RS:CS - Home',
+    '/stacks': 'RS:CS - Stacks',
+    '/queue': 'RS:CS - Queue',
+    '/binary-tree-traversal': 'RS:CS - Binary Tree Traversal',
+    '/binary-search-tree': 'RS:CS - Binary Search Tree',
+    '/tic-tac-toe': 'RS:CS - Tic Tac Toe',
+    '/towers-of-hanoi': 'RS:CS - Towers of Hanoi',
+    '/sorting': 'RS:CS - Sorting',
+    '/play': 'RS:CS - Play',
+  };
+
+  useEffect(() => {
+    const title = routeTitles[location.pathname];
+    document.title = title;
+  }, [location]);
 
   return (
-<div className="h-full w-full pt-[64px] text-[11px] 2xl:text-[14px] text-border"> {/* deprecate: -mb-16 */}      
+    <div className="h-full w-full pt-[64px] text-[11px] 2xl:text-[14px] text-border">
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
