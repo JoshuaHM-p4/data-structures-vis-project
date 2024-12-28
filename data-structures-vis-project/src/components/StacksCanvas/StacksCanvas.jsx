@@ -8,7 +8,7 @@ const StacksCanvas = ({ stack }) => {
   const canvasRef = useRef(null);
   const imagesRef = useRef({});
   const carsRef = useRef([]);
-  const carSize = 250;
+  const carSize = 150;
   const canvasWidthRef = useRef(0);
   const removingCarRef = useRef(null);
 
@@ -16,6 +16,10 @@ const StacksCanvas = ({ stack }) => {
   const { playSound } = useSound();
   const playHardHit = () => playSound(hardHit);
   const playSoftHit = () => playSound(softHit);
+
+  const updateCarX = () => {
+    return canvasWidthRef.current / 2 - carSize / 2;
+  }
 
   // Function for getting image paths
   const getImagePath = (type, color, isUtility) => {
@@ -63,7 +67,7 @@ const StacksCanvas = ({ stack }) => {
             color: car.color,
             isUtility: car.isUtility,
             image: null,
-            x: canvas.width / 2 - 125,
+            x: updateCarX(),
             y: 10 + index * 260, // Space out cars by 260 pixels
             dy: 1,
             hovered: false,
@@ -111,8 +115,8 @@ const StacksCanvas = ({ stack }) => {
     const fixedDeltaTime = 16; // Fixed time step in milliseconds (60 FPS)
     const energyThreshold = 1; // Threshold to stop the car
     let animationFrameId;
-    const groundCollisionBuffer = 200;
-    const carCollisionBuffer = 50;
+    const groundCollisionBuffer = carSize;
+    const carCollisionBuffer = carSize / 4;
     let mouse = { x: undefined, y: undefined };
 
     initializeCars(stack, canvas);
@@ -124,7 +128,7 @@ const StacksCanvas = ({ stack }) => {
         if (!car || !car.image) return car;
 
         // Update x position based on the current canvas width
-        car.x = canvasWidthRef.current / 2 - 125;
+        car.x = updateCarX();
 
         // Check if the removing car has reached the top
         if (removingCarRef.current) {
@@ -143,7 +147,7 @@ const StacksCanvas = ({ stack }) => {
 
           // Limit dy to a reasonable value for negative gravity
           const maxNegativeDy = -20; // Example value, adjust as needed
-          const minNegativeDy = 0 ; // Example value, adjust as needed
+          const minNegativeDy = 0; // Example value, adjust as needed
           car.dy = Math.max(Math.min(car.dy, minNegativeDy), maxNegativeDy);
         } else {
           // Limit dy to a reasonable value
@@ -231,7 +235,7 @@ const StacksCanvas = ({ stack }) => {
         if (car.hovered) {
           context.font = "18px Arial bold";
           context.fillStyle = 'white';
-          context.fillText(`${car.plateNumber}`, textPosition.x, textPosition.y);
+          context.fillText(`${car.x}`, textPosition.x, textPosition.y);
         }
 
         // Draw car image
@@ -239,6 +243,11 @@ const StacksCanvas = ({ stack }) => {
         context.imageSmoothingEnabled = false; // Disable image smoothing
         context.drawImage(image, car.x, car.y, carSize, carSize); // Center the image on the vehicle's position and make it bigger
         context.restore();
+
+        // Debugging Canvas
+        context.font = "18px Arial bold";
+        context.fillStyle = 'white';
+        context.fillText(`${canvas.width}`, 10, 20);
 
         // // Draw car boxes
         // context.beginPath();
