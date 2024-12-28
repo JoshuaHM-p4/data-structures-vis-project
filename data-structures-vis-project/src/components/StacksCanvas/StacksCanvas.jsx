@@ -128,7 +128,7 @@ const StacksCanvas = ({ stack }) => {
 
         // Check if the removing car has reached the top
         if (removingCarRef.current) {
-          if (removingCarRef.current.index === index && car && car.y <= 250) {
+          if (removingCarRef.current.index === index && car && car.y <= canvas.height / 3) {
             // filter out the car from the array
             carsRef.current.filter((_, i) => i !== removingCarRef.current.index);
             removingCarRef.current = null; // Stop removing car
@@ -212,7 +212,7 @@ const StacksCanvas = ({ stack }) => {
         const originalIndex = carsRef.current.length - 1 - index;
 
         // Temporarily hide cars above the removed car
-        if (removingCarRef.current && originalIndex < removingCarRef.current.index && car.y < 300) {
+        if (removingCarRef.current && originalIndex < removingCarRef.current.index && car.y <= canvas.height / 3) {
           return;
         }
 
