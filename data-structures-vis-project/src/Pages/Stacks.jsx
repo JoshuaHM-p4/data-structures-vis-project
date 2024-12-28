@@ -1,9 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import StackOverlay from '../components/StacksComponents/StackOverlay.jsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCarSide } from '@fortawesome/free-solid-svg-icons';
+import { faTableList } from '@fortawesome/free-solid-svg-icons';
 import Modal from '../components/StackQueueModal/Modal.jsx';
 import Tooltip from '../components/Tooltip/Tooltip.jsx';
+import StacksCanvas from '../components/StacksCanvas/StacksCanvas.jsx';
+import useSound from '../hooks/useSound.js';
+
+import carArrival from "../assets/sounds/car-arrival.mp3";
+import carRev1 from "../assets/sounds/car-rev-1.mp3";
+import carRev2 from "../assets/sounds/car-rev-2.mp3";
+import truckRun from "../assets/sounds/truck-run-1.mp3";
+
+import pingSound from "../assets/sounds/ping.wav";
+import resetSound from "../assets/sounds/move-up.wav";
+import errorSound from "../assets/sounds/damage.mp3";
+import successSound from "../assets/sounds/complete.wav";
 
 const Stacks = () => {
   const [stack, setStack] = useState([]);
@@ -13,17 +26,21 @@ const Stacks = () => {
   const [mode, setMode] = useState(''); // 'arrival' or 'departure'
   const [tempContainer, setTempContainer] = useState([]);
   const [pastCars, setPastCars] = useState([]); // Changed to an array to hold multiple past cars
+  const [isToolbarCollapsed, setIsToolbarCollapsed] = useState(true);
+  const { playSound } = useSound();
 
   // Add a car to the stack
   const addStack = (plateNumber) => {
     // Check if the stack is full
     if (stack.length >= 10) {
+      playSound(errorSound);
       alert('Garage is full!');
       return;
     }
 
     // Check if the plate number exists in the stack
     if (stack.some(car => car.plateNumber === plateNumber)) {
+      playSound(errorSound);
       alert('Car already exists!');
       return;
     }
@@ -38,19 +55,33 @@ const Stacks = () => {
       setIsModalOpen(false);
       // Remove the car from the past cars state
       setPastCars(pastCars.filter((_, index) => index !== pastCarIndex));
+      playSound(successSound);
+      playSound(carArrival);
       alert(pastCar.plateNumber + " has arrived again");
       return;
     }
+
+    const newType = typeClasses[Math.floor(Math.random() * typeClasses.length)]
+    const isUtility = newType === 'Ambulance' || newType === 'Taxi' || newType === 'Police';
 
     // Create a new car object
     const newCar = {
       plateNumber,
       color: colorGenerator(),
+      type: newType,
+      isUtility: isUtility,
       arrivalCount: 1,
       departureCount: 0
     };
 
-    console.log(newCar.plateNumber, "has arrived");
+    if (isUtility || newType.toLowerCase().includes('truck')) {
+      playSound(truckRun);
+    } else {
+      const randomRevSound = Math.random() >= 0.5 ? carRev1 : carRev2;
+      playSound(randomRevSound);
+    }
+
+    console.log(newCar);
 
     // Add the new car to the stack
     setStack([newCar, ...stack]);
@@ -59,22 +90,35 @@ const Stacks = () => {
     setIsModalOpen(false);
   };
 
+  // Function for getting image paths
+  const getImagePath = (type, color, isUtility) => {
+    if (isUtility) {
+      return `/vehicles/UTILITY/${type.toUpperCase()}.png`;
+    } else {
+      return `/vehicles/${type.toUpperCase()}/${color.toUpperCase()}.png`;
+    }
+  };
+
   // Remove a car from the stack
   const removeStack = (plateNumber) => {
+
     // Check if the stack is empty
     if (stack.length === 0) {
+      playSound(errorSound);
       alert('Garage is empty!');
       return;
     }
 
     // Check if the plate number exists in the stack
     if (plateNumber === '') {
+      playSound(errorSound);
       alert('Please enter a plate number!');
       return;
     }
 
     // Check if the plate number exists in the stack
     if (!stack.some(car => car.plateNumber === plateNumber)) {
+      playSound(errorSound);
       alert('Car not found!');
       return;
     }
@@ -92,6 +136,9 @@ const Stacks = () => {
         removedCar = currentCar;
         carFound = true;
         setPoppedItem(removedCar);
+        const randomRevSound = Math.random() >= 0.5 ? carRev1 : carRev2;
+        playSound(randomRevSound);
+        playSound(successSound);
         console.log(removedCar.plateNumber, "has been removed");
         break;
       } else {
@@ -117,11 +164,11 @@ const Stacks = () => {
 
     // Adding the removed car to the past car state
     setPastCars(prevPastCars => [removedCar, ...prevPastCars]);
-    console.log(pastCars);
   };
 
   // Clear the stack
   const clearStack = () => {
+    playSound(resetSound);
     setPoppedItem(null);
     setStack([]);
     setTempContainer([]);
@@ -129,19 +176,40 @@ const Stacks = () => {
   };
 
   // Color classes for the cars
-  const colorClasses = [
-    'text-red-800', 'text-blue-800', 'text-green-800', 'text-yellow-800',
-    'text-purple-800', 'text-pink-800', 'text-indigo-800', 'text-gray-800',
-    'text-black-800', 'text-white-800'
-  ];
+  const colorClasses = ['Black', 'Blue', 'Brown', 'Green', 'Magenta', 'Red', 'White', 'Yellow'];
+  const typeClasses = ['Ambulance', 'Taxi', 'Police', 'Bus', 'BoxTruck', 'Camper', 'Civic', 'Hatchback', 'Jeep', 'Limo', 'Luxury', 'MediumTruck', 'Micro', 'Minivan', 'Musclecar', 'Pickup', 'Sedan', 'Sport', 'Supercar', 'SUV', 'Van', 'Wagon']
 
   // Generate a random color class
   const colorGenerator = () => {
     return colorClasses[Math.floor(Math.random() * colorClasses.length)];
   };
 
+  const fasIconColorMap = (color) => {
+    switch (color) {
+      case 'Black':
+        return 'text-black';
+      case 'Blue':
+        return 'text-blue-500';
+      case 'Brown':
+        return 'text-yellow-800';
+      case 'Green':
+        return 'text-green-500';
+      case 'Magenta':
+        return 'text-pink-500';
+      case 'Red':
+        return 'text-red-500';
+      case 'White':
+        return 'text-white';
+      case 'Yellow':
+        return 'text-yellow-500';
+      default:
+        return 'text-gray-500';
+    }
+  };
+
   // Handle the arrival button click
   const handleArrivalClick = () => {
+    playSound(pingSound);
     if (stack.length >= 10) {
       alert('Garage is full! Cannot add more cars.');
       return;
@@ -153,11 +221,12 @@ const Stacks = () => {
 
   // Handle the departure button click
   const handleDepartureClick = () => {
+    playSound(pingSound);
     if (stack.length === 0) {
       alert('Garage is empty! Cannot remove any cars.');
       return;
     }
-    
+
     setMode('departure');
     setIsModalOpen(true);
   };
@@ -180,8 +249,8 @@ const Stacks = () => {
   };
 
   return (
-    <div className="w-full h-full pt-3">
-      <div className='flex gap-2 justify-center'>
+    <div className="w-full h-full">
+      <div className='flex gap-2 justify-center top-20 left-0 absolute w-full h-fit'>
         <button onClick={handleArrivalClick} className="nes-btn is-primary rounded">
           Arrival
         </button>
@@ -195,22 +264,33 @@ const Stacks = () => {
         </button>
       </div>
 
-      <div className='flex flex-col items-center justify-center mt-4'>
-        {stack.map((car, index) => (
-          <Tooltip key={index} 
-          text={`Plate number: ${car.plateNumber}`}
-          optionalText={`Arrival: ${car.arrivalCount} | Departure: ${car.departureCount}`}
-          position='right'>
-            <div className='p-2 inline-block text-center'>
-              <FontAwesomeIcon className={car.color} icon={faCarSide} flip="horizontal" size="xl" />
-              <br />
-              {car.plateNumber}
-            </div>
-          </Tooltip>
-        ))}
+      {stack &&
+        <button
+          onClick={() => setIsToolbarCollapsed(!isToolbarCollapsed)}
+          className="fixed top-20 left-5 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 active:opacity-80">
+          {isToolbarCollapsed ? <FontAwesomeIcon icon={faTableList} /> : 'Hide Map'}
+        </button>
+      }
+
+      <div className={`fixed w-fit min-w-32 top-32 left-0 h-full bg-transparent shadow-lg transition-transform ${isToolbarCollapsed ? '-translate-x-full' : 'translate-x-0'}`}>
+        <div className='flex flex-col pl-5 items-center justify-center mt-4 relative'>
+          {stack.map((car, index) => (
+            <Tooltip key={index}
+              text={`Plate number: ${car.plateNumber}`}
+              optionalText={`Arrival: ${car.arrivalCount} | Departure: ${car.departureCount}`}
+              position='right'>
+              <div className='p-2 inline-block text-center'>
+                <img src={getImagePath(car?.type, car?.color, car?.isUtility)} alt={car?.type} className='w-10 h-10 mx-auto p-[-5rem]' />
+                {car.plateNumber}
+              </div>
+            </Tooltip>
+          ))}
+        </div>
       </div>
 
-      {poppedItem && <StackOverlay car={poppedItem} />}
+      <StacksCanvas stack={stack} />
+
+      {poppedItem && <StackOverlay car={poppedItem} colorMap={fasIconColorMap} />}
 
       <Modal
         isModalOpen={isModalOpen}
@@ -220,7 +300,7 @@ const Stacks = () => {
         setPlateNumber={setPlateNumber}
         mode={mode}
         cars={stack}
-      />  
+      />
     </div>
   );
 };
