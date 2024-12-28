@@ -245,9 +245,9 @@ const StacksCanvas = ({ stack }) => {
         context.restore();
 
         // Debugging Canvas
-        context.font = "18px Arial bold";
-        context.fillStyle = 'white';
-        context.fillText(`${canvas.width}`, 10, 20);
+        // context.font = "18px Arial bold";
+        // context.fillStyle = 'white';
+        // context.fillText(`${canvas.plateNumber}`, 10, 20);
 
         // // Draw car boxes
         // context.beginPath();

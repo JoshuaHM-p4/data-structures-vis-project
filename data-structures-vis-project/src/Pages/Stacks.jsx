@@ -14,7 +14,7 @@ import carRev2 from "../assets/sounds/car-rev-2.mp3";
 import truckRun from "../assets/sounds/truck-run-1.mp3";
 
 import pingSound from "../assets/sounds/ping.wav";
-import resetSound from "../assets/sounds/move-up.wav";
+import resetSound from "../assets/sounds/thud.wav";
 import errorSound from "../assets/sounds/damage.mp3";
 import successSound from "../assets/sounds/complete.wav";
 
