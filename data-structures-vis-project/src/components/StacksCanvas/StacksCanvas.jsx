@@ -132,7 +132,7 @@ const StacksCanvas = ({ stack }) => {
 
         // Check if the removing car has reached the top
         if (removingCarRef.current) {
-          if (removingCarRef.current.index === index && car && car.y <= canvas.height / 3) {
+          if (removingCarRef.current.index === index && car && car.y <= canvas.height / 5) {
             // filter out the car from the array
             carsRef.current.filter((_, i) => i !== removingCarRef.current.index);
             removingCarRef.current = null; // Stop removing car
@@ -216,7 +216,7 @@ const StacksCanvas = ({ stack }) => {
         const originalIndex = carsRef.current.length - 1 - index;
 
         // Temporarily hide cars above the removed car
-        if (removingCarRef.current && originalIndex < removingCarRef.current.index && car.y <= canvas.height / 3) {
+        if (removingCarRef.current && originalIndex < removingCarRef.current.index && car.y <= canvas.height / 5) {
           return;
         }
 
@@ -235,7 +235,7 @@ const StacksCanvas = ({ stack }) => {
         if (car.hovered) {
           context.font = "18px Arial bold";
           context.fillStyle = 'white';
-          context.fillText(`${car.x}`, textPosition.x, textPosition.y);
+          context.fillText(`${car.y}`, textPosition.x, textPosition.y);
         }
 
         // Draw car image
@@ -245,9 +245,9 @@ const StacksCanvas = ({ stack }) => {
         context.restore();
 
         // Debugging Canvas
-        // context.font = "18px Arial bold";
-        // context.fillStyle = 'white';
-        // context.fillText(`${canvas.plateNumber}`, 10, 20);
+        context.font = "18px Arial bold";
+        context.fillStyle = 'white';
+        context.fillText(`${canvas.height}`, 10, 20);
 
         // // Draw car boxes
         // context.beginPath();
