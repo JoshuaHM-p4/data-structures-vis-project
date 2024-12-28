@@ -37,7 +37,7 @@ const Carousel = ({ items }) => {
         onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
       >
         {items.map((item, index) => (
-          <SwiperSlide key={index} className="w-64 h-96 flex items-center justify-center bg-gray-500 text-white font-bold text-lg rounded-lg shadow-md hover:scale-105 transition-transform duration-300">
+          <SwiperSlide key={index} className="w-64 h-96 nes-pointer flex items-center justify-center bg-gray-500 text-white font-bold text-lg rounded-lg shadow-md hover:scale-105 transition-transform duration-300">
             {index === activeIndex ? (
               <Link to={item.Link} className="w-full h-full flex items-center justify-center">
                 <Tooltip text={item.description}>
@@ -47,14 +47,7 @@ const Carousel = ({ items }) => {
                 </Tooltip>
               </Link>
             ) : (
-              <div className="w-full h-full flex items-center justify-center">
-                
-                <Tooltip text={item.description}>
-                  <div className="w-full h-full flex items-center justify-center">
-                    {item.title}
-                  </div>
-                </Tooltip>
-              </div>
+              item.title
             )}
           </SwiperSlide>
         ))}
