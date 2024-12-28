@@ -11,6 +11,7 @@ import TicTacToe from './Pages/TicTacToe.jsx';
 import TowerOfHanoi from './Pages/TowerOfHanoi.jsx';
 import Sorting from './Pages/Sorting.jsx';
 import Play from './Pages/Play.jsx';
+import About from './Pages/About.jsx';
 
 import './App.css';
 
@@ -26,6 +27,7 @@ const App = () => {
     '/tic-tac-toe': 'RS:CS - Tic Tac Toe',
     '/towers-of-hanoi': 'RS:CS - Towers of Hanoi',
     '/sorting': 'RS:CS - Sorting',
+    '/about': 'RS:CS - About',
     '/play': 'RS:CS - Play',
   };
 
@@ -46,6 +48,7 @@ const App = () => {
         <Route path="/tic-tac-toe" element={<TicTacToe />} />
         <Route path="/towers-of-hanoi" element={<TowerOfHanoi />} />
         <Route path="/sorting" element={<Sorting />} />
+        <Route path="/about" element={<About />} />
         <Route path="/play" element={<Play />} />
       </Routes>
     </div>
