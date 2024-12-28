@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBurger, faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
+import { faBurger, faAngleDown, faAngleUp, faHome, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { Link, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
@@ -33,17 +33,36 @@ const Navbar = () => {
     <nav className="fixed w-full h-[64px] bg-stone-900 z-50 top-0 p-5 text-white shadow-md border-b">
       <div className="flex items-center justify-between h-full">
         {/* Logo */}
-        <Link to="/" onClick={() => setIsMenuOpen(false)}>
+        <Link to="/" 
+        onClick={() => {
+          setIsMenuOpen(false)
+          setIsDropdownOpen(false)
+          setCurrentGame('')
+        }}>
           <h1 className="text-neutral">MyApp.dev</h1>
         </Link>
+
+        {/* Smaller Screens */}
+        <div className="sm:hidden flex gap-5 items-center">  
+        {/* Home Icon */}
+        <Link to="/" className="sm:hidden">
+          <FontAwesomeIcon icon={faHome} size="lg" />
+        </Link>
+
+        {/* About Icon */}
+        <Link to="/about" className="sm:hidden">
+          <FontAwesomeIcon icon={faInfoCircle} size="lg" />
+        </Link>
+
         {/* Hamburger Icon */}
         <div className="sm:hidden">
           <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="focus:outline-none">
             <FontAwesomeIcon icon={faBurger} size="xl" />
           </button>
         </div>
+        </div>
         {/* Menu Links */}
-        <ul className={`${isMenuOpen ? 'flex flex-col' : 'hidden'} fixed sm:static top-16 left-0 right w-full sm:flex sm:flex-row sm:w-auto gap-2 bg-stone-900 sm:bg-transparent p-5 rounded-br-xl rounded-bl-xl sm:p-0 transition-all duration-300 ease-in-out`}>
+        <ul className= 'fixed sm:static top-16 left-0 right w-full sm:flex sm:flex-row sm:w-auto gap-2 bg-stone-900 sm:bg-transparent p-5 rounded-br-xl rounded-bl-xl sm:p-0 transition-all duration-300 ease-in-out' >
           {navLinks.map((navLink, index) => (
             <li key={index}>
               <Link
