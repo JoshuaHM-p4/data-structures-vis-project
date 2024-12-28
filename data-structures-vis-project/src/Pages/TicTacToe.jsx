@@ -42,7 +42,6 @@ const TicTacToe = () => {
     return board.every((cell) => cell !== null) ? "Draw" : null; // Return "Draw" if all cells are filled, otherwise null
   };
 
-
   // Handle cell click
   const handleCellClick = (index) => {
     if (board[index] || gameStatus.includes("wins")) return; // Ignore click if cell is already filled or game is over
@@ -80,19 +79,25 @@ const TicTacToe = () => {
     playSound(resetSound);
   };
 
-
   return (
-    <div className="flex flex-col items-center justify-evenly h-full relative">
+    <div className="flex flex-col items-center justify-evenly h-full ">
       <h1 className="text-3xl font-bold">Tic Tac Toe</h1>
       <div className="text-lg">{gameStatus}</div>
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-3 ">
         {board.map((cell, index) => (
           <button
             key={index}
-            className={`w-20 h-20 flex items-center justify-center text-2xl font-bold border border-gray-300 rounded shadow hover:bg-gray-200 hover:text-black active:opacity-90 ${
+            className={`nes-pointer w-24 h-24 flex items-center text-center justify-center text-4xl font-["Gluten"] hover:bg-gray-200 hover:text-black active:opacity-90 focus:outline-none   
+            ${
               Array.isArray(winningCombo) && winningCombo.includes(index)
               ? "bg-red-600 text-black hover:bg-red-800 hover:text-white"
               : "bg-black"
+            } ${
+              index === 1 ? "border-r-4 border-l-4" :
+              index === 3 ? "border-y-4" :
+              index === 4 ? "border-4" :
+              index === 5 ? "border-t-4 border-b-4" :
+              index === 7 ? "border-x-4" : ""
             }`}
             onClick={() => handleCellClick(index)}
           >
@@ -101,7 +106,7 @@ const TicTacToe = () => {
         ))}
       </div>
       <button
-        className="px-4 py-2 bg-blue-500 text-white font-semibold rounded shadow hover:bg-blue-600 active:opacity-80"
+        className="nes-btn is-primary mt-4"
         onClick={restartGame}
       >
         Restart Game
