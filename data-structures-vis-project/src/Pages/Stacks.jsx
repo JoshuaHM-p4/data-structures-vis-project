@@ -6,6 +6,17 @@ import { faTableList } from '@fortawesome/free-solid-svg-icons';
 import Modal from '../components/StackQueueModal/Modal.jsx';
 import Tooltip from '../components/Tooltip/Tooltip.jsx';
 import StacksCanvas from '../components/StacksCanvas/StacksCanvas.jsx';
+import useSound from '../hooks/useSound.js';
+
+import carArrival from "../assets/sounds/car-arrival.mp3";
+import carRev1 from "../assets/sounds/car-rev-1.mp3";
+import carRev2 from "../assets/sounds/car-rev-2.mp3";
+import truckRun from "../assets/sounds/truck-run-1.mp3";
+
+import pingSound from "../assets/sounds/ping.wav";
+import resetSound from "../assets/sounds/move-up.wav";
+import errorSound from "../assets/sounds/damage.mp3";
+import successSound from "../assets/sounds/complete.wav";
 
 const Stacks = () => {
   const [stack, setStack] = useState([]);
@@ -16,17 +27,20 @@ const Stacks = () => {
   const [tempContainer, setTempContainer] = useState([]);
   const [pastCars, setPastCars] = useState([]); // Changed to an array to hold multiple past cars
   const [isToolbarCollapsed, setIsToolbarCollapsed] = useState(true);
+  const { playSound } = useSound();
 
   // Add a car to the stack
   const addStack = (plateNumber) => {
     // Check if the stack is full
     if (stack.length >= 10) {
+      playSound(errorSound);
       alert('Garage is full!');
       return;
     }
 
     // Check if the plate number exists in the stack
     if (stack.some(car => car.plateNumber === plateNumber)) {
+      playSound(errorSound);
       alert('Car already exists!');
       return;
     }
@@ -41,6 +55,8 @@ const Stacks = () => {
       setIsModalOpen(false);
       // Remove the car from the past cars state
       setPastCars(pastCars.filter((_, index) => index !== pastCarIndex));
+      playSound(successSound);
+      playSound(carArrival);
       alert(pastCar.plateNumber + " has arrived again");
       return;
     }
@@ -57,6 +73,13 @@ const Stacks = () => {
       arrivalCount: 1,
       departureCount: 0
     };
+
+    if (isUtility || newType.toLowerCase().includes('truck')) {
+      playSound(truckRun);
+    } else {
+      const randomRevSound = Math.random() >= 0.5 ? carRev1 : carRev2;
+      playSound(randomRevSound);
+    }
 
     console.log(newCar);
 
@@ -78,20 +101,24 @@ const Stacks = () => {
 
   // Remove a car from the stack
   const removeStack = (plateNumber) => {
+
     // Check if the stack is empty
     if (stack.length === 0) {
+      playSound(errorSound);
       alert('Garage is empty!');
       return;
     }
 
     // Check if the plate number exists in the stack
     if (plateNumber === '') {
+      playSound(errorSound);
       alert('Please enter a plate number!');
       return;
     }
 
     // Check if the plate number exists in the stack
     if (!stack.some(car => car.plateNumber === plateNumber)) {
+      playSound(errorSound);
       alert('Car not found!');
       return;
     }
@@ -109,6 +136,9 @@ const Stacks = () => {
         removedCar = currentCar;
         carFound = true;
         setPoppedItem(removedCar);
+        const randomRevSound = Math.random() >= 0.5 ? carRev1 : carRev2;
+        playSound(randomRevSound);
+        playSound(successSound);
         console.log(removedCar.plateNumber, "has been removed");
         break;
       } else {
@@ -138,6 +168,7 @@ const Stacks = () => {
 
   // Clear the stack
   const clearStack = () => {
+    playSound(resetSound);
     setPoppedItem(null);
     setStack([]);
     setTempContainer([]);
@@ -178,6 +209,7 @@ const Stacks = () => {
 
   // Handle the arrival button click
   const handleArrivalClick = () => {
+    playSound(pingSound);
     if (stack.length >= 10) {
       alert('Garage is full! Cannot add more cars.');
       return;
@@ -189,6 +221,7 @@ const Stacks = () => {
 
   // Handle the departure button click
   const handleDepartureClick = () => {
+    playSound(pingSound);
     if (stack.length === 0) {
       alert('Garage is empty! Cannot remove any cars.');
       return;

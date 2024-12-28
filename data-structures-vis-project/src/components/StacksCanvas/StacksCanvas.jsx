@@ -1,4 +1,8 @@
 import { useRef, useEffect } from 'react';
+import useSound from "../../hooks/useSound.js";
+
+import hardHit from '../../assets/sounds/hard-hit.wav';
+import softHit from '../../assets/sounds/soft-hit.wav';
 
 const StacksCanvas = ({ stack }) => {
   const canvasRef = useRef(null);
@@ -7,6 +11,11 @@ const StacksCanvas = ({ stack }) => {
   const carSize = 250;
   const canvasWidthRef = useRef(0);
   const removingCarRef = useRef(null);
+
+  // Sound effects
+  const { playSound } = useSound();
+  const playHardHit = () => playSound(hardHit);
+  const playSoftHit = () => playSound(softHit);
 
   // Function for getting image paths
   const getImagePath = (type, color, isUtility) => {
@@ -58,7 +67,8 @@ const StacksCanvas = ({ stack }) => {
             y: 10 + index * 260, // Space out cars by 260 pixels
             dy: 1,
             hovered: false,
-            removing: false
+            removing: false,
+            hasCollided: false // Add hasCollided property
           };
         }
       });
@@ -147,6 +157,10 @@ const StacksCanvas = ({ stack }) => {
         // Ensure y position doesn't go beyond the canvas height
         if (newY + groundCollisionBuffer > canvas.height) {
           newY = canvas.height - groundCollisionBuffer;
+          if (!car.hasCollided && Math.abs(car.dy) > 5) { // Check velocity threshold
+            playHardHit(); // Play hard hit sound on ground collision
+            car.hasCollided = true; // Mark the car as having collided
+          }
           car.dy = -car.dy * friction; // Reverse direction and apply damping from friction
           if (Math.abs(car.dy) < energyThreshold) {
             car.dy = 0; // Stop the car if energy is below the threshold
@@ -155,15 +169,19 @@ const StacksCanvas = ({ stack }) => {
           // ensure y position doesnt go below 0
           newY = 0;
           car.dy = 0;
-        }
-        else {
+        } else {
           car.dy += gravity;
+          car.hasCollided = false; // Reset collision status when in the air
         }
 
         // Check for collision with other cars
         carsRef.current.forEach((otherCar, otherIndex) => {
           if (index !== otherIndex && newY + carCollisionBuffer > otherCar.y && car.y < otherCar.y) {
             newY = otherCar.y - carCollisionBuffer;
+            if (!car.hasCollided && Math.abs(car.dy) > 5) { // Check velocity threshold
+              playSoftHit(); // Play soft hit sound on car collision
+              car.hasCollided = true; // Mark the car as having collided
+            }
             car.dy = -car.dy * friction; // Reverse direction and apply damping from friction
             if (Math.abs(car.dy) < energyThreshold) {
               car.dy = 0; // Stop the car if energy is below the threshold
