@@ -5,6 +5,7 @@ const StacksCanvas = ({ stack }) => {
   const imagesRef = useRef({});
   const carsRef = useRef([]);
   const carSize = 250;
+  const canvasWidthRef = useRef(0);
 
   // Function for getting image paths
   const getImagePath = (type, color, isUtility) => {
@@ -83,23 +84,14 @@ const StacksCanvas = ({ stack }) => {
 
     initializeCars(stack, canvas);
 
-    // Canvas Resize
-    const resizeCanvas = () => {
-      canvas.width = canvas.parentElement.clientWidth;
-      canvas.height = canvas.parentElement.clientHeight;
-    };
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-    window.addEventListener('mousemove', (event) => {
-      mouse.x = event.x;
-      mouse.y = event.y;
-    });
-
     // Update Car Position
     const update = () => {
       carsRef.current = carsRef.current.map((car, index) => {
         // Skip updating if the image is not loaded
         if (!car.image) return car;
+
+        // Update x position based on the current canvas width
+        car.x = canvasWidthRef.current / 2 - 125;
 
         // Limit dy to a reasonable value
         const maxDy = 10;
@@ -186,6 +178,22 @@ const StacksCanvas = ({ stack }) => {
         // context.stroke();
       });
     };
+
+    // Canvas Resize
+    const resizeCanvas = () => {
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
+
+      // Store the canvas width in the ref
+      canvasWidthRef.current = canvas.width;
+    };
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('mousemove', (event) => {
+      mouse.x = event.x;
+      mouse.y = event.y;
+    });
+
 
     const render = (currentTime) => {
       const deltaTime = currentTime - lastUpdateTime;
