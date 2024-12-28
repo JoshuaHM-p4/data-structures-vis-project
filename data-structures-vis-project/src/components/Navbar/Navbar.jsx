@@ -37,6 +37,7 @@ const Navbar = () => {
           onClick={() => {
             setIsDropdownOpen(false);
             setCurrentGame('');
+            setIsActive('/');
           }}
         >
           <h1 className="text-neutral-50 hover:text-cyan-400">MyApp.dev</h1>
@@ -45,12 +46,26 @@ const Navbar = () => {
         {/* Smaller Screens */}
         <div className="sm:hidden flex gap-7 items-center">
           {/* Home Icon */}
-          <Link to="/" className="sm:hidden text-neutral-100 hover:text-cyan-400">
+          <Link 
+            to="/" 
+            className={`sm:hidden ${isActive === '/' ? 'text-cyan-400' : 'text-neutral-100'} hover:text-cyan-400`}
+            onClick={() => {
+              setIsDropdownOpen(false);
+              setCurrentGame('');
+            }}
+          >
             <FontAwesomeIcon icon={faHome} size="lg" />
           </Link>
 
           {/* About Icon */}
-          <Link to="/about" className="sm:hidden text-neutral-100 hover:text-cyan-400">
+          <Link 
+            to="/about" 
+            className={`sm:hidden ${isActive === '/about' ? 'text-cyan-400' : 'text-neutral-100'} hover:text-cyan-400`}
+            onClick={() => {
+              setIsDropdownOpen(false);
+              setCurrentGame('');
+            }}
+          >
             <FontAwesomeIcon icon={faInfoCircle} size="lg" />
           </Link>
 
