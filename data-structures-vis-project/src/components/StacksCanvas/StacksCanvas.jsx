@@ -6,6 +6,7 @@ const StacksCanvas = ({ stack }) => {
   const carsRef = useRef([]);
   const carSize = 250;
   const canvasWidthRef = useRef(0);
+  const removingCarRef = useRef(null);
 
   // Function for getting image paths
   const getImagePath = (type, color, isUtility) => {
@@ -24,11 +25,25 @@ const StacksCanvas = ({ stack }) => {
         return;
       }
 
+      // Get existing cars from current state of the canvas
       const existingCars = carsRef.current.reduce((acc, car) => {
         acc[car.plateNumber] = car;
         return acc;
       }, {});
 
+      // Detect car removal
+      if (stack.length < carsRef.current.length) {
+        const removedCarIndex = Object.keys(existingCars).findIndex(plateNumber => !stack.some(s => s.plateNumber === plateNumber));
+        if (removedCarIndex !== -1) {
+          removingCarRef.current = { index: removedCarIndex };
+          carsRef.current[removedCarIndex].removing = true; // Mark the car as removing
+          carsRef.current[removedCarIndex].originalIndex = removedCarIndex; // Store original index
+        }
+      }
+
+      console.log(removingCarRef.current);
+
+      // Map new cars to the canvas
       const newCars = stack.map((car, index) => {
         if (existingCars[car.plateNumber]) {
           return existingCars[car.plateNumber];
@@ -42,12 +57,19 @@ const StacksCanvas = ({ stack }) => {
             x: canvas.width / 2 - 125,
             y: 10 + index * 260, // Space out cars by 260 pixels
             dy: 1,
-            hovered: false
+            hovered: false,
+            removing: false
           };
         }
       });
 
-      carsRef.current = newCars;
+      // Add the cars that are being removed back to the array
+      const removingCars = carsRef.current.filter(car => car.removing);
+      carsRef.current = [...newCars];
+
+      removingCars.forEach(car => {
+        carsRef.current.splice(car.originalIndex, 0, car);
+      });
 
       // Load Image Function
       const loadImage = (path, callback) => {
@@ -69,9 +91,10 @@ const StacksCanvas = ({ stack }) => {
       });
     };
 
+
     const canvas = canvasRef.current;
     const gravity = 0.5;
-    const friction = 0.5;
+    const friction = 0.35;
     const context = canvas.getContext('2d');
     let lastUpdateTime = 0;
     const controlSpeedMultiplier = 0.1;
@@ -87,15 +110,36 @@ const StacksCanvas = ({ stack }) => {
     // Update Car Position
     const update = () => {
       carsRef.current = carsRef.current.map((car, index) => {
-        // Skip updating if the image is not loaded
-        if (!car.image) return car;
+        // Skip updating if the car is undefined or the image is not loaded
+        if (!car || !car.image) return car;
 
         // Update x position based on the current canvas width
         car.x = canvasWidthRef.current / 2 - 125;
 
-        // Limit dy to a reasonable value
-        const maxDy = 10;
-        car.dy = Math.min(Math.max(car.dy, -maxDy), maxDy);
+        // Check if the removing car has reached the top
+        if (removingCarRef.current) {
+          if (removingCarRef.current.index === index && car && car.y <= 250) {
+            // filter out the car from the array
+            carsRef.current.filter((_, i) => i !== removingCarRef.current.index);
+            removingCarRef.current = null; // Stop removing car
+            return null; // Return null to remove the car from the array
+          }
+        }
+
+        // Apply different physics if a car is being removed
+        if (car.removing || (removingCarRef.current && index < removingCarRef.current.index)) {
+          // Apply faster negative gravity
+          car.dy = -Math.abs(car.dy) * 2.1;
+
+          // Limit dy to a reasonable value for negative gravity
+          const maxNegativeDy = -20; // Example value, adjust as needed
+          const minNegativeDy = 0 ; // Example value, adjust as needed
+          car.dy = Math.max(Math.min(car.dy, minNegativeDy), maxNegativeDy);
+        } else {
+          // Limit dy to a reasonable value
+          const maxDy = 20;
+          car.dy = Math.min(Math.max(car.dy, -maxDy), maxDy);
+        }
 
         // Update y position
         let newY = car.y + car.dy * fixedDeltaTime * controlSpeedMultiplier;
@@ -107,7 +151,12 @@ const StacksCanvas = ({ stack }) => {
           if (Math.abs(car.dy) < energyThreshold) {
             car.dy = 0; // Stop the car if energy is below the threshold
           }
-        } else {
+        } else if (newY < 0) {
+          // ensure y position doesnt go below 0
+          newY = 0;
+          car.dy = 0;
+        }
+        else {
           car.dy += gravity;
         }
 
@@ -130,7 +179,7 @@ const StacksCanvas = ({ stack }) => {
           ...car,
           y: newY,
         };
-      });
+      }).filter(car => car !== null); // Filter out removed cars
     };
 
     // Car Draw
@@ -138,9 +187,16 @@ const StacksCanvas = ({ stack }) => {
       context.clearRect(0, 0, canvas.width, canvas.height);
 
       // Reverse the order of cars array and then render
-      [...carsRef.current].reverse().forEach((car) => {
+      [...carsRef.current].reverse().forEach((car, index) => {
         const image = imagesRef.current[car.plateNumber];
         if (!image) return; // Ensure images are loaded
+
+        const originalIndex = carsRef.current.length - 1 - index;
+
+        // Temporarily hide cars above the removed car
+        if (removingCarRef.current && originalIndex < removingCarRef.current.index && car.y < 300) {
+          return;
+        }
 
         let textPosition = { x: car.x + 10 + carSize, y: car.y + carSize / 2 + 25 };
 
@@ -157,7 +213,7 @@ const StacksCanvas = ({ stack }) => {
         if (car.hovered) {
           context.font = "18px Arial bold";
           context.fillStyle = 'white';
-          context.fillText(car.plateNumber, textPosition.x, textPosition.y);
+          context.fillText(`${car.plateNumber}`, textPosition.x, textPosition.y);
         }
 
         // Draw car image
@@ -193,7 +249,6 @@ const StacksCanvas = ({ stack }) => {
       mouse.x = event.x;
       mouse.y = event.y;
     });
-
 
     const render = (currentTime) => {
       const deltaTime = currentTime - lastUpdateTime;
