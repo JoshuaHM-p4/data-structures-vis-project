@@ -235,7 +235,7 @@ const StacksCanvas = ({ stack }) => {
         if (car.hovered) {
           context.font = "18px Arial bold";
           context.fillStyle = 'white';
-          context.fillText(`${car.y}`, textPosition.x, textPosition.y);
+          context.fillText(`${car.plateNumber}`, textPosition.x, textPosition.y);
         }
 
         // Draw car image
@@ -245,9 +245,9 @@ const StacksCanvas = ({ stack }) => {
         context.restore();
 
         // Debugging Canvas
-        context.font = "18px Arial bold";
-        context.fillStyle = 'white';
-        context.fillText(`${canvas.height}`, 10, 20);
+        // context.font = "18px Arial bold";
+        // context.fillStyle = 'white';
+        // context.fillText(`${canvas.height}`, 10, 20);
 
         // // Draw car boxes
         // context.beginPath();
