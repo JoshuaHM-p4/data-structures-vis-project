@@ -9,10 +9,6 @@ const Navbar = () => {
   const [isActive, setIsActive] = useState(location.pathname);
   const [currentGame, setCurrentGame] = useState('');
 
-  useEffect(() => {
-    setIsActive(location.pathname);
-  }, [location]);
-
   const navLinks = [
     { link: '/', title: 'Home' },
     { link: '/about', title: 'About' },
@@ -27,6 +23,16 @@ const Navbar = () => {
     { link: '/towers-of-hanoi', title: 'Towers of Hanoi' },
     { link: '/sorting', title: 'Sorting' },
   ];
+
+  useEffect(() => {
+    setIsActive(location.pathname);
+    const currentGameLink = gameLinks.find(game => game.link === location.pathname);
+    if (currentGameLink) {
+      setCurrentGame(currentGameLink.title);
+    } else {
+      setCurrentGame('');
+    }
+  }, [location]);
 
   return (
     <nav className="fixed w-full h-[64px] bg-stone-900 z-50 top-0 p-5 text-white shadow-md border-b">
@@ -52,6 +58,7 @@ const Navbar = () => {
             onClick={() => {
               setIsDropdownOpen(false);
               setCurrentGame('');
+              setIsActive('/');
             }}
           >
             <FontAwesomeIcon icon={faHome} size="lg" />
@@ -64,6 +71,7 @@ const Navbar = () => {
             onClick={() => {
               setIsDropdownOpen(false);
               setCurrentGame('');
+              setIsActive('/about');
             }}
           >
             <FontAwesomeIcon icon={faInfoCircle} size="lg" />
@@ -83,6 +91,7 @@ const Navbar = () => {
                   onClick={() => {
                     setIsDropdownOpen(false);
                     setCurrentGame(gameLink.title);
+                    setIsActive(gameLink.link);
                   }}
                 >
                   {gameLink.title}
@@ -102,6 +111,7 @@ const Navbar = () => {
                 onClick={() => {
                   setIsDropdownOpen(false);
                   setCurrentGame('');
+                  setIsActive(navLink.link);
                 }}
               >
                 {navLink.title}
@@ -130,6 +140,7 @@ const Navbar = () => {
                     onClick={() => {
                       setIsDropdownOpen(false);
                       setCurrentGame(gameLink.title);
+                      setIsActive(gameLink.link);
                     }}
                   >
                     {gameLink.title}
