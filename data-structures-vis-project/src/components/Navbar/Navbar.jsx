@@ -9,7 +9,8 @@ const Navbar = () => {
   const location = useLocation();
   const [isActive, setIsActive] = useState(location.pathname);
   const [currentGame, setCurrentGame] = useState('');
-  let dropdownRef = useRef();
+  const dropdownRef = useRef();
+  const gamesRef = useRef();
 
   const navLinks = [
     { link: '/', title: 'Home' },
@@ -37,17 +38,23 @@ const Navbar = () => {
   }, [location]);
 
   useEffect(() => {
-    let handler = (e) => {
-      if (!dropdownRef.current.contains(e.target)) {
-        setIsDropdownOpen(false);
-        console.log('clicked outside');
+    const handleClickOutside = (event) => {
+      if (
+        dropdownRef.current && 
+        !dropdownRef.current.contains(event.target) &&
+        gamesRef.current &&
+        !gamesRef.current.contains(event.target) // Ensure gamesRef is not clicked
+      ) {
+        setIsDropdownOpen(false); // Close dropdown
       }
-    }
-    document.addEventListener('mousedown', handler);
+    };
+  
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handler);
-    }
-  });
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [dropdownRef, gamesRef]); // Correct dependencies
+  
 
   return (
     <nav className="fixed w-full h-[64px] bg-stone-900 z-50 top-0 p-5 text-white shadow-md border-b">
@@ -127,8 +134,12 @@ const Navbar = () => {
           ))}
           <li className="relative">
             <span
+              ref={gamesRef}
               className={`flex items-center p-2 text-center align-middle justify-center sm:inline min-w-fit sm:m-0 bg-stone-800 sm:bg-transparent rounded-lg transition-all duration-300 ease-in-out hover:text-cyan-400 hover:bg-stone-700 active:opacity-80 cursor-pointer ${currentGame ? 'text-cyan-400' : 'text-neutral-100'}`}
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              onClick={(event) => {
+                event.stopPropagation();
+                setIsDropdownOpen((prev) => !prev);
+              }}
             >
               {currentGame ? currentGame : 'Games'}
               {isDropdownOpen ? (
