@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBurger, faAngleDown, faAngleUp, faHome, faInfoCircle, faGamepad } from '@fortawesome/free-solid-svg-icons';
 import { Link, useLocation } from 'react-router-dom';
+import DropdownMenu from './DropdownMenu.jsx';
 
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -82,23 +83,14 @@ const Navbar = () => {
             <FontAwesomeIcon icon={faGamepad} size="xl" />
           </button>
 
-          <ul className={` ${isDropdownOpen ? 'flex flex-col' : 'hidden'} fixed top-16 left-0 right w-full gap-2 bg-stone-900 px-5 py-5 rounded-br-xl rounded-bl-xl transition-all duration-300 ease-in-out`}>
-            {gameLinks.map((gameLink, index) => (
-              <li key={index}>
-                <Link
-                  className={` ${isActive === gameLink.link ? 'text-cyan-400' : 'text-neutral-100'} block px-4 py-2 text-center align-middle justify-center bg-stone-800 rounded-lg transition-all duration-300 ease-in-out hover:text-cyan-400 hover:bg-stone-700 active:opacity-80`}
-                  to={gameLink.link}
-                  onClick={() => {
-                    setIsDropdownOpen(false);
-                    setCurrentGame(gameLink.title);
-                    setIsActive(gameLink.link);
-                  }}
-                >
-                  {gameLink.title}
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <DropdownMenu
+            isDropdownOpen={isDropdownOpen}
+            gameLinks={gameLinks}
+            isActive={isActive}
+            setIsDropdownOpen={setIsDropdownOpen}
+            setCurrentGame={setCurrentGame}
+            setIsActive={setIsActive}
+          />
         </div>
 
         {/* Menu Links */}
@@ -131,23 +123,14 @@ const Navbar = () => {
               )}
             </span>
 
-            <ul className={` ${isDropdownOpen ? 'flex flex-col' : 'hidden'} sm:absolute sm:w-56 sm:bg-stone-900 sm:rounded-lg sm:shadow-lg fixed top-11 -right-5 gap-2 bg-stone-900 px-5 py-5 rounded-br-xl rounded-bl-xl transition-all duration-300 ease-in-out`}>
-              {gameLinks.map((gameLink, index) => (
-                <li key={index}>
-                  <Link
-                    className={` ${isActive === gameLink.link ? 'text-cyan-400' : 'text-neutral-100'} block px-4 py-2 text-center align-middle justify-center bg-stone-800 rounded-lg transition-all duration-300 ease-in-out hover:text-cyan-400 hover:bg-stone-700 active:opacity-80`}
-                    to={gameLink.link}
-                    onClick={() => {
-                      setIsDropdownOpen(false);
-                      setCurrentGame(gameLink.title);
-                      setIsActive(gameLink.link);
-                    }}
-                  >
-                    {gameLink.title}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <DropdownMenu
+              isDropdownOpen={isDropdownOpen}
+              gameLinks={gameLinks}
+              isActive={isActive}
+              setIsDropdownOpen={setIsDropdownOpen}
+              setCurrentGame={setCurrentGame}
+              setIsActive={setIsActive}
+            />
           </li>
         </ul>
       </div>
