@@ -135,8 +135,8 @@ const Navbar = () => {
           <li className="relative">
             <span
               ref={gamesRef}
-              className={`flex items-center p-2 text-center align-middle justify-center sm:inline min-w-fit sm:m-0 bg-stone-800 sm:bg-transparent rounded-lg transition-all duration-300 ease-in-out hover:text-cyan-400 hover:bg-stone-700 active:opacity-80 cursor-pointer ${currentGame ? 'text-cyan-400' : 'text-neutral-100'}`}
-              onClick={(event) => {
+              className={`flex items-center p-2 text-center align-middle justify-center sm:inline min-w-fit sm:m-0 bg-stone-800 sm:bg-transparent rounded-lg transition-all duration-300 ease-in-out hover:text-cyan-400 hover:bg-stone-700 active:opacity-80 nes-pointer ${currentGame ? 'text-cyan-400' : 'text-neutral-100'}`}
+              onClick={() => {
                 event.stopPropagation();
                 setIsDropdownOpen((prev) => !prev);
               }}
