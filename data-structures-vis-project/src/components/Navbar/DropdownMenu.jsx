@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom';
 
-const DropdownMenu = ({ isDropdownOpen, gameLinks, isActive, setIsDropdownOpen, setCurrentGame, setIsActive }) => {
+const DropdownMenu = ({ isDropdownOpen, gameLinks, isActive, setIsDropdownOpen, setCurrentGame, setIsActive, dropdownRef }) => {
   return (
-    <ul className={` ${isDropdownOpen ? 'flex flex-col' : 'hidden'} fixed sm:absolute top-16 sm:top-11 left-0 sm:left-auto right sm:-right-5 w-full sm:w-56 gap-2 bg-stone-900 p-5 rounded-br-xl rounded-bl-xl transition-all duration-300 ease-in-out`}>
+    <ul className={` ${isDropdownOpen ? 'flex flex-col' : 'hidden'} fixed sm:absolute top-16 sm:top-11 left-0 sm:left-auto right sm:-right-5 w-full sm:w-56 gap-2 bg-stone-900 p-5 rounded-br-xl rounded-bl-xl transition-all duration-300 ease-in-out`}
+      ref={dropdownRef}
+    >
       {gameLinks.map((gameLink, index) => (
         <li key={index}>
           <Link

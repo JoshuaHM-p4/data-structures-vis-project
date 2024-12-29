@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBurger, faAngleDown, faAngleUp, faHome, faInfoCircle, faGamepad } from '@fortawesome/free-solid-svg-icons';
 import { Link, useLocation } from 'react-router-dom';
@@ -9,6 +9,7 @@ const Navbar = () => {
   const location = useLocation();
   const [isActive, setIsActive] = useState(location.pathname);
   const [currentGame, setCurrentGame] = useState('');
+  let dropdownRef = useRef();
 
   const navLinks = [
     { link: '/', title: 'Home' },
@@ -34,6 +35,19 @@ const Navbar = () => {
       setCurrentGame('');
     }
   }, [location]);
+
+  useEffect(() => {
+    let handler = (e) => {
+      if (!dropdownRef.current.contains(e.target)) {
+        setIsDropdownOpen(false);
+        console.log('clicked outside');
+      }
+    }
+    document.addEventListener('mousedown', handler);
+    return () => {
+      document.removeEventListener('mousedown', handler);
+    }
+  });
 
   return (
     <nav className="fixed w-full h-[64px] bg-stone-900 z-50 top-0 p-5 text-white shadow-md border-b">
@@ -90,6 +104,7 @@ const Navbar = () => {
             setIsDropdownOpen={setIsDropdownOpen}
             setCurrentGame={setCurrentGame}
             setIsActive={setIsActive}
+            dropdownRef={dropdownRef}
           />
         </div>
 
@@ -130,6 +145,7 @@ const Navbar = () => {
               setIsDropdownOpen={setIsDropdownOpen}
               setCurrentGame={setCurrentGame}
               setIsActive={setIsActive}
+              dropdownRef={dropdownRef}
             />
           </li>
         </ul>
