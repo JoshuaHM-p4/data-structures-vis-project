@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import StackOverlay from '../components/StacksComponents/StackOverlay.jsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCarSide } from '@fortawesome/free-solid-svg-icons';
-import { faTableList } from '@fortawesome/free-solid-svg-icons';
+import { faQuestion } from '@fortawesome/free-solid-svg-icons';
 
 import Modal from '../components/StackQueueModal/Modal.jsx';
 import Tooltip from '../components/Tooltip/Tooltip.jsx';
@@ -18,7 +18,7 @@ const Queue = () => {
   const [tempContainer, setTempContainer] = useState([]);
   const [pastCars, setPastCars] = useState([]); // Changed to an array to hold multiple past cars
 
-  const [isToolbarCollapsed, setIsToolbarCollapsed] = useState(true);
+  const [isTooltipClosed, setisTooltipClosed] = useState(true);
 
   // Add a car to the queue
   const addQueue = (plateNumber) => {
@@ -54,6 +54,7 @@ const Queue = () => {
     // Create a new car object
     const newCar = {
       plateNumber,
+      order: queue.length + 1,
       color: colorGenerator(),
       type: newType,
       isUtility: isUtility,
@@ -108,7 +109,6 @@ const Queue = () => {
       } else {
         // Increment the departureCount of the current car
         currentCar.departureCount += 1;
-        // Temporarily store other cars
         tempContainer.push(currentCar);
       }
     }
@@ -118,8 +118,11 @@ const Queue = () => {
       car.arrivalCount += 1;
     });
 
-    // Re-add the cars from temp back to the queue (back)
-    setQueue([...queue, ...tempContainer]);
+    // Re-add the cars from temp back to the queue (back) and update the car orders
+    setQueue([...queue, ...tempContainer].map((car, index) => {
+      car.order = index + 1;
+      return car;
+    }));
 
     // Update the stack and temp container
     setTempContainer([]);
@@ -216,22 +219,24 @@ const Queue = () => {
 
       {queue &&
         <button
-          onClick={() => setIsToolbarCollapsed(!isToolbarCollapsed)}
+          onClick={() => setisTooltipClosed(!isTooltipClosed)}
           className="fixed top-20 left-5 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 active:opacity-80">
-          {isToolbarCollapsed ? <FontAwesomeIcon icon={faTableList} /> : 'Hide Map'}
+          {isTooltipClosed ? <FontAwesomeIcon icon={faQuestion} /> : 'Hide Tooltip'}
         </button>
       }
 
-      <div className={`fixed w-fit min-w-32 top-32 left-0 h-full bg-transparent shadow-lg transition-transform ${isToolbarCollapsed ? '-translate-x-full' : 'translate-x-0'}`}>
-        <div className='grid grid-cols-10 gap-5 mx-5 flex-grow relative'>
+      <div className={`fixed w-fit min-w-32 top-1/2 left-0 h-full`}>
+        <div className='grid grid-cols-10 flex-grow relative'>
           {queue.map((car, index) => (
-            <div key={index} className='flex flex-col p-5 my-auto items-center justify-center border rounded-lg'>
+            <div key={index} className='flex flex-col items-center justify-center'>
               <Tooltip key={index}
-                text={`Plate number: ${car.plateNumber}`}
-                optionalText={`Arrival: ${car.arrivalCount} | Departure: ${car.departureCount}`}
-                position='top'>
-                <div className='p-2 inline-block text-center'>
-                  <img src={getImagePath(car?.type, car?.color, car?.isUtility)} alt={car?.type} className='w-10 h-10 mx-auto p-[-5rem]' />
+                text={`${car.color} ${car.type} Order: ${car.order}`}
+                alwaysVisible={!isTooltipClosed}
+                optionalText={`Arrivals: ${car.arrivalCount} Departures: ${car.departureCount}`}
+                position='bottom'
+                addedStyle={`w-[125px]`}
+                >
+                <div className='p-2 flex items-end justify-center text-center align-text-bottom pb-5 h-[125px] w-[125px]'>
                   {car.plateNumber}
                 </div>
               </Tooltip>
@@ -240,7 +245,7 @@ const Queue = () => {
         </div>
       </div>
 
-      <QueueCanvas stack={queue} />
+      <QueueCanvas queue={queue} />
 
       {poppedItem && <StackOverlay car={poppedItem} />}
 
