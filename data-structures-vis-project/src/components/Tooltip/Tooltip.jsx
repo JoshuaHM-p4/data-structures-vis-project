@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Tooltip = ({ children, text, optionalText = "", position = "top" }) => {
+const Tooltip = ({ children, text, optionalText = "", position = "top", alwaysVisible = false, addedStyle=''}) => {
   let positionClasses;
   let arrowClasses;
 
@@ -29,9 +29,9 @@ const Tooltip = ({ children, text, optionalText = "", position = "top" }) => {
   return (
     <div className="relative inline-block group">
       {children}
-      <div className={`absolute invisible z-50 opacity-0 group-hover:visible group-hover:opacity-100 ${positionClasses} transition-all duration-300 ease-in-out` }>
-        <div className="relative px-4 py-2 text-[10px] text-white bg-gray-900 rounded-lg backdrop-blur-sm bg-opacity-90 border border-gray-700/50 shadow-xl w-60 text-center">
-          <div className="flex items-center space-x-2 flex-col">
+      <div className={`absolute z-40 ${alwaysVisible ? 'visible opacity-50 group-hover:z-50 group-hover:opacity-100' : `invisible opacity-0 group-hover:visible group-hover:opacity-100`}  ${positionClasses} transition-all duration-300 ease-in-out` }>
+        <div className={`relative px-4 ${addedStyle} py-2 text-[0.625rem] text-white bg-gray-900 rounded-lg backdrop-blur-sm bg-opacity-90 border border-gray-700/50 shadow-xl w-60 text-center`}>
+          <div className="flex items-center flex-col">
             <span>{text}</span>
             <span>{optionalText}</span>
           </div>
