@@ -32,12 +32,6 @@ const StacksCanvas = ({ stack }) => {
 
   useEffect(() => {
     const initializeCars = (stack, canvas) => {
-      if (stack.length === 0) {
-        carsRef.current = [];
-        imagesRef.current = {};
-        return;
-      }
-
       // Get existing cars from current state of the canvas
       const existingCars = carsRef.current.reduce((acc, car) => {
         acc[car.plateNumber] = car;
@@ -53,8 +47,6 @@ const StacksCanvas = ({ stack }) => {
           carsRef.current[removedCarIndex].originalIndex = removedCarIndex; // Store original index
         }
       }
-
-      console.log(removingCarRef.current);
 
       // Map new cars to the canvas
       const newCars = stack.map((car, index) => {
