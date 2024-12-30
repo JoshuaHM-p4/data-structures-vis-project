@@ -4,21 +4,21 @@ import useSound from "../../hooks/useSound.js";
 import hardHit from '../../assets/sounds/hard-hit.wav';
 import softHit from '../../assets/sounds/soft-hit.wav';
 
-const QueueCanvas = ({ stack }) => {
+const QueueCanvas = ({ queue }) => {
   const canvasRef = useRef(null);
   const imagesRef = useRef({});
   const carsRef = useRef([]);
-  const carSize = 150;
-  const canvasWidthRef = useRef(0);
-  const removingCarRef = useRef(null);
+  const carSize = 125;
+  const canvasHeightRef = useRef(0);
+  const removingCarRef = useRef({index: -1});
 
   // Sound effects
   const { playSound } = useSound();
   const playHardHit = () => playSound(hardHit);
   const playSoftHit = () => playSound(softHit);
 
-  const updateCarX = () => {
-    return canvasWidthRef.current / 2 - carSize / 2;
+  const updateCarY = () => {
+    return canvasHeightRef.current / 2 - carSize / 2;
   }
 
   // Function for getting image paths
@@ -31,22 +31,23 @@ const QueueCanvas = ({ stack }) => {
   };
 
   useEffect(() => {
-    const initializeCars = (stack, canvas) => {
-      if (stack.length === 0) {
-        carsRef.current = [];
-        imagesRef.current = {};
-        return;
-      }
-
+    const initializeCars = (queue, canvas) => {
       // Get existing cars from current state of the canvas
       const existingCars = carsRef.current.reduce((acc, car) => {
         acc[car.plateNumber] = car;
         return acc;
       }, {});
 
-      // Detect car removal
-      if (stack.length < carsRef.current.length) {
-        const removedCarIndex = Object.keys(existingCars).findIndex(plateNumber => !stack.some(s => s.plateNumber === plateNumber));
+      // Clear cars off canvas if queue is empty and there are more than one car on the canvas
+      if (queue.length == 0 && existingCars.length > 1 || existingCars.length == 0) {
+        carsRef.current = [];
+        imagesRef.current = {};
+        return null;
+      }
+
+      // Find the index of car removed
+      if (queue.length < carsRef.current.length) {
+        const removedCarIndex = Object.keys(existingCars).findIndex(plateNumber => !queue.some(s => s.plateNumber === plateNumber));
         if (removedCarIndex !== -1) {
           removingCarRef.current = { index: removedCarIndex };
           carsRef.current[removedCarIndex].removing = true; // Mark the car as removing
@@ -54,22 +55,22 @@ const QueueCanvas = ({ stack }) => {
         }
       }
 
-      console.log(removingCarRef.current);
-
       // Map new cars to the canvas
-      const newCars = stack.map((car, index) => {
+      const newCars = queue.map((car, index) => {
         if (existingCars[car.plateNumber]) {
           return existingCars[car.plateNumber];
         } else {
           return {
             plateNumber: car.plateNumber,
+            order: car.order,
             type: car.type,
             color: car.color,
             isUtility: car.isUtility,
             image: null,
-            x: updateCarX(),
-            y: 10 + index * 260, // Space out cars by 260 pixels
-            dy: 1,
+            y: updateCarY(),
+            targetX: carSize * index, // Car Position in the queue
+            x: canvas.width, // Start off the screen
+            dx: 0,
             hovered: false,
             removing: false,
             hasCollided: false // Add hasCollided property
@@ -84,6 +85,15 @@ const QueueCanvas = ({ stack }) => {
       removingCars.forEach(car => {
         carsRef.current.splice(car.originalIndex, 0, car);
       });
+
+      // Change targetX to other existing cars if a car in queue is removed
+      if (removingCarRef.current.index !== -1) {
+        carsRef.current.forEach((car, index) => {
+          if (index !== removingCarRef.current.index) {
+            car.targetX = carSize * (index - 1);
+          }
+        });
+      }
 
       // Load Image Function
       const loadImage = (path, callback) => {
@@ -107,19 +117,18 @@ const QueueCanvas = ({ stack }) => {
 
 
     const canvas = canvasRef.current;
-    const gravity = 0.5;
-    const friction = 0.35;
     const context = canvas.getContext('2d');
     let lastUpdateTime = 0;
-    const controlSpeedMultiplier = 0.1;
     const fixedDeltaTime = 16; // Fixed time step in milliseconds (60 FPS)
-    const energyThreshold = 1; // Threshold to stop the car
     let animationFrameId;
-    const groundCollisionBuffer = carSize;
-    const carCollisionBuffer = carSize / 4;
     let mouse = { x: undefined, y: undefined };
 
-    initializeCars(stack, canvas);
+    const MAX_SPEED = 25; // Maximum speed of the car
+    const ACCELERATION = 1; // Acceleration rate
+    const STOP_THRESHOLD = 3; // Distance within which the car should stop
+
+    initializeCars(queue, canvas);
+
 
     // Update Car Position
     const update = () => {
@@ -127,79 +136,53 @@ const QueueCanvas = ({ stack }) => {
         // Skip updating if the car is undefined or the image is not loaded
         if (!car || !car.image) return car;
 
-        // Update x position based on the current canvas width
-        car.x = updateCarX();
+        // Update x position based on the current canvas height
+        car.y = updateCarY();
 
-        // Check if the removing car has reached the top
-        if (removingCarRef.current) {
-          if (removingCarRef.current.index === index && car && car.y <= canvas.height / 5) {
-            // filter out the car from the array
+        // Check if car is moved out of screen
+        if (removingCarRef.current.index !== -1) {
+          if (removingCarRef.current.index == index && car.x + carSize <= 0) {
             carsRef.current.filter((_, i) => i !== removingCarRef.current.index);
-            removingCarRef.current = null; // Stop removing car
-            return null; // Return null to remove the car from the array
+            removingCarRef.current = {index: -1};
+            return null;
           }
         }
 
-        // Apply different physics if a car is being removed
-        if (car.removing || (removingCarRef.current && index < removingCarRef.current.index)) {
-          // Apply faster negative gravity
-          car.dy = -Math.abs(car.dy) * 2.1;
+        // Move the car out of screen if it is being removed
+        if (car.removing) {
+          car.dx = Math.min(car.dx + ACCELERATION, MAX_SPEED);
+          car.x += car.dx * -1; // Accelerate the car to the left offscreen
+        }
+        else {
+          // Move the car from initial position car.x to target position car.targetX
+          // Calculate distance to the target position
+          const distanceToTarget = Math.abs(car.targetX - car.x);
+          const decelerationDistance = Math.max(distanceToTarget/2, 50);
 
-          // Limit dy to a reasonable value for negative gravity
-          const maxNegativeDy = -20; // Example value, adjust as needed
-          const minNegativeDy = 0; // Example value, adjust as needed
-          car.dy = Math.max(Math.min(car.dy, minNegativeDy), maxNegativeDy);
-        } else {
-          // Limit dy to a reasonable value
-          const maxDy = 20;
-          car.dy = Math.min(Math.max(car.dy, -maxDy), maxDy);
+          // Determine if the car should be accelerating or decelerating
+          if (distanceToTarget > decelerationDistance) {
+            // Accelerate until the maximum speed is reached
+            car.dx = Math.min(car.dx + ACCELERATION, MAX_SPEED);
+          } else if (distanceToTarget > STOP_THRESHOLD) {
+            // Decelerate as the car approaches the target position
+            car.dx = Math.max(car.dx - ACCELERATION, 0);
+          } else {
+            // Stop the car if it is very close to the target position
+            car.dx = 0;
+            car.x = car.targetX; // Ensure the car's position is exactly at targetX
+          }
+
+          // Update car's position based on its dx (speed)
+          car.x += car.dx * Math.sign(car.targetX - car.x);
         }
 
-        // Update y position
-        let newY = car.y + car.dy * fixedDeltaTime * controlSpeedMultiplier;
-
-        // Ensure y position doesn't go beyond the canvas height
-        if (newY + groundCollisionBuffer > canvas.height) {
-          newY = canvas.height - groundCollisionBuffer;
-          if (!car.hasCollided && Math.abs(car.dy) > 5) { // Check velocity threshold
-            playHardHit(); // Play hard hit sound on ground collision
-            car.hasCollided = true; // Mark the car as having collided
-          }
-          car.dy = -car.dy * friction; // Reverse direction and apply damping from friction
-          if (Math.abs(car.dy) < energyThreshold) {
-            car.dy = 0; // Stop the car if energy is below the threshold
-          }
-        } else if (newY < 0) {
-          // ensure y position doesnt go below 0
-          newY = 0;
-          car.dy = 0;
-        } else {
-          car.dy += gravity;
-          car.hasCollided = false; // Reset collision status when in the air
-        }
-
-        // Check for collision with other cars
-        carsRef.current.forEach((otherCar, otherIndex) => {
-          if (index !== otherIndex && newY + carCollisionBuffer > otherCar.y && car.y < otherCar.y) {
-            newY = otherCar.y - carCollisionBuffer;
-            if (!car.hasCollided && Math.abs(car.dy) > 5) { // Check velocity threshold
-              playSoftHit(); // Play soft hit sound on car collision
-              car.hasCollided = true; // Mark the car as having collided
-            }
-            car.dy = -car.dy * friction; // Reverse direction and apply damping from friction
-            if (Math.abs(car.dy) < energyThreshold) {
-              car.dy = 0; // Stop the car if energy is below the threshold
-            }
-          }
-        });
 
         // Check for mouse hover
-        const isHovered = (mouse.x > car.x) && (mouse.x < car.x + carSize * 1.5) && (mouse.y > car.y + carSize / 2) && (mouse.y < car.y + carSize);
+        const isHovered = (mouse.x > car.x) && (mouse.x < car.x + carSize) && (mouse.y > car.y + carSize / 2) && (mouse.y < car.y + carSize);
         car.hovered = isHovered;
 
         return {
           ...car,
-          y: newY,
         };
       }).filter(car => car !== null); // Filter out removed cars
     };
@@ -216,27 +199,33 @@ const QueueCanvas = ({ stack }) => {
         const originalIndex = carsRef.current.length - 1 - index;
 
         // Temporarily hide cars above the removed car
-        if (removingCarRef.current && originalIndex < removingCarRef.current.index && car.y <= canvas.height / 5) {
-          return;
-        }
+        // if (removingCarRef.current && originalIndex < removingCarRef.current.index && car.y <= canvas.height / 5) {
+        //   return;
+        // }
 
-        let textPosition = { x: car.x + 10 + carSize, y: car.y + carSize / 2 + 25 };
+        let textPosition = { y: car.y -10, x: car.x + carSize + 5 };
 
         // Draw line for guide on hover
-        if (car.hovered) {
-          context.beginPath();
-          context.moveTo(car.x + carSize / 2, textPosition.y);
-          context.lineTo(textPosition.x, textPosition.y);
-          context.strokeStyle = 'white';
-          context.stroke();
-        }
+        // if (car.hovered) {
+        //   context.beginPath();
+        //   context.moveTo(car.x + carSize / 2, car.y + carSize / 2);
+        //   context.lineTo(car.x + carSize / 2, textPosition.y);
+        //   context.strokeStyle = 'white';
+        //   context.stroke();
+        // }
 
-        // Draw car plate number on hover
-        if (car.hovered) {
-          context.font = "18px Arial bold";
-          context.fillStyle = 'white';
-          context.fillText(`${car.plateNumber}`, textPosition.x, textPosition.y);
-        }
+        // // Draw car plate number on hover
+        // if (car.hovered) {
+        //   context.font = "18px Arial bold";
+        //   context.fillStyle = 'white';
+        //   context.fillText(`${car.plateNumber}`, textPosition.x, textPosition.y + 10);
+        // }
+
+        // Draw Car position (debug)
+        context.font = "18px 'Press Start 2P' bold";
+        context.fillStyle = 'white';
+        context.fillText(`X: ${car.x} targetX: ${car.targetX} ${removingCarRef.current.index}`, textPosition.x, textPosition.y);
+
 
         // Draw car image
         context.save();
@@ -250,10 +239,10 @@ const QueueCanvas = ({ stack }) => {
         // context.fillText(`${canvas.height}`, 10, 20);
 
         // // Draw car boxes
-        // context.beginPath();
-        // context.rect(car.x, car.y, carSize, carSize); // bound by carSize
-        // context.strokeStyle = 'red';
-        // context.stroke();
+        context.beginPath();
+        context.rect(car.x, car.y, carSize, carSize); // bound by carSize
+        context.strokeStyle = 'yellow';
+        context.stroke();
 
         // context.beginPath();
         // context.rect(car.x, car.y + (carSize) / 5, carSize, carSize / 2);
@@ -267,8 +256,8 @@ const QueueCanvas = ({ stack }) => {
       canvas.width = canvas.parentElement.clientWidth;
       canvas.height = canvas.parentElement.clientHeight;
 
-      // Store the canvas width in the ref
-      canvasWidthRef.current = canvas.width;
+      // Store the canvas height in the ref
+      canvasHeightRef.current = canvas.height;
     };
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
@@ -294,7 +283,7 @@ const QueueCanvas = ({ stack }) => {
       window.removeEventListener('resize', resizeCanvas);
       cancelAnimationFrame(animationFrameId);
     };
-  }, [stack]);
+  }, [queue]);
 
   return (
     <canvas ref={canvasRef} className="w-full"></canvas>
