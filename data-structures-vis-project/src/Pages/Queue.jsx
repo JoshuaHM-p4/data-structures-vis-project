@@ -118,8 +118,8 @@ const Queue = () => {
       car.arrivalCount += 1;
     });
 
-    // Re-add the cars from temp back to the stack
-    setQueue([...tempContainer, ...queue]);
+    // Re-add the cars from temp back to the queue (back)
+    setQueue([...queue, ...tempContainer]);
 
     // Update the stack and temp container
     setTempContainer([]);
@@ -240,7 +240,7 @@ const Queue = () => {
         </div>
       </div>
 
-      {/* <QueueCanvas /> */}
+      <QueueCanvas stack={queue} />
 
       {poppedItem && <StackOverlay car={poppedItem} />}
 
