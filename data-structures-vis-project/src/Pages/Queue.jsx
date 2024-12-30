@@ -2,8 +2,12 @@ import React, { useState } from 'react';
 import StackOverlay from '../components/StacksComponents/StackOverlay.jsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCarSide } from '@fortawesome/free-solid-svg-icons';
+import { faTableList } from '@fortawesome/free-solid-svg-icons';
+
 import Modal from '../components/StackQueueModal/Modal.jsx';
 import Tooltip from '../components/Tooltip/Tooltip.jsx';
+
+import QueueCanvas from '../components/QueueComponents/QueueCanvas.jsx';
 
 const Queue = () => {
   const [queue, setQueue] = useState([]);
@@ -13,6 +17,8 @@ const Queue = () => {
   const [mode, setMode] = useState(''); // 'arrival' or 'departure'
   const [tempContainer, setTempContainer] = useState([]);
   const [pastCars, setPastCars] = useState([]); // Changed to an array to hold multiple past cars
+
+  const [isToolbarCollapsed, setIsToolbarCollapsed] = useState(true);
 
   // Add a car to the queue
   const addQueue = (plateNumber) => {
@@ -33,7 +39,7 @@ const Queue = () => {
     if (pastCarIndex !== -1) {
       const pastCar = pastCars[pastCarIndex];
       pastCar.arrivalCount += 1;
-      setQueue([ ...queue, pastCar ]);
+      setQueue([...queue, pastCar]);
       setPlateNumber('');
       setIsModalOpen(false);
       // Remove the car from the past cars state
@@ -42,10 +48,15 @@ const Queue = () => {
       return;
     }
 
+    const newType = typeClasses[Math.floor(Math.random() * typeClasses.length)]
+    const isUtility = newType === 'Ambulance' || newType === 'Taxi' || newType === 'Police';
+
     // Create a new car object
     const newCar = {
       plateNumber,
       color: colorGenerator(),
+      type: newType,
+      isUtility: isUtility,
       arrivalCount: 1,
       departureCount: 0
     };
@@ -108,7 +119,7 @@ const Queue = () => {
     });
 
     // Re-add the cars from temp back to the stack
-    setQueue([ ...tempContainer, ...queue ]);
+    setQueue([...tempContainer, ...queue]);
 
     // Update the stack and temp container
     setTempContainer([]);
@@ -129,15 +140,23 @@ const Queue = () => {
   };
 
   // Color classes for the cars
-  const colorClasses = [
-    'text-red-800', 'text-blue-800', 'text-green-800', 'text-yellow-800',
-    'text-purple-800', 'text-pink-800', 'text-indigo-800', 'text-gray-800',
-    'text-black-800', 'text-white-800'
-  ];
+  const colorClasses = ['Black', 'Blue', 'Brown', 'Green', 'Magenta', 'Red', 'White', 'Yellow'];
+
+  // Car type classes
+  const typeClasses = ['Ambulance', 'Taxi', 'Police', 'Bus', 'BoxTruck', 'Camper', 'Civic', 'Hatchback', 'Jeep', 'Limo', 'Luxury', 'MediumTruck', 'Micro', 'Minivan', 'Musclecar', 'Pickup', 'Sedan', 'Sport', 'Supercar', 'SUV', 'Van', 'Wagon']
 
   // Generate a random color class
   const colorGenerator = () => {
     return colorClasses[Math.floor(Math.random() * colorClasses.length)];
+  };
+
+  // Function for getting image paths
+  const getImagePath = (type, color, isUtility) => {
+    if (isUtility) {
+      return `/vehicles/UTILITY/${type.toUpperCase()}.png`;
+    } else {
+      return `/vehicles/${type.toUpperCase()}/${color.toUpperCase()}.png`;
+    }
   };
 
   // Handle the arrival button click
@@ -180,9 +199,9 @@ const Queue = () => {
   };
 
   return (
-    <div className="w-full h-full flex flex-col">      
-      <div className='flex gap-2 justify-center py-3'>
-        <button onClick={handleArrivalClick } className="nes-btn is-primary">
+    <div className="w-full h-full">
+      <div className='flex gap-2 justify-center top-20 left-0 absolute w-full h-fit'>
+        <button onClick={handleArrivalClick} className="nes-btn is-primary">
           Arrival
         </button>
 
@@ -194,23 +213,34 @@ const Queue = () => {
           Clear
         </button>
       </div>
-      
-      <div className='grid grid-cols-10 gap-5 mx-5 flex-grow'>
-        {queue.map((car, index) => (
-          <div key={index} className='flex flex-col p-5 my-auto items-center justify-center border rounded-lg'>
-            <Tooltip key={index} 
-          text={`Plate number: ${car.plateNumber}`}
-          optionalText={`Arrival: ${car.arrivalCount} | Departure: ${car.departureCount}`}
-          position='top'>
-            <div className='p-2 inline-block text-center'>
-              <FontAwesomeIcon className={car.color} icon={faCarSide} flip="horizontal" size="xl" />
-              <br />
-              {car.plateNumber}
+
+      {queue &&
+        <button
+          onClick={() => setIsToolbarCollapsed(!isToolbarCollapsed)}
+          className="fixed top-20 left-5 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 active:opacity-80">
+          {isToolbarCollapsed ? <FontAwesomeIcon icon={faTableList} /> : 'Hide Map'}
+        </button>
+      }
+
+      <div className={`fixed w-fit min-w-32 top-32 left-0 h-full bg-transparent shadow-lg transition-transform ${isToolbarCollapsed ? '-translate-x-full' : 'translate-x-0'}`}>
+        <div className='grid grid-cols-10 gap-5 mx-5 flex-grow relative'>
+          {queue.map((car, index) => (
+            <div key={index} className='flex flex-col p-5 my-auto items-center justify-center border rounded-lg'>
+              <Tooltip key={index}
+                text={`Plate number: ${car.plateNumber}`}
+                optionalText={`Arrival: ${car.arrivalCount} | Departure: ${car.departureCount}`}
+                position='top'>
+                <div className='p-2 inline-block text-center'>
+                  <img src={getImagePath(car?.type, car?.color, car?.isUtility)} alt={car?.type} className='w-10 h-10 mx-auto p-[-5rem]' />
+                  {car.plateNumber}
+                </div>
+              </Tooltip>
             </div>
-          </Tooltip>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
+
+      {/* <QueueCanvas /> */}
 
       {poppedItem && <StackOverlay car={poppedItem} />}
 
