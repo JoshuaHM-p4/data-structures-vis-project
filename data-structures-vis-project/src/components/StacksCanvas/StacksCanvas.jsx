@@ -38,6 +38,12 @@ const StacksCanvas = ({ stack }) => {
         return acc;
       }, {});
 
+      if (stack.length === 0 && existingCars.length > 1 || existingCars.length === 0) {
+        carsRef.current = [];
+        imagesRef.current = {};
+        return null;
+      }
+
       // Detect car removal
       if (stack.length < carsRef.current.length) {
         const removedCarIndex = Object.keys(existingCars).findIndex(plateNumber => !stack.some(s => s.plateNumber === plateNumber));

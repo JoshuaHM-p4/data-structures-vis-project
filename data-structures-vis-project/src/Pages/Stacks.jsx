@@ -276,7 +276,7 @@ const Stacks = () => {
         <div className='flex flex-col pl-5 items-center justify-center mt-4 relative'>
           {stack.map((car, index) => (
             <Tooltip key={index}
-              text={`Plate number: ${car.plateNumber}`}
+              text={`Plate #: ${car.plateNumber} | ${!car.isUtility ? car.color + ' ' : ''}${car.type}`}
               optionalText={`Arrival: ${car.arrivalCount} | Departure: ${car.departureCount}`}
               position='right'>
               <div className='p-2 inline-block text-center'>
