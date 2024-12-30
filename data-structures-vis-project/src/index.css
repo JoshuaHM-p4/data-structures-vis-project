@@ -42,3 +42,16 @@ a:hover {
 .no-text-border {
   text-shadow: none;
 }
+
+@keyframes walk{
+  0% {
+    transform: translateX(-580%);
+  }
+  100% {
+    transform: translateX(580%);
+  }
+}
+
+.walk-animation {
+  animation: walk 6s infinite linear; 
+}
