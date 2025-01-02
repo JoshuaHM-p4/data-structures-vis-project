@@ -89,26 +89,6 @@ const QueueCanvas = ({ queue }) => {
         }
       });
 
-      ////////////////////// NOTE REFACTOR THIS LINE BELOW ///////////////////////
-
-      // Add the cars that are being removed back to the array
-      const removingCars = carsRef.current.filter(car => car.removing);
-      carsRef.current = [...newCars];
-
-      removingCars.forEach(car => {
-        carsRef.current.splice(car.originalIndex, 0, car);
-      });
-
-      // Change targetX to other existing cars if a car in queue is removed
-      if (removingCarRef.current.index !== -1) {
-        carsRef.current.forEach((car) => {
-          const queueIndex = queue.findIndex(qCar => qCar.plateNumber === car.plateNumber);
-          if (queueIndex !== -1) {
-            car.targetX = carSize * queueIndex;
-          }
-        });
-      }
-
       // Load Image Function
       const loadImage = (path, callback) => {
         const img = new Image();
@@ -127,6 +107,24 @@ const QueueCanvas = ({ queue }) => {
           });
         }
       });
+
+      // Add the cars that are being removed back to the array
+      const removingCars = carsRef.current.filter(car => car.removing);
+      carsRef.current = [...newCars];
+
+      removingCars.forEach(car => {
+        carsRef.current.splice(car.originalIndex, 0, car);
+      });
+
+      // Change targetX to other existing cars if a car in queue is removed
+      if (removingCarRef.current.index !== -1) {
+        carsRef.current.forEach((car) => {
+          const queueIndex = queue.findIndex(qCar => qCar.plateNumber === car.plateNumber);
+          if (queueIndex !== -1) {
+            car.targetX = carSize * queueIndex;
+          }
+        });
+      }
     };
 
 
@@ -326,7 +324,7 @@ const QueueCanvas = ({ queue }) => {
         update(currentTime);
         draw();
       }
-      console.log(carsRef.current.map((car) => `${car.plateNumber} X: ${car.x} TX: ${car.targetX} P:${car.parked} R: ${car.removing}`));
+      // console.log(carsRef.current.map((car) => `${car.plateNumber} X: ${car.x} TX: ${car.targetX} P:${car.parked} R: ${car.removing}`));
       animationFrameId = requestAnimationFrame(render);
     };
 
