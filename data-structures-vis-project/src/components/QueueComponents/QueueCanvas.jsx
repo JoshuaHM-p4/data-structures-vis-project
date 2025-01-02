@@ -58,9 +58,7 @@ const QueueCanvas = ({ queue }) => {
             if (index < removedCarIndex) {
               car.parked = false;
             }
-            console.log(car);
           });
-
         }
       }
 
@@ -88,6 +86,26 @@ const QueueCanvas = ({ queue }) => {
         }
       });
 
+      // Add the cars that are being removed back to the array
+      const removingCars = carsRef.current.filter(car => car.removing);
+      carsRef.current = [...newCars];
+
+      removingCars.forEach(car => {
+        carsRef.current.splice(car.originalIndex, 0, car);
+      });
+
+      console.log("removing cars?? : ", removingCars)
+
+      // Change targetX to other existing cars if a car in queue is removed
+      if (removingCarRef.current.index !== -1) {
+        carsRef.current.forEach((car) => {
+          const queueIndex = queue.findIndex(qCar => qCar.plateNumber === car.plateNumber);
+          if (queueIndex !== -1) {
+            car.targetX = carSize * queueIndex;
+          }
+        });
+      }
+
       // Load Image Function
       const loadImage = (path, callback) => {
         const img = new Image();
@@ -107,23 +125,6 @@ const QueueCanvas = ({ queue }) => {
         }
       });
 
-      // Add the cars that are being removed back to the array
-      const removingCars = carsRef.current.filter(car => car.removing);
-      carsRef.current = [...newCars];
-
-      removingCars.forEach(car => {
-        carsRef.current.splice(car.originalIndex, 0, car);
-      });
-
-      // Change targetX to other existing cars if a car in queue is removed
-      if (removingCarRef.current.index !== -1) {
-        carsRef.current.forEach((car) => {
-          const queueIndex = queue.findIndex(qCar => qCar.plateNumber === car.plateNumber);
-          if (queueIndex !== -1) {
-            car.targetX = carSize * queueIndex;
-          }
-        });
-      }
     };
 
 
