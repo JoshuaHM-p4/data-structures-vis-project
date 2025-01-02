@@ -47,13 +47,15 @@ const QueueCanvas = ({ queue }) => {
 
       // Find the index of car removed
       if (queue.length < carsRef.current.length) {
-        const removedCarIndex = Object.keys(existingCars).findIndex(plateNumber => !queue.some(s => s.plateNumber === plateNumber));
+
+        const removedCarIndex = carsRef.current.findIndex(car => !queue.some(s => s.plateNumber === car.plateNumber));
         if (removedCarIndex !== -1) {
+          console.log('Car removed at index: ', removedCarIndex, "which is", carsRef.current[removedCarIndex]);
           removingCarRef.current = { index: removedCarIndex };
           carsRef.current[removedCarIndex].removing = true; // Mark the car as removing
           carsRef.current[removedCarIndex].originalIndex = removedCarIndex; // Store original index
 
-          // mark cars infront as parked: false
+          // mark cars in front as parked: false
           carsRef.current.forEach((car, index) => {
             if (index < removedCarIndex) {
               car.parked = false;
@@ -94,8 +96,6 @@ const QueueCanvas = ({ queue }) => {
         carsRef.current.splice(car.originalIndex, 0, car);
       });
 
-      console.log("removing cars?? : ", removingCars)
-
       // Change targetX to other existing cars if a car in queue is removed
       if (removingCarRef.current.index !== -1) {
         carsRef.current.forEach((car) => {
@@ -125,6 +125,7 @@ const QueueCanvas = ({ queue }) => {
         }
       });
 
+
     };
 
 
@@ -144,13 +145,13 @@ const QueueCanvas = ({ queue }) => {
 
     // Update Car Position
     const update = () => {
-      const isRemoving = removingCarRef.current.index !== -1
+      let isRemoving = removingCarRef.current.index !== -1
 
       // Refill the cars that are stored from outside
       if (!isRemoving && carsOutsideRef.current.length > 0) {
         const currentCarsLength = carsRef.current.length;
         carsOutsideRef.current.map((car, index) => {
-          car.x = canvas.width;
+          car.x = canvas.width + carSize * index;
           car.targetX = carSize * (currentCarsLength + index);
           car.parked = true;
           carsRef.current.push(car);
@@ -165,38 +166,23 @@ const QueueCanvas = ({ queue }) => {
         // Update x position based on the current canvas height
         car.y = updateCarY();
 
+        // Remove the cars in front of the removed car when they are out of screen
+        if (!car.parked && car.x + carSize <= 0) {
+          carsOutsideRef.current.push(car);
+          carsRef.current = carsRef.current.filter((_, i) => i !== removingCarRef.current.index);
 
-        if (car.x + carSize <= 0) {
-          if (!car.parked) {
-            carsOutsideRef.current.push(car);
-            carsRef.current = carsRef.current.filter((_, i) => i !== removingCarRef.current.index);
-            removingCarRef.current.index -= 1;
-            return null;
-
-          } else if (car.removing) {
-            carsRef.current.filter((_, i) => i !== removingCarRef.current.index);
-            removingCarRef.current = { index: -1 }; // Reset removingCarRef index
-            return null;
-          }
+          // update removingCarRef index
+          removingCarRef.current.index -= 1;
+          console.log('CHANGE CHANGE', removingCarRef.current.index);
+          return null;
         }
 
-        // Remove the cars in front of the removed car when they are out of screen
-        // if (!car.parked && car.x + carSize <= 0) {
-        //   carsOutsideRef.current.push(car);
-        //   carsRef.current = carsRef.current.filter((_, i) => i !== removingCarRef.current.index);
-
-        //   // update removingCarRef index
-        //   removingCarRef.current.index -= 1;
-
-        //   return null;
-        // }
-
-        // // Remove the car that is being removed when it is out of screen
-        // if (car.removing && car.x + carSize <= 0) {
-        //   carsRef.current.filter((_, i) => i !== removingCarRef.current.index);
-        //   removingCarRef.current = { index: -1 }; // Reset removingCarRef index
-        //   return null;
-        // }
+        // Remove the car that is being removed when it is out of screen
+        if (car.removing && car.x + carSize <= 0) {
+          carsRef.current.filter((_, i) => i !== removingCarRef.current.index);
+          removingCarRef.current.index = -1;
+          return null;
+        }
 
         // Move the car out of screen if it is being removed or if is a car (not parked) in front of the removed car
         if (car.removing || !car.parked) {
@@ -324,7 +310,8 @@ const QueueCanvas = ({ queue }) => {
         update(currentTime);
         draw();
       }
-      // console.log(carsRef.current.map((car) => `${car.plateNumber} X: ${car.x} TX: ${car.targetX} P:${car.parked} R: ${car.removing}`));
+      // console.log(removingCarRef.current.index);
+      // console.log(carsRef.current.map((car) => `${car.plateNumber} X: ${car.x} TX: ${car.targetX} ${car.parked ? 'parked' : 'outside'} ${car.removing ? 'removing' : ''}`), carsOutsideRef.current.map((car) => `${car.plateNumber} X: ${car.x} TX: ${car.targetX} ${car.parked ? 'parked' : 'outside'} ${car.removing ? 'removing' : ''}`));
       animationFrameId = requestAnimationFrame(render);
     };
 
