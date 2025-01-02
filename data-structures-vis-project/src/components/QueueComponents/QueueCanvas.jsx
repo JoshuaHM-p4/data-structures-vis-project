@@ -2,7 +2,6 @@ import { useRef, useEffect } from 'react';
 import useSound from "../../hooks/useSound.js";
 
 import hardHit from '../../assets/sounds/hard-hit.wav';
-import softHit from '../../assets/sounds/soft-hit.wav';
 
 const QueueCanvas = ({ queue }) => {
   const canvasRef = useRef(null);
@@ -15,8 +14,7 @@ const QueueCanvas = ({ queue }) => {
 
   // Sound effects
   const { playSound } = useSound();
-  const playHardHit = () => playSound(hardHit);
-  const playSoftHit = () => playSound(softHit);
+  const playRev = () => playSound(hardHit);
 
   const updateCarY = () => {
     return canvasHeightRef.current / 2 - carSize / 2;
@@ -71,6 +69,7 @@ const QueueCanvas = ({ queue }) => {
         if (existingCars[car.plateNumber]) {
           return existingCars[car.plateNumber];
         } else {
+
           return {
             plateNumber: car.plateNumber,
             order: car.order,

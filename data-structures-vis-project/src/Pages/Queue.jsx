@@ -9,6 +9,18 @@ import Tooltip from '../components/Tooltip/Tooltip.jsx';
 
 import QueueCanvas from '../components/QueueComponents/QueueCanvas.jsx';
 
+import useSound from '../hooks/useSound.js';
+import carArrival from "../assets/sounds/car-arrival.mp3";
+import carRev1 from "../assets/sounds/car-rev-1.mp3";
+import carRev2 from "../assets/sounds/car-rev-2.mp3";
+import truckRun from "../assets/sounds/truck-run-1.mp3";
+
+import pingSound from "../assets/sounds/ping.wav";
+import resetSound from "../assets/sounds/thud.wav";
+import errorSound from "../assets/sounds/damage.mp3";
+import successSound from "../assets/sounds/complete.wav";
+
+
 const Queue = () => {
   const [queue, setQueue] = useState([]);
   const [poppedItem, setPoppedItem] = useState(null);
@@ -20,16 +32,20 @@ const Queue = () => {
 
   const [isTooltipClosed, setisTooltipClosed] = useState(true);
 
+  const { playSound } = useSound();
+
   // Add a car to the queue
   const addQueue = (plateNumber) => {
     // Check if the queue is full
     if (queue.length >= 10) {
+      playSound(errorSound);
       alert('Garage is full!');
       return;
     }
 
     // Check if the plate number exists in the queue
     if (queue.some(car => car.plateNumber === plateNumber)) {
+      playSound(errorSound);
       alert('Car already exists!');
       return;
     }
@@ -42,6 +58,8 @@ const Queue = () => {
       setQueue([...queue, pastCar]);
       setPlateNumber('');
       setIsModalOpen(false);
+      playSound(successSound);
+      playSound(carArrival);
       // Remove the car from the past cars state
       setPastCars(pastCars.filter((_, index) => index !== pastCarIndex));
       alert(pastCar.plateNumber + " has arrived again");
@@ -62,7 +80,12 @@ const Queue = () => {
       departureCount: 0
     };
 
-    console.log(newCar.plateNumber, "has arrived");
+    if (isUtility || newType.toLowerCase().includes('truck')) {
+      playSound(truckRun);
+    } else {
+      const randomRevSound = Math.random() >= 0.5 ? carRev1 : carRev2;
+      playSound(randomRevSound);
+    }
 
     // Add the new car to the queue
     setQueue([...queue, newCar]);
@@ -75,18 +98,21 @@ const Queue = () => {
   const removeQueue = (plateNumber) => {
     // Check if the stack is empty
     if (queue.length === 0) {
+      playSound(errorSound);
       alert('Garage is empty!');
       return;
     }
 
     // Check if the plate number exists in the stack
     if (plateNumber === '') {
+      playSound(errorSound);
       alert('Please enter a plate number!');
       return;
     }
 
     // Check if the plate number exists in the stack
     if (!queue.some(car => car.plateNumber === plateNumber)) {
+      playSound(errorSound);
       alert('Car not found!');
       return;
     }
@@ -103,6 +129,9 @@ const Queue = () => {
         currentCar.departureCount += 1;
         removedCar = currentCar;
         carFound = true;
+        const randomRevSound = Math.random() >= 0.5 ? carRev1 : carRev2;
+        playSound(randomRevSound);
+        playSound(successSound);
         setPoppedItem(removedCar);
         console.log(removedCar.plateNumber, "has been removed");
         break;
@@ -136,6 +165,7 @@ const Queue = () => {
 
   // Clear the stack
   const clearQueue = () => {
+    playSound(resetSound);
     setPoppedItem(null);
     setQueue([]);
     setTempContainer([]);
@@ -164,6 +194,7 @@ const Queue = () => {
 
   // Handle the arrival button click
   const handleArrivalClick = () => {
+    playSound(pingSound);
     if (queue.length >= 10) {
       alert('Garage is full! Cannot add more cars');
       return;
@@ -175,6 +206,7 @@ const Queue = () => {
 
   // Handle the departure button click
   const handleDepartureClick = () => {
+    playSound(pingSound);
     if (queue.length === 0) {
       alert('Garage is empty! Cannot remove any cars');
       return;
@@ -235,7 +267,7 @@ const Queue = () => {
                 optionalText={`Arrivals: ${car.arrivalCount} Departures: ${car.departureCount}`}
                 position='bottom'
                 addedStyle={`w-[125px]`}
-                >
+              >
                 <div className='p-2 flex items-end justify-center text-center align-text-bottom pb-5 h-[125px] w-[125px]'>
                   {car.plateNumber}
                 </div>

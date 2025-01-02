@@ -81,8 +81,6 @@ const Stacks = () => {
       playSound(randomRevSound);
     }
 
-    console.log(newCar);
-
     // Add the new car to the stack
     setStack([newCar, ...stack]);
     // Reset the plate number and close the modal
