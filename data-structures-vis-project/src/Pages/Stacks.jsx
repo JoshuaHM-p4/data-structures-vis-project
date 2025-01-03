@@ -26,7 +26,7 @@ const Stacks = () => {
   const [mode, setMode] = useState(''); // 'arrival' or 'departure'
   const [tempContainer, setTempContainer] = useState([]);
   const [pastCars, setPastCars] = useState([]); // Changed to an array to hold multiple past cars
-  const [isToolbarCollapsed, setIsToolbarCollapsed] = useState(true);
+  const [isTooltipClosed, setIsTooltipClosed] = useState(true);
   const { playSound } = useSound();
 
   // Add a car to the stack
@@ -248,7 +248,7 @@ const Stacks = () => {
 
   return (
     <div className="w-full h-full">
-      <div className='flex gap-2 justify-center top-20 left-0 absolute w-full h-fit'>
+      <div className='flex gap-2 justify-center top-20 left-0 absolute w-full h-fit z-50'>
         <button onClick={handleArrivalClick} className="nes-btn is-primary rounded">
           Arrival
         </button>
@@ -264,22 +264,25 @@ const Stacks = () => {
 
       {stack &&
         <button
-          onClick={() => setIsToolbarCollapsed(!isToolbarCollapsed)}
-          className="fixed top-20 left-5 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 active:opacity-80">
-          {isToolbarCollapsed ? <FontAwesomeIcon icon={faTableList} /> : 'Hide Map'}
+          onClick={() => setIsTooltipClosed(!isTooltipClosed)}
+          className="fixed top-20 left-5 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 active:opacity-80 z-50">
+          {isTooltipClosed ? <FontAwesomeIcon icon={faTableList} /> : 'Hide Tooltip'}
         </button>
       }
 
-      <div className={`fixed w-fit min-w-32 top-32 left-0 h-full bg-transparent shadow-lg transition-transform ${isToolbarCollapsed ? '-translate-x-full' : 'translate-x-0'}`}>
-        <div className='flex flex-col pl-5 items-center justify-center mt-4 relative'>
+      <div className="fixed w-fit min-w-fit -translate-x-20 left-1/2 top-0 h-full pb-16 overflow-visible">
+        <div className='flex flex-col pl-5 h-full items-end justify-end mt-4 relative'>
           {stack.map((car, index) => (
             <Tooltip key={index}
               text={`Plate #: ${car.plateNumber} | ${!car.isUtility ? car.color + ' ' : ''}${car.type}`}
+              alwaysVisible={!isTooltipClosed}
               optionalText={`Arrival: ${car.arrivalCount} | Departure: ${car.departureCount}`}
-              position='right'>
-              <div className='p-2 inline-block text-center'>
-                <img src={getImagePath(car?.type, car?.color, car?.isUtility)} alt={car?.type} className='w-10 h-10 mx-auto p-[-5rem]' />
-                {car.plateNumber}
+              position='right'
+              addedStyle={`h-fit w-[300px]`}
+              >
+              <div className='p-2 h-[37px] w-44 relative'>
+                {/* <img src={getImagePath(car?.type, car?.color, car?.isUtility)} alt={car?.type} className='w-10 h-10 mx-auto p-[-5rem]' /> */}
+                <p className='absolute left-3/4'>{car.plateNumber}</p>
               </div>
             </Tooltip>
           ))}

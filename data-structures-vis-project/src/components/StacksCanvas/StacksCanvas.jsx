@@ -121,7 +121,7 @@ const StacksCanvas = ({ stack }) => {
 
     // Update Car Position
     const update = () => {
-      console.log(carsRef.current.map((car) => car.plateNumber));
+      // console.log(carsRef.current.map((car) => car.plateNumber));
       carsRef.current = carsRef.current.map((car, index) => {
         // Skip updating if the car is undefined or the image is not loaded
         if (!car || !car.image) return car;
@@ -222,20 +222,20 @@ const StacksCanvas = ({ stack }) => {
         let textPosition = { x: car.x + 10 + carSize, y: car.y + carSize / 2 + 25 };
 
         // Draw line for guide on hover
-        if (car.hovered) {
-          context.beginPath();
-          context.moveTo(car.x + carSize / 2, textPosition.y);
-          context.lineTo(textPosition.x, textPosition.y);
-          context.strokeStyle = 'white';
-          context.stroke();
-        }
+        // if (car.hovered) {
+        //   context.beginPath();
+        //   context.moveTo(car.x + carSize / 2, textPosition.y);
+        //   context.lineTo(textPosition.x, textPosition.y);
+        //   context.strokeStyle = 'white';
+        //   context.stroke();
+        // }
 
         // Draw car plate number on hover
-        if (car.hovered) {
-          context.font = "18px Arial bold";
-          context.fillStyle = 'white';
-          context.fillText(`${car.plateNumber}`, textPosition.x, textPosition.y);
-        }
+        // if (car.hovered) {
+        //   context.font = "18px Arial bold";
+        //   context.fillStyle = 'white';
+        //   context.fillText(`${car.plateNumber}`, textPosition.x, textPosition.y);
+        // }
 
         // Draw car image
         context.save();
@@ -246,7 +246,7 @@ const StacksCanvas = ({ stack }) => {
         // Debugging Canvas
         // context.font = "18px Arial bold";
         // context.fillStyle = 'white';
-        // context.fillText(`${canvas.height}`, 10, 20);
+        // context.fillText(`${canvasWidthRef.current} ${canvasWidthRef.current / 2 - carSize / 2}`, 10, 20);
 
         // // Draw car boxes
         // context.beginPath();
