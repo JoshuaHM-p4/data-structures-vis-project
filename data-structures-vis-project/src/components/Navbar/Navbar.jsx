@@ -14,7 +14,9 @@ const Navbar = () => {
   const [isActive, setIsActive] = useState(location.pathname);
   const [currentGame, setCurrentGame] = useState('');
   const dropdownRef = useRef();
+  const smalldropdownRef = useRef();
   const gamesRef = useRef();
+  const smallgamesRef = useRef();
 
   const { playSound } = useSound();
   const playDropdown = () => { playSound(dropdownSound) };
@@ -51,17 +53,21 @@ const Navbar = () => {
         dropdownRef.current &&
         !dropdownRef.current.contains(event.target) &&
         gamesRef.current &&
-        !gamesRef.current.contains(event.target) // Ensure gamesRef is not clicked
+        !gamesRef.current.contains(event.target) &&
+        smallgamesRef.current &&
+        !smallgamesRef.current.contains(event.target) &&
+        smalldropdownRef.current &&
+        !smalldropdownRef.current.contains(event.target)
       ) {
         setIsDropdownOpen(false); // Close dropdown
       }
     };
-
+  
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [dropdownRef, gamesRef]); // Correct dependencies
+  }, [dropdownRef, gamesRef, smallgamesRef]); // Correct dependencies
 
 
   return (
@@ -110,8 +116,16 @@ const Navbar = () => {
             <FontAwesomeIcon icon={faInfoCircle} size="lg" />
           </Link>
 
-          {/* Hamburger Icon */}
-          <button onClick={() => {playDropdown; setIsDropdownOpen(!isDropdownOpen);}} className="sm:hidden focus:outline-none nes-pointer text-neutral-100 hover:text-cyan-400">
+          {/* Game Icon */}
+          <button
+            ref={smallgamesRef}
+            className="sm:hidden focus:outline-none nes-pointer text-red-500 hover:text-cyan-400"
+            onClick={(e) => {
+              e.stopPropagation();
+              playDropdown();
+              setIsDropdownOpen((prev) => !prev);
+            }}
+            >
             <FontAwesomeIcon icon={faGamepad} size="xl" />
           </button>
 
@@ -122,7 +136,7 @@ const Navbar = () => {
             setIsDropdownOpen={setIsDropdownOpen}
             setCurrentGame={setCurrentGame}
             setIsActive={setIsActive}
-            dropdownRef={dropdownRef}
+            dropdownRef={smalldropdownRef}
           />
         </div>
 
