@@ -265,7 +265,7 @@ const Stacks = () => {
       {stack &&
         <button
           onClick={() => setIsTooltipClosed(!isTooltipClosed)}
-          className="fixed top-20 left-5 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 active:opacity-80">
+          className="fixed top-20 left-5 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 active:opacity-80 z-40">
           {isTooltipClosed ? <FontAwesomeIcon icon={faTableList} /> : 'Hide Tooltip'}
         </button>
       }
