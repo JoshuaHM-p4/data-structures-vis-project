@@ -32,17 +32,17 @@ const StacksCanvas = ({ stack }) => {
 
   useEffect(() => {
     const initializeCars = (stack, canvas) => {
-      if (stack.length === 0) {
-        carsRef.current = [];
-        imagesRef.current = {};
-        return;
-      }
-
       // Get existing cars from current state of the canvas
       const existingCars = carsRef.current.reduce((acc, car) => {
         acc[car.plateNumber] = car;
         return acc;
       }, {});
+
+      if (stack.length === 0 && existingCars.length > 1 || existingCars.length === 0) {
+        carsRef.current = [];
+        imagesRef.current = {};
+        return null;
+      }
 
       // Detect car removal
       if (stack.length < carsRef.current.length) {
@@ -53,8 +53,6 @@ const StacksCanvas = ({ stack }) => {
           carsRef.current[removedCarIndex].originalIndex = removedCarIndex; // Store original index
         }
       }
-
-      console.log(removingCarRef.current);
 
       // Map new cars to the canvas
       const newCars = stack.map((car, index) => {

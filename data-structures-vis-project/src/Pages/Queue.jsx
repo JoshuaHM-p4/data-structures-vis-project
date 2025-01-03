@@ -2,8 +2,24 @@ import React, { useState } from 'react';
 import StackOverlay from '../components/StacksComponents/StackOverlay.jsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCarSide } from '@fortawesome/free-solid-svg-icons';
+import { faQuestion } from '@fortawesome/free-solid-svg-icons';
+
 import Modal from '../components/StackQueueModal/Modal.jsx';
 import Tooltip from '../components/Tooltip/Tooltip.jsx';
+
+import QueueCanvas from '../components/QueueComponents/QueueCanvas.jsx';
+
+import useSound from '../hooks/useSound.js';
+import carArrival from "../assets/sounds/car-arrival.mp3";
+import carRev1 from "../assets/sounds/car-rev-1.mp3";
+import carRev2 from "../assets/sounds/car-rev-2.mp3";
+import truckRun from "../assets/sounds/truck-run-1.mp3";
+
+import pingSound from "../assets/sounds/ping.wav";
+import resetSound from "../assets/sounds/thud.wav";
+import errorSound from "../assets/sounds/damage.mp3";
+import successSound from "../assets/sounds/complete.wav";
+
 
 const Queue = () => {
   const [queue, setQueue] = useState([]);
@@ -14,16 +30,22 @@ const Queue = () => {
   const [tempContainer, setTempContainer] = useState([]);
   const [pastCars, setPastCars] = useState([]); // Changed to an array to hold multiple past cars
 
+  const [isTooltipClosed, setisTooltipClosed] = useState(true);
+
+  const { playSound } = useSound();
+
   // Add a car to the queue
   const addQueue = (plateNumber) => {
     // Check if the queue is full
     if (queue.length >= 10) {
+      playSound(errorSound);
       alert('Garage is full!');
       return;
     }
 
     // Check if the plate number exists in the queue
     if (queue.some(car => car.plateNumber === plateNumber)) {
+      playSound(errorSound);
       alert('Car already exists!');
       return;
     }
@@ -33,24 +55,37 @@ const Queue = () => {
     if (pastCarIndex !== -1) {
       const pastCar = pastCars[pastCarIndex];
       pastCar.arrivalCount += 1;
-      setQueue([ ...queue, pastCar ]);
+      setQueue([...queue, pastCar]);
       setPlateNumber('');
       setIsModalOpen(false);
+      playSound(successSound);
+      playSound(carArrival);
       // Remove the car from the past cars state
       setPastCars(pastCars.filter((_, index) => index !== pastCarIndex));
       alert(pastCar.plateNumber + " has arrived again");
       return;
     }
 
+    const newType = typeClasses[Math.floor(Math.random() * typeClasses.length)]
+    const isUtility = newType === 'Ambulance' || newType === 'Taxi' || newType === 'Police';
+
     // Create a new car object
     const newCar = {
       plateNumber,
+      order: queue.length + 1,
       color: colorGenerator(),
+      type: newType,
+      isUtility: isUtility,
       arrivalCount: 1,
       departureCount: 0
     };
 
-    console.log(newCar.plateNumber, "has arrived");
+    if (isUtility || newType.toLowerCase().includes('truck')) {
+      playSound(truckRun);
+    } else {
+      const randomRevSound = Math.random() >= 0.5 ? carRev1 : carRev2;
+      playSound(randomRevSound);
+    }
 
     // Add the new car to the queue
     setQueue([...queue, newCar]);
@@ -63,18 +98,21 @@ const Queue = () => {
   const removeQueue = (plateNumber) => {
     // Check if the stack is empty
     if (queue.length === 0) {
+      playSound(errorSound);
       alert('Garage is empty!');
       return;
     }
 
     // Check if the plate number exists in the stack
     if (plateNumber === '') {
+      playSound(errorSound);
       alert('Please enter a plate number!');
       return;
     }
 
     // Check if the plate number exists in the stack
     if (!queue.some(car => car.plateNumber === plateNumber)) {
+      playSound(errorSound);
       alert('Car not found!');
       return;
     }
@@ -91,13 +129,15 @@ const Queue = () => {
         currentCar.departureCount += 1;
         removedCar = currentCar;
         carFound = true;
+        const randomRevSound = Math.random() >= 0.5 ? carRev1 : carRev2;
+        playSound(randomRevSound);
+        playSound(successSound);
         setPoppedItem(removedCar);
         console.log(removedCar.plateNumber, "has been removed");
         break;
       } else {
         // Increment the departureCount of the current car
         currentCar.departureCount += 1;
-        // Temporarily store other cars
         tempContainer.push(currentCar);
       }
     }
@@ -107,8 +147,11 @@ const Queue = () => {
       car.arrivalCount += 1;
     });
 
-    // Re-add the cars from temp back to the stack
-    setQueue([ ...tempContainer, ...queue ]);
+    // Re-add the cars from temp back to the queue (back) and update the car orders
+    setQueue([...queue, ...tempContainer].map((car, index) => {
+      car.order = index + 1;
+      return car;
+    }));
 
     // Update the stack and temp container
     setTempContainer([]);
@@ -122,6 +165,7 @@ const Queue = () => {
 
   // Clear the stack
   const clearQueue = () => {
+    playSound(resetSound);
     setPoppedItem(null);
     setQueue([]);
     setTempContainer([]);
@@ -129,19 +173,28 @@ const Queue = () => {
   };
 
   // Color classes for the cars
-  const colorClasses = [
-    'text-red-800', 'text-blue-800', 'text-green-800', 'text-yellow-800',
-    'text-purple-800', 'text-pink-800', 'text-indigo-800', 'text-gray-800',
-    'text-black-800', 'text-white-800'
-  ];
+  const colorClasses = ['Black', 'Blue', 'Brown', 'Green', 'Magenta', 'Red', 'White', 'Yellow'];
+
+  // Car type classes
+  const typeClasses = ['Ambulance', 'Taxi', 'Police', 'Bus', 'BoxTruck', 'Camper', 'Civic', 'Hatchback', 'Jeep', 'Limo', 'Luxury', 'MediumTruck', 'Micro', 'Minivan', 'Musclecar', 'Pickup', 'Sedan', 'Sport', 'Supercar', 'SUV', 'Van', 'Wagon']
 
   // Generate a random color class
   const colorGenerator = () => {
     return colorClasses[Math.floor(Math.random() * colorClasses.length)];
   };
 
+  // Function for getting image paths
+  const getImagePath = (type, color, isUtility) => {
+    if (isUtility) {
+      return `/vehicles/UTILITY/${type.toUpperCase()}.png`;
+    } else {
+      return `/vehicles/${type.toUpperCase()}/${color.toUpperCase()}.png`;
+    }
+  };
+
   // Handle the arrival button click
   const handleArrivalClick = () => {
+    playSound(pingSound);
     if (queue.length >= 10) {
       alert('Garage is full! Cannot add more cars');
       return;
@@ -153,6 +206,7 @@ const Queue = () => {
 
   // Handle the departure button click
   const handleDepartureClick = () => {
+    playSound(pingSound);
     if (queue.length === 0) {
       alert('Garage is empty! Cannot remove any cars');
       return;
@@ -180,9 +234,9 @@ const Queue = () => {
   };
 
   return (
-    <div className="w-full h-full flex flex-col">      
-      <div className='flex gap-2 justify-center py-3'>
-        <button onClick={handleArrivalClick } className="nes-btn is-primary">
+    <div className="w-full h-full">
+      <div className='flex gap-2 justify-center top-20 left-0 absolute w-full h-fit'>
+        <button onClick={handleArrivalClick} className="nes-btn is-primary">
           Arrival
         </button>
 
@@ -194,23 +248,36 @@ const Queue = () => {
           Clear
         </button>
       </div>
-      
-      <div className='grid grid-cols-10 gap-5 mx-5 flex-grow'>
-        {queue.map((car, index) => (
-          <div key={index} className='flex flex-col p-5 my-auto items-center justify-center border rounded-lg'>
-            <Tooltip key={index} 
-          text={`Plate number: ${car.plateNumber}`}
-          optionalText={`Arrival: ${car.arrivalCount} | Departure: ${car.departureCount}`}
-          position='top'>
-            <div className='p-2 inline-block text-center'>
-              <FontAwesomeIcon className={car.color} icon={faCarSide} flip="horizontal" size="xl" />
-              <br />
-              {car.plateNumber}
+
+      {queue &&
+        <button
+          onClick={() => setisTooltipClosed(!isTooltipClosed)}
+          className="fixed top-20 left-5 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 active:opacity-80">
+          {isTooltipClosed ? <FontAwesomeIcon icon={faQuestion} /> : 'Hide Tooltip'}
+        </button>
+      }
+
+      <div className={`fixed w-fit min-w-32 top-1/2 left-0 h-full`}>
+        <div className='grid grid-cols-10 flex-grow relative'>
+          {queue.map((car, index) => (
+            <div key={index} className='flex flex-col items-center justify-center'>
+              <Tooltip key={index}
+                text={`${car.color} ${car.type} Order: ${car.order}`}
+                alwaysVisible={!isTooltipClosed}
+                optionalText={`Arrivals: ${car.arrivalCount} Departures: ${car.departureCount}`}
+                position='bottom'
+                addedStyle={`w-[125px]`}
+              >
+                <div className='p-2 flex items-end justify-center text-center align-text-bottom pb-5 h-[125px] w-[125px]'>
+                  {car.plateNumber}
+                </div>
+              </Tooltip>
             </div>
-          </Tooltip>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
+
+      <QueueCanvas queue={queue} />
 
       {poppedItem && <StackOverlay car={poppedItem} />}
 
