@@ -248,7 +248,7 @@ const Stacks = () => {
 
   return (
     <div className="w-full h-full">
-      <div className='flex gap-2 justify-center top-20 left-0 absolute w-full h-fit z-50'>
+      <div className='flex gap-2 justify-center top-20 left-0 absolute w-full h-fit'>
         <button onClick={handleArrivalClick} className="nes-btn is-primary rounded">
           Arrival
         </button>
@@ -265,7 +265,7 @@ const Stacks = () => {
       {stack &&
         <button
           onClick={() => setIsTooltipClosed(!isTooltipClosed)}
-          className="fixed top-20 left-5 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 active:opacity-80 z-50">
+          className="fixed top-20 left-5 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 active:opacity-80">
           {isTooltipClosed ? <FontAwesomeIcon icon={faTableList} /> : 'Hide Tooltip'}
         </button>
       }
