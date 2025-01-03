@@ -248,7 +248,7 @@ const Stacks = () => {
 
   return (
     <div className="w-full h-full">
-      <div className='flex gap-2 justify-center top-20 left-0 absolute w-full h-fit'>
+      <div className='flex gap-2 justify-center top-20 left-0 absolute w-full h-fit z-40'>
         <button onClick={handleArrivalClick} className="nes-btn is-primary rounded">
           Arrival
         </button>
