@@ -23,7 +23,8 @@ const Stacks = () => {
   const [poppedItem, setPoppedItem] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [plateNumber, setPlateNumber] = useState('');
-  const [mode, setMode] = useState(''); // 'arrival' or 'departure'
+  const [mode, setMode] = useState(''); // 'arrival', 'departure', or 'alert'
+  const [alertMessage, setAlertMessage] = useState(''); // Message for alert mode
   const [tempContainer, setTempContainer] = useState([]);
   const [pastCars, setPastCars] = useState([]); // Changed to an array to hold multiple past cars
   const [isTooltipClosed, setIsTooltipClosed] = useState(true);
@@ -34,14 +35,18 @@ const Stacks = () => {
     // Check if the stack is full
     if (stack.length >= 10) {
       playSound(errorSound);
-      alert('Garage is full!');
+      setAlertMessage('Garage is full!');
+      setMode('alert');
+      setIsModalOpen(true);
       return;
     }
 
     // Check if the plate number exists in the stack
     if (stack.some(car => car.plateNumber === plateNumber)) {
       playSound(errorSound);
-      alert('Car already exists!');
+      setAlertMessage('Car already exists!');
+      setMode('alert');
+      setIsModalOpen(true);
       return;
     }
 
@@ -57,7 +62,9 @@ const Stacks = () => {
       setPastCars(pastCars.filter((_, index) => index !== pastCarIndex));
       playSound(successSound);
       playSound(carArrival);
-      alert(pastCar.plateNumber + " has arrived again");
+      setAlertMessage(`${pastCar.plateNumber} has arrived again`);
+      setMode('alert');
+      setIsModalOpen(true);
       return;
     }
 
@@ -103,21 +110,27 @@ const Stacks = () => {
     // Check if the stack is empty
     if (stack.length === 0) {
       playSound(errorSound);
-      alert('Garage is empty!');
+      setAlertMessage('Garage is empty!');
+      setMode('alert');
+      setIsModalOpen(true);
       return;
     }
 
     // Check if the plate number exists in the stack
     if (plateNumber === '') {
       playSound(errorSound);
-      alert('Please enter a plate number!');
+      setAlertMessage('Please enter a plate number!');
+      setMode('alert');
+      setIsModalOpen(true);
       return;
     }
 
     // Check if the plate number exists in the stack
     if (!stack.some(car => car.plateNumber === plateNumber)) {
       playSound(errorSound);
-      alert('Car not found!');
+      setAlertMessage('Car not found!');
+      setMode('alert');
+      setIsModalOpen(true);
       return;
     }
 
@@ -209,7 +222,9 @@ const Stacks = () => {
   const handleArrivalClick = () => {
     playSound(pingSound);
     if (stack.length >= 10) {
-      alert('Garage is full! Cannot add more cars.');
+      setAlertMessage('Garage is full! Cannot add more cars.');
+      setMode('alert');
+      setIsModalOpen(true);
       return;
     }
 
@@ -221,7 +236,9 @@ const Stacks = () => {
   const handleDepartureClick = () => {
     playSound(pingSound);
     if (stack.length === 0) {
-      alert('Garage is empty! Cannot remove any cars.');
+      setAlertMessage('Garage is empty! Cannot remove any cars.');
+      setMode('alert');
+      setIsModalOpen(true);
       return;
     }
 
@@ -301,7 +318,9 @@ const Stacks = () => {
         setPlateNumber={setPlateNumber}
         mode={mode}
         cars={stack}
-      />
+        alertMessage={alertMessage}
+      >
+      </Modal>
     </div>
   );
 };
