@@ -46,7 +46,7 @@ const StacksCanvas = ({ stack }) => {
 
       // Detect car removal
       if (stack.length < carsRef.current.length) {
-        const removedCarIndex = Object.keys(existingCars).findIndex(plateNumber => !stack.some(s => s.plateNumber === plateNumber));
+        const removedCarIndex = carsRef.current.findIndex(car => !stack.some(s => s.plateNumber === car.plateNumber));
         if (removedCarIndex !== -1) {
           removingCarRef.current = { index: removedCarIndex };
           carsRef.current[removedCarIndex].removing = true; // Mark the car as removing
@@ -121,6 +121,7 @@ const StacksCanvas = ({ stack }) => {
 
     // Update Car Position
     const update = () => {
+      console.log(carsRef.current.map((car) => car.plateNumber));
       carsRef.current = carsRef.current.map((car, index) => {
         // Skip updating if the car is undefined or the image is not loaded
         if (!car || !car.image) return car;
