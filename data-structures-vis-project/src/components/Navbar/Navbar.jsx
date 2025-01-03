@@ -4,6 +4,10 @@ import { faBurger, faAngleDown, faAngleUp, faHome, faInfoCircle, faGamepad } fro
 import { Link, useLocation } from 'react-router-dom';
 import DropdownMenu from './DropdownMenu.jsx';
 
+import useSound from '../../hooks/useSound.js';
+import dropdownSound from '../../assets/sounds/coin-small.mp3';
+import select from '../../assets/sounds/select.mp3';
+
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const location = useLocation();
@@ -11,6 +15,10 @@ const Navbar = () => {
   const [currentGame, setCurrentGame] = useState('');
   const dropdownRef = useRef();
   const gamesRef = useRef();
+
+  const { playSound } = useSound();
+  const playDropdown = () => { playSound(dropdownSound) };
+  const selectSound = () => { playSound(select) };
 
   const navLinks = [
     { link: '/', title: 'Home' },
@@ -40,7 +48,7 @@ const Navbar = () => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
-        dropdownRef.current && 
+        dropdownRef.current &&
         !dropdownRef.current.contains(event.target) &&
         gamesRef.current &&
         !gamesRef.current.contains(event.target) // Ensure gamesRef is not clicked
@@ -48,13 +56,13 @@ const Navbar = () => {
         setIsDropdownOpen(false); // Close dropdown
       }
     };
-  
+
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [dropdownRef, gamesRef]); // Correct dependencies
-  
+
 
   return (
     <nav className="fixed w-full h-[64px] bg-stone-900 z-50 top-0 p-5 text-white shadow-md border-b">
@@ -63,6 +71,7 @@ const Navbar = () => {
         <Link
           to="/"
           onClick={() => {
+            selectSound();
             setIsDropdownOpen(false);
             setCurrentGame('');
             setIsActive('/');
@@ -74,10 +83,11 @@ const Navbar = () => {
         {/* Smaller Screens */}
         <div className="sm:hidden flex gap-7 items-center">
           {/* Home Icon */}
-          <Link 
-            to="/" 
+          <Link
+            to="/"
             className={`sm:hidden ${isActive === '/' ? 'text-cyan-400' : 'text-neutral-100'} hover:text-cyan-400`}
             onClick={() => {
+              selectSound();
               setIsDropdownOpen(false);
               setCurrentGame('');
               setIsActive('/');
@@ -87,10 +97,11 @@ const Navbar = () => {
           </Link>
 
           {/* About Icon */}
-          <Link 
-            to="/about" 
+          <Link
+            to="/about"
             className={`sm:hidden ${isActive === '/about' ? 'text-cyan-400' : 'text-neutral-100'} hover:text-cyan-400`}
             onClick={() => {
+              selectSound();
               setIsDropdownOpen(false);
               setCurrentGame('');
               setIsActive('/about');
@@ -100,7 +111,7 @@ const Navbar = () => {
           </Link>
 
           {/* Hamburger Icon */}
-          <button onClick={() => setIsDropdownOpen(!isDropdownOpen)} className="sm:hidden focus:outline-none nes-pointer text-neutral-100 hover:text-cyan-400">
+          <button onClick={() => {playDropdown; setIsDropdownOpen(!isDropdownOpen);}} className="sm:hidden focus:outline-none nes-pointer text-neutral-100 hover:text-cyan-400">
             <FontAwesomeIcon icon={faGamepad} size="xl" />
           </button>
 
@@ -124,6 +135,7 @@ const Navbar = () => {
                 to={navLink.link}
                 onClick={() => {
                   setIsDropdownOpen(false);
+                  selectSound();
                   setCurrentGame('');
                   setIsActive(navLink.link);
                 }}
@@ -136,8 +148,9 @@ const Navbar = () => {
             <span
               ref={gamesRef}
               className={`flex items-center p-2 text-center align-middle justify-center sm:inline min-w-fit sm:m-0 bg-stone-800 sm:bg-transparent rounded-lg transition-all duration-300 ease-in-out hover:text-cyan-400 hover:bg-stone-700 active:opacity-80 nes-pointer ${currentGame ? 'text-cyan-400' : 'text-neutral-100'}`}
-              onClick={() => {
-                event.stopPropagation();
+              onClick={(e) => {
+                e.stopPropagation();
+                playDropdown();
                 setIsDropdownOpen((prev) => !prev);
               }}
             >
