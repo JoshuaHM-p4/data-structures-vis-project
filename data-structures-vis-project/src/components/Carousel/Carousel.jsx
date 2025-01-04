@@ -3,6 +3,9 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Link } from 'react-router-dom';
 import Tooltip from '../Tooltip/Tooltip.jsx';
 
+import useSound from '../../hooks/useSound.js';
+import select from '../../assets/sounds/select.mp3';
+
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
 import 'swiper/css/pagination';
@@ -12,6 +15,10 @@ import { EffectCoverflow, Pagination, Navigation } from 'swiper/modules';
 
 const Carousel = ({ items }) => {
   const [activeIndex, setActiveIndex] = useState(0);
+
+  const { playSound } = useSound();
+  const selectSound = () => { playSound(select) };
+
 
   return (
     <div className="relative w-full max-w-3xl mx-auto my-auto">
@@ -34,7 +41,10 @@ const Carousel = ({ items }) => {
         }}
         modules={[EffectCoverflow, Pagination, Navigation]}
         className="swiper_container"
-        onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
+        onSlideChange={(swiper) => {
+          setActiveIndex(swiper.activeIndex);
+          selectSound();
+        }}
       >
         {items.map((item, index) => (
           <SwiperSlide key={index} className="w-64 h-96 nes-pointer flex items-center justify-center bg-gray-500 text-white font-bold text-lg rounded-lg shadow-md hover:scale-105 transition-transform duration-300">
