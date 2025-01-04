@@ -1,0 +1,77 @@
+.tube {
+    width: 38px; /* Adjust the width as needed */
+    height: 50px; /* Adjust the height as needed */
+    background-color: green;
+    border-radius: 10px 10px 0px 0px;
+    position: relative;
+    margin: 20px auto;
+    box-shadow: 0 8px 10px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(
+      to right,
+      #579c66,
+      #579c66 5px,
+      #6dad7b 15px,
+      #e9ffe8 33px,
+      #9dd591 50px,
+      #6bb765 100px,
+      #142e16 100%
+    );
+    transition: height 0.5s ease, background-color 0.5s ease, outline 0.5s linear; /* Add transition for height and background-color */
+}
+
+.tube.comparing {
+    background: linear-gradient(
+      to right,
+      #9c5757,
+      #9c5757 5px,
+      #ad6d6d 15px,
+      #ffe8e8 33px,
+      #d59191 50px,
+      #b76565 100px,
+      #2e1414 100%
+    );
+}
+
+.tube.sorted {
+    outline: 2px solid black;
+}
+
+.tube::after {
+    content: "";
+    position: absolute;
+    left: -8px;
+    height: 20px;
+    width: 53px;
+    border-radius: 6px;
+    border-bottom: solid 7px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 4px 5px rgba(0, 0, 0, 0.5);
+    background: linear-gradient(
+      to right,
+      #579c66,
+      #579c66 5px,
+      #6dad7b 18px,
+      #e9ffe8 36px,
+      #9dd591 53px,
+      #6bb765 103px,
+      #142e16 100%
+    );
+    transition: height 0.5s ease, background-color 0.5s ease, outline 0.5s ease; /* Add transition for height and background-color */
+    
+}
+
+.tube.comparing::after {
+    background: linear-gradient(
+      to right,
+      #9c5757,
+      #9c5757 5px,
+      #ad6d6d 18px,
+      #ffe8e8 36px,
+      #d59191 53px,
+      #b76565 103px,
+      #2e1414 100%
+    );
+}
+
+.tube.sorted::after {
+    outline: 2px solid black;
+}

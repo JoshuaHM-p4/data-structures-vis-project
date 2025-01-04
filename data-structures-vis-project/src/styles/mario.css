@@ -1,0 +1,90 @@
+* {
+    box-sizing: border-box
+    }
+    
+        .mario-block {
+            display: inline-block;
+            height: 30px;
+            margin-right: -7px;
+            position: relative;
+            width: 30px;
+        }
+        .mario-block input {
+            position: absolute;
+            visibility: hidden;
+            z-index: -1;
+        }
+        .mario-block label {
+            background: #F88D2E;
+            border: 4px solid #070000;
+            box-shadow: inset -4px -4px 0 #965117, inset 4px 4px 0 #FAB89B;
+            display: block;
+            height: 100%;
+            position: relative;
+            width: 100%;
+        }
+        .mario-block input:checked + label {
+            background: #885818;
+            box-shadow: inset -4px -4px 0 #68400B, inset 4px 4px 0 #FAB89B;
+        }
+        .mario-block input:checked + label .dot,
+        .mario-block input:checked + label .question-mark {
+            display: none;
+        }
+        .mario-block input:checked + label:before,
+        .mario-block input:checked + label:after {
+            content: '';
+            height: 20px;
+            position: absolute;
+            transform: rotate(45deg);
+            width: 20px;
+        }
+        .mario-block input:checked + label:before {
+            border-right: 4px solid #070000;
+            right: 18px;
+            top: 15px;
+            transform: rotate(45deg);
+        }
+        .mario-block input:checked + label:after {
+            border-left: 4px solid #070000;
+            left: 18px;
+            top: 15px;
+            transform: rotate(-45deg);
+        }
+        .mario-block .dot {
+            background: #070000;
+            height: 5px;
+            position: absolute;
+            width: 5px;
+        }
+        .mario-block .dot:nth-child(1) {
+            left: 4px;
+            top: 4px;
+        }
+        .mario-block .dot:nth-child(2) {
+            right: 4px;
+            top: 4px;
+        }
+        .mario-block .dot:nth-child(3) {
+            bottom: 4px;
+            left: 4px;
+        }
+        .mario-block .dot:nth-child(4) {
+            bottom: 4px;
+            right: 4px;
+        }
+        .mario-block--question label {
+            cursor: pointer;
+        }
+        .mario-block--question .question-mark {
+            background-image: url("data:image/svg+xml,%3Csvg width='277px' height='380px' viewBox='0 0 277 380' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3E%3Cg id='Page-1' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'%3E%3Cg id='Group'%3E%3Cpolygon id='Path' fill='%23000000' points='30 168 30 65 63 65 63 30 195.910156 30 238 65 277 65 277 204 207 204 207 274 137 274 137 204 170 204 170 168 207 168 207 65 101 65 101 168'%3E%3C/polygon%3E%3Cpolygon id='Path-2' fill='%23000000' points='137 312 137 380 207 380 207 312'%3E%3C/polygon%3E%3Cpolygon id='Path' fill='%23FFFFFF' points='0 138 0 35 33 35 33 0 208 0 208 35 247 35 247 174 177 174 177 244 107 244 107 174 140 174 140 138 177 138 177 35 71 35 71 138'%3E%3C/polygon%3E%3Cpolygon id='Path-2' fill='%23FFFFFF' points='107 282 107 350 177 350 177 282'%3E%3C/polygon%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: 40px;
+            bottom: 0;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            z-index: 1;
+        }
