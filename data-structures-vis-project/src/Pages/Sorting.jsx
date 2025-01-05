@@ -8,6 +8,7 @@ const Sorting = () => {
   const [isSorting, setIsSorting] = useState(false);
   const [comparing, setComparing] = useState([-1, -1]);
   const [sortedIndices, setSortedIndices] = useState([]);
+  const [sortMethod, setSortMethod] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [delay, setDelay] = useState(500);
@@ -342,9 +343,9 @@ const Sorting = () => {
       {/* Button Section */}
       <div className='flex gap-2 justify-center items-center w-full bg-red-50'>
         <select
-          onChange={(e) => handleSort(e.target.value)}
           className='p-2 h-full bg-blue-500 text-white rounded'
           disabled={isSorting}
+          onChange={(e) => setSortMethod(e.target.value)}
         >
           <option value="" disabled selected>Select Sort Method</option>
           <option value="bubble">Bubble Sort</option>
@@ -355,6 +356,13 @@ const Sorting = () => {
           <option value="quick">Quick Sort</option>
           <option value="heap">Heap Sort</option>
         </select>
+        <button
+          className='p-2 h-full bg-blue-500 text-white rounded'
+          disabled={isSorting}
+          onClick={() => handleSort(sortMethod)}
+        >
+          Sort
+        </button>
         <button
           className='p-2 h-full bg-blue-500 text-white rounded'
           onClick={() => {
@@ -369,11 +377,11 @@ const Sorting = () => {
       </div>
 
       {/* Sorting Section */}
-      <div className="flex items-end gap-6 bg-red-50 h-full w-full justify-center">
+      <div className="flex flex-grow items-end gap-2 bg-red-50 h-full w-full justify-center">
         {arr.map((num, index) => (
           <div key={index} className='flex flex-col items-center'>
             <MarioTube 
-              height={num * 7.5} 
+              height={num * 4.5} 
               comparing={comparing.includes(index)} 
               sorted={sortedIndices.includes(index)} />
             <p>{num}</p>

@@ -1,59 +1,70 @@
 .tube {
-    width: 38px; /* Adjust the width as needed */
+    width: 20px; /* Adjust the width as needed */
     height: 50px; /* Adjust the height as needed */
     background-color: green;
-    border-radius: 10px 10px 0px 0px;
     position: relative;
-    margin: 20px auto;
+    margin: 5px auto;
     box-shadow: 0 8px 10px rgba(0, 0, 0, 0.3);
+    outline: black 1px solid;
     background: linear-gradient(
       to right,
-      #579c66,
-      #579c66 5px,
-      #6dad7b 15px,
-      #e9ffe8 33px,
-      #9dd591 50px,
-      #6bb765 100px,
-      #142e16 100%
+      #4a90e2, /* Light blue */
+      #4a90e2 0.5px,
+      #5ba4ee 3px, /* Slightly lighter blue */
+      #d0eaff 6px, /* Very light blue */
+      #7fc7f7 10px, /* Sky blue */
+      #4b9cd3 17px, /* Medium blue */
+      #102a4c 100% /* Dark blue */
     );
-    transition: height 0.5s ease, background-color 0.5s ease, outline 0.5s linear; /* Add transition for height and background-color */
+    transition: height 0.5s ease, background-color 0.5s ease,; /* Add transition for height and background-color */
 }
 
 .tube.comparing {
     background: linear-gradient(
       to right,
       #9c5757,
-      #9c5757 5px,
-      #ad6d6d 15px,
-      #ffe8e8 33px,
-      #d59191 50px,
-      #b76565 100px,
+      #9c5757 0.5px,
+      #ad6d6d 3px,
+      #ffe8e8 6px,
+      #d59191 10px,
+      #b76565 17px,
       #2e1414 100%
     );
 }
 
 .tube.sorted {
-    outline: 2px solid black;
+  background: linear-gradient(
+  to right,
+  #579c66,
+  #579c66 0.5px,
+  #6dad7b 3px,
+  #e9ffe8 6px,
+  #9dd591 10px,
+  #6bb765 17px,
+  #142e16 100%
+);
 }
 
 .tube::after {
     content: "";
     position: absolute;
-    left: -8px;
-    height: 20px;
-    width: 53px;
-    border-radius: 6px;
-    border-bottom: solid 7px rgba(0, 0, 0, 0.4);
+    left:-5px;
+    top: -10px;
+    height: 10px;
+    width: 30px;
+    border-radius: 3px;
+    border-bottom: solid 5px rgba(0, 0, 0, 0.4);
     box-shadow: 0 4px 5px rgba(0, 0, 0, 0.5);
+    outline: black 1px solid;
     background: linear-gradient(
       to right,
-      #579c66,
-      #579c66 5px,
-      #6dad7b 18px,
-      #e9ffe8 36px,
-      #9dd591 53px,
-      #6bb765 103px,
-      #142e16 100%
+      #4a90e2, /* Light blue */
+      #4a90e2 1px,
+      #5ba4ee 5px, /* Slightly lighter blue */
+      #d0eaff 10px, /* Very light blue */
+      #7fc7f7 15px, /* Sky blue */
+      #4b9cd3 17px, /* Medium blue */
+      #102a4c 100% /* Dark blue */
     );
     transition: height 0.5s ease, background-color 0.5s ease, outline 0.5s ease; /* Add transition for height and background-color */
     
@@ -63,15 +74,24 @@
     background: linear-gradient(
       to right,
       #9c5757,
-      #9c5757 5px,
-      #ad6d6d 18px,
-      #ffe8e8 36px,
-      #d59191 53px,
-      #b76565 103px,
+      #9c5757 1px,
+      #ad6d6d 5px,
+      #ffe8e8 10px,
+      #d59191 15px,
+      #b76565 17px,
       #2e1414 100%
     );
 }
 
 .tube.sorted::after {
-    outline: 2px solid black;
+  background: linear-gradient(
+    to right,
+    #579c66,
+    #579c66 1px,
+    #6dad7b 5px,
+    #e9ffe8 10px,
+    #9dd591 15px,
+    #6bb765 17px,
+    #142e16 100%
+  );
 }
