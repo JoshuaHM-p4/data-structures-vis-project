@@ -166,7 +166,7 @@ const Sorting = () => {
 
     for (let i = 0; i < n; i++) {
         setSortedIndices((prev) => [...prev, i]);
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        await new Promise((resolve) => setTimeout(resolve, delayRef.current));
     }
 
     setSortedIndices([...Array(n).keys()]);
@@ -179,48 +179,65 @@ const Sorting = () => {
 
   const mergeSort = async (array) => {
     let arrCopy = [...array];
+    const n = arrCopy.length;
 
-    const merge = async (left, right) => {
-      let result = [];
-      let leftIndex = 0;
-      let rightIndex = 0;
+    const merge = async (left, mid, right) => {
+      let leftArray = arrCopy.slice(left, mid + 1);
+      let rightArray = arrCopy.slice(mid + 1, right + 1);
 
-      while (leftIndex < left.length && rightIndex < right.length) {
-        setComparing([leftIndex, rightIndex]);
-        await new Promise((resolve) => setTimeout(resolve, delayRef.current)); // Adjust the delay as needed
-        if (left[leftIndex] < right[rightIndex]) {
-          result.push(left[leftIndex]);
-          leftIndex++;
+      let i = 0, j = 0, k = left;
+
+      while (i < leftArray.length && j < rightArray.length) {
+        setComparing([left + i, mid + 1 + j]);
+        await new Promise((resolve) => setTimeout(resolve, delayRef.current));
+
+        if (leftArray[i] <= rightArray[j]) {
+          arrCopy[k] = leftArray[i];
+          i++;
         } else {
-          result.push(right[rightIndex]);
-          rightIndex++;
+          arrCopy[k] = rightArray[j];
+          j++;
         }
+        setArr([...arrCopy]);
+        k++;
+        await new Promise((resolve) => setTimeout(resolve, delayRef.current));
       }
 
-      return result.concat(left.slice(leftIndex)).concat(right.slice(rightIndex));
-    };
-
-    const mergeSortRecursive = async (arr) => {
-      if (arr.length <= 1) {
-        return arr;
+      while (i < leftArray.length) {
+        arrCopy[k] = leftArray[i];
+        i++;
+        k++;
+        setArr([...arrCopy]);
+        await new Promise((resolve) => setTimeout(resolve, delayRef.current));
       }
 
-      const middle = Math.floor(arr.length / 2);
-      const left = await mergeSortRecursive(arr.slice(0, middle));
-      const right = await mergeSortRecursive(arr.slice(middle));
-
-      const merged = await merge(left, right);
-      setArr([...merged]);
-      setSortedIndices((prev) => [...prev, ...Array.from({ length: merged.length }, (_, i) => i)]);
-      return merged;
+      while (j < rightArray.length) {
+        arrCopy[k] = rightArray[j];
+        j++;
+        k++;
+        setArr([...arrCopy]);
+        await new Promise((resolve) => setTimeout(resolve, delayRef.current));
+      }
     };
 
-    await mergeSortRecursive(arrCopy);
+    const mergeSortRecursive = async (left, right) => {
+      if (left < right) {
+        let mid = Math.floor((left + right) / 2);
+
+        await mergeSortRecursive(left, mid);
+        await mergeSortRecursive(mid + 1, right);
+        await merge(left, mid, right);
+      }
+    };
+
+    await mergeSortRecursive(0, n - 1);
+    setSortedIndices([...Array(n).keys()]);
     setComparing([-1, -1]);
     setIsSorting(false);
     setPrevArr([...array]);
     handleModalOpen('Merge Sort Completed');
   };
+
 
   const shellSort = async (array) => {
     let arrCopy = [...array];
@@ -340,20 +357,27 @@ const Sorting = () => {
 
   const handleSort = (sortType) => {
     setIsSorting(true);
+    const startTime = performance.now();
+    const sortCompleted = (sortName) => {
+      const endTime = performance.now();
+      const timeTaken = ((endTime - startTime) / 1000).toFixed(2);
+      handleModalOpen(`${sortName} Completed in ${timeTaken} seconds`);
+    };
+
     if (sortType === 'bubble') {
-      bubbleSort(arr);
+      bubbleSort(arr).then(() => sortCompleted('Bubble Sort'));
     } else if (sortType === 'selection') {
-      selectionSort(arr);
+      selectionSort(arr).then(() => sortCompleted('Selection Sort'));
     } else if (sortType === 'insertion') {
-      insertionSort(arr);
+      insertionSort(arr).then(() => sortCompleted('Insertion Sort'));
     } else if (sortType === 'merge') {
-      mergeSort(arr);
+      mergeSort(arr).then(() => sortCompleted('Merge Sort'));
     } else if (sortType === 'shell') {
-      shellSort(arr);
+      shellSort(arr).then(() => sortCompleted('Shell Sort'));
     } else if (sortType === 'quick') {
-      quickSort(arr);
+      quickSort(arr).then(() => sortCompleted('Quick Sort'));
     } else if (sortType === 'heap') {
-      heapSort(arr);
+      heapSort(arr).then(() => sortCompleted('Heap Sort'));
     }
   };
 
