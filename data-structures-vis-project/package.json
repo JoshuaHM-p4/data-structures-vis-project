@@ -16,6 +16,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.7.1",
     "@fortawesome/react-fontawesome": "^0.2.2",
     "autoprefixer": "^10.4.20",
+    "gsap": "^3.12.5",
     "nes.css": "^2.2.1",
     "postcss": "^8.4.49",
     "react": "^18.3.1",
