@@ -16,7 +16,7 @@
       #4b9cd3 17px, /* Medium blue */
       #102a4c 100% /* Dark blue */
     );
-    transition: height 0.5s ease, background-color 0.5s ease,; /* Add transition for height and background-color */
+    transition: height 0.3s ease, background-color 0.3s ease; /* Add transition for height and background-color */
 }
 
 .tube.comparing {
@@ -31,6 +31,20 @@
       #2e1414 100%
     );
 }
+
+.tube.reference {
+  background: linear-gradient(
+    to right,
+    #f4e04d, /* Light yellow */
+    #f4e04d 0.5px,
+    #f7e669 3px, /* Slightly lighter yellow */
+    #fff9d6 6px, /* Very light yellow */
+    #fde88b 10px, /* Sunny yellow */
+    #f7d357 17px, /* Medium yellow */
+    #4d3b10 100% /* Dark yellow-brown */
+  );
+}  
+
 
 .tube.sorted {
   background: linear-gradient(
@@ -66,11 +80,11 @@
       #4b9cd3 17px, /* Medium blue */
       #102a4c 100% /* Dark blue */
     );
-    transition: height 0.5s ease, background-color 0.5s ease, outline 0.5s ease; /* Add transition for height and background-color */
+    transition: height 0.3s ease, background-color 0.3s ease,; /* Add transition for height and background-color */
     
 }
 
-.tube.comparing::after {
+.tube.comparing::after{
     background: linear-gradient(
       to right,
       #9c5757,
@@ -95,3 +109,35 @@
     #142e16 100%
   );
 }
+
+.tube.reference::after {
+  background: linear-gradient(
+    to right,
+    #f4e04d, /* Light yellow */
+    #f4e04d 1px,
+    #f7e669 5px, /* Slightly lighter yellow */
+    #fff9d6 10px, /* Very light yellow */
+    #fde88b 15px, /* Sunny yellow */
+    #f7d357 17px, /* Medium yellow */
+    #4d3b10 100% /* Dark yellow-brown */
+  );  
+}
+
+
+@keyframes swap {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.swapping {
+    animation: swap 0.3s ease;
+}
+
+
