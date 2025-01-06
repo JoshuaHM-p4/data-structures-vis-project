@@ -470,7 +470,7 @@ const Sorting = () => {
               height={num * 4.5} 
               comparing={comparing.includes(index)} 
               sorted={sortedIndices.includes(index)} 
-              reference={referenceIndex === index} />
+              reference={referenceIndex === index && !comparing.includes(index)} />
             <p>{num}</p>
           </div>
         ))}
