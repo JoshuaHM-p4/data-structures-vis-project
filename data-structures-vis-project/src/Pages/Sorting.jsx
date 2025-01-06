@@ -3,16 +3,25 @@ import MarioTube from '../components/MarioComponent/MarioTubes.jsx';
 import Modal from '../components/StackQueueModal/Modal.jsx';
 
 const Sorting = () => {
-  const [arr, setArr] = useState([]);
+  const [arr, setArr] = useState([46, 21, 3, 12, 45, 2, 1, 5, 16, 10]);
   const [prevArr, setPrevArr] = useState([]);
+
+  const [isDisabled, setIsDisabled] = useState(false);
+
+
   const [isSorting, setIsSorting] = useState(false);
   const [comparing, setComparing] = useState([-1, -1]);
   const [sortedIndices, setSortedIndices] = useState([]);
   const [sortMethod, setSortMethod] = useState('');
+  const [referenceIndex, setReferenceIndex] = useState(-1);
+  const [swapping, setSwapping] = useState([-1, -1]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
+
   const [delay, setDelay] = useState(500);
   const delayRef = useRef(delay);
+
+  
 
   const handleModalClose = () => {
     setIsModalOpen(false);
@@ -47,10 +56,13 @@ const Sorting = () => {
         setComparing([j, j + 1]);
         await new Promise((resolve) => setTimeout(resolve, delayRef.current)); // Adjust the delay as needed
         if (arrCopy[j] > arrCopy[j + 1]) {
+          setSwapping([j, j + 1]);
+          await new Promise((resolve) => setTimeout(resolve, delayRef.current)); // Add delay for swapping animation
           let temp = arrCopy[j];
           arrCopy[j] = arrCopy[j + 1];
           arrCopy[j + 1] = temp;
           setArr([...arrCopy]);
+          setSwapping([-1, -1]);
         }
         setComparing([-1, -1]);
         await new Promise((resolve) => setTimeout(resolve, delayRef.current)); // Adjust the delay as needed
@@ -70,7 +82,8 @@ const Sorting = () => {
     for (let i = 0; i < n - 1; i++) {
       let minIndex = i;
       for (let j = i + 1; j < n; j++) {
-        setComparing([minIndex, j]);
+        setComparing([i, minIndex]);
+        setReferenceIndex(j);
         await new Promise((resolve) => setTimeout(resolve, delayRef.current));
         if (arrCopy[j] < arrCopy[minIndex]) {
           minIndex = j;
@@ -78,15 +91,21 @@ const Sorting = () => {
         await new Promise((resolve) => setTimeout(resolve, delayRef.current)); // Adjust the delay as needed
       }
       if (minIndex !== i) {
+        setComparing([i, minIndex]);
+        setSwapping([i, minIndex]);
+        setReferenceIndex(-1);
+        await new Promise((resolve) => setTimeout(resolve, delayRef.current)); // Add delay for swapping animation
         let temp = arrCopy[i];
         arrCopy[i] = arrCopy[minIndex];
         arrCopy[minIndex] = temp;
         setArr([...arrCopy]);
+        setSwapping([-1, -1]);
       }
       setSortedIndices((prev) => [...prev, i]);
     }
     setSortedIndices((prev) => [...prev, n - 1]);
     setComparing([-1, -1]);
+    setReferenceIndex(-1);
     setIsSorting(false);
     setPrevArr([...array]);
     handleModalOpen('Selection Sort Completed');
@@ -95,27 +114,68 @@ const Sorting = () => {
   const insertionSort = async (array) => {
     let arrCopy = [...array];
     let n = arrCopy.length;
-    for (let i = 1; i < n; i++) {
-      let key = arrCopy[i];
-      let j = i - 1;
-      while (j >= 0 && arrCopy[j] > key) {
-        setComparing([j, j + 1]);
+
+    const delay = async () => {
         await new Promise((resolve) => setTimeout(resolve, delayRef.current));
-        arrCopy[j + 1] = arrCopy[j];
-        j = j - 1;
-        setArr([...arrCopy]);
-        await new Promise((resolve) => setTimeout(resolve, delayRef.current)); // Adjust the delay as needed
-      }
-      arrCopy[j + 1] = key;
-      setArr([...arrCopy]);
-      setSortedIndices((prev) => [...prev, i]);
+    };
+
+    for (let i = 1; i < n; i++) {
+        let currentValue = arrCopy[i];
+        let j = i - 1;
+
+        setReferenceIndex(i);
+        let localReferenceIndex = i;
+        await delay();
+
+        let lastComparedIndex = [i, i - 1];
+
+        while (j >= 0 && arrCopy[j] > currentValue) {
+            if (localReferenceIndex === j + 1) {
+                setReferenceIndex(-1);
+                setComparing([j, j + 1]);
+                await delay();
+                setReferenceIndex(i);
+            } else {
+                setComparing([j, j + 1]);
+                await delay();
+            }
+
+            [arrCopy[j + 1], arrCopy[j]] = [arrCopy[j], arrCopy[j + 1]];
+            j--;
+
+            lastComparedIndex = [j, j + 1];
+            setArr([...arrCopy]);
+            await delay();
+        }
+
+        if (lastComparedIndex[0] === localReferenceIndex) {
+            setReferenceIndex(-1);
+            setComparing(lastComparedIndex);
+            await delay();
+            setReferenceIndex(i);
+        } else {
+            setComparing(lastComparedIndex);
+            await delay();
+        }
+
+        setReferenceIndex(-1);
+        setComparing([-1, -1]);
     }
-    setSortedIndices((prev) => [...prev, 0]);
+
+    setArr([...arrCopy]);
+
+    for (let i = 0; i < n; i++) {
+        setSortedIndices((prev) => [...prev, i]);
+        await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+
+    setSortedIndices([...Array(n).keys()]);
     setComparing([-1, -1]);
+    setReferenceIndex(-1);
     setIsSorting(false);
     setPrevArr([...array]);
     handleModalOpen('Insertion Sort Completed');
-  };
+};
 
   const mergeSort = async (array) => {
     let arrCopy = [...array];
@@ -370,7 +430,9 @@ const Sorting = () => {
             setPrevArr([]);
             setSortedIndices([]);
             setComparing([-1, -1]);
+            setIsDisabled(true)
           }}
+          disabled={isDisabled}
         >
           Revert Array
         </button>
@@ -379,11 +441,12 @@ const Sorting = () => {
       {/* Sorting Section */}
       <div className="flex flex-grow items-end gap-2 bg-red-50 h-full w-full justify-center">
         {arr.map((num, index) => (
-          <div key={index} className='flex flex-col items-center'>
+          <div key={index} className={`flex flex-col items-center ${swapping.includes(index) ? 'swapping' : ''}`}>
             <MarioTube 
               height={num * 4.5} 
               comparing={comparing.includes(index)} 
-              sorted={sortedIndices.includes(index)} />
+              sorted={sortedIndices.includes(index)} 
+              reference={referenceIndex === index} />
             <p>{num}</p>
           </div>
         ))}
