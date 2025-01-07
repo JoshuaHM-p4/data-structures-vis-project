@@ -35,6 +35,9 @@ const Sorting = () => {
   const [delay, setDelay] = useState(100);
   const delayRef = useRef(delay);
 
+  const [arraySize, setArraySize] = useState(20);
+  const [timeTaken, setTimeTaken] = useState(0);
+
   const getTubeMode = (index) => {
     if (redTube.includes(index)) return 'red';
     if (greenTube.includes(index)) return 'green';
@@ -73,6 +76,7 @@ const Sorting = () => {
     const sortCompleted = (sortName) => {
       const endTime = performance.now();
       const timeTaken = ((endTime - startTime) / 1000).toFixed(2);
+      setTimeTaken(timeTaken);
       handleModalOpen(`${sortName} Completed in ${timeTaken} seconds`);
       setIsSorting(false);
     };
@@ -95,8 +99,8 @@ const Sorting = () => {
     // }
   };
 
-  const generateRandomArray = () => {
-    const randomArray = Array.from({ length: 30 }, () => Math.floor(Math.random() * 50) + 1);
+  const generateRandomArray = (size) => {
+    const randomArray = Array.from({ length: size }, () => Math.floor(Math.random() * 50) + 1);
     setArr(randomArray);
     setPrevArr([]);
     setRedTube([]);
@@ -117,12 +121,17 @@ const Sorting = () => {
             <Slider 
               min={10}
               max={30}
-              value={20}
-              onChange={10}/>
+              step={10}
+              value={arraySize}
+              onChange={(value) => {
+                setArraySize(value);
+                generateRandomArray(value);
+              }}
+            />
           </div>
         
           <button
-            onClick={generateRandomArray}
+            onClick={() => generateRandomArray(arraySize)}
             className='nes-btn is-warning '
           >
             Generate Random Array
@@ -194,7 +203,7 @@ const Sorting = () => {
             onClick={decreaseDelay}/>
           </button>
           </div>
-          <p className='p-2'>Time Taken: 10 secs</p>
+          <p className='p-2'>Timer: {timeTaken} secs</p>
 
         </div>
       </div>
