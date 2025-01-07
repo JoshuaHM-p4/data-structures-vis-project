@@ -1,6 +1,11 @@
 import React, { useState, useRef } from 'react';
 import MarioTube from '../components/MarioComponent/MarioTubes.jsx';
 import Modal from '../components/StackQueueModal/Modal.jsx';
+import Slider from '../components/Slider/Slider.jsx';
+
+import { faCaretUp, faCaretDown} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import { bubbleSort } from '../sortingAlgorithms/bubbleSort';
 import { selectionSort } from '../sortingAlgorithms/selectionSort';
 import { insertionSort } from '../sortingAlgorithms/insertionSort';
@@ -102,82 +107,100 @@ const Sorting = () => {
   };
 
   return (
-    <div className='flex h-full bg-green-100 flex-col items-center gap-3'>
-      {/* Array Section */}
-      <div className='flex gap-2 pt-2'>
-        <button
-          onClick={generateRandomArray}
-          className='p-2 bg-blue-500 text-white rounded'
-        >
-          Generate Random Array
-        </button>
-        <button
-          onClick={decreaseDelay}
-          className='p-2 bg-blue-500 text-white rounded'
-        >
-          Decrease Delay
-        </button>
-        <button
-          onClick={increaseDelay}
-          className='p-2 bg-blue-500 text-white rounded'
-        >
-          Increase Delay
-        </button>
-      </div>
-
-      {/* Display Array */}
-      <div className='flex gap-2 justify-center items-center w-full'>
-        <p>Array:</p>
-        {arr.map((num, index) => (
-          <div key={index} className='p-2 bg-blue-500 text-white rounded'>
-            {num}
+    <div className='flex h-full flex-col items-center gap-2 p-2'>
+      {/* Upper Section */}
+      <div className='flex flex-row justify-between items-center w-full gap-2'>
+        {/* Left Section */}
+        <div className='flex flex-col gap-2 p-2 w-full h-full justify-center items-start'>
+          <div className='flex gap-2 justify-start items-center'>
+            <p className='pr-2'>Array Size: </p>
+            <Slider 
+              min={10}
+              max={30}
+              value={20}
+              onChange={10}/>
           </div>
-        ))}
-        <p>Delay: {delay}</p>
-      </div>
+        
+          <button
+            onClick={generateRandomArray}
+            className='nes-btn is-warning '
+          >
+            Generate Random Array
+          </button>
+        </div>
 
-      {/* Button Section */}
-      <div className='flex gap-2 justify-center items-center w-full bg-red-50'>
-        <select
-          className='p-2 h-full bg-blue-500 text-white rounded'
-          disabled={isSorting}
-          onChange={(e) => setSortMethod(e.target.value)}
-        >
-          <option value="" disabled selected>Select Sort Method</option>
-          <option value="bubble">Bubble Sort</option>
-          <option value="selection">Selection Sort</option>
-          <option value="insertion">Insertion Sort</option>
-          <option value="merge">Merge Sort</option>
-          <option value="shell">Shell Sort</option>
-          <option value="quick">Quick Sort</option>
-          <option value="heap">Heap Sort</option>
-        </select>
-        <button
-          className='p-2 h-full bg-blue-500 text-white rounded'
-          disabled={isSorting}
-          onClick={() => handleSort(sortMethod)}
-        >
-          Sort
-        </button>
-        <button
-          className='p-2 h-full bg-blue-500 text-white rounded'
-          onClick={() => {
-            setArr([...prevArr]);
-            setPrevArr([]);
-            setRedTube([]);
-            setGreenTube([]);
-            setYellowTube([]);
-            setSwapping([]);
-            setIsDisabled(true);
-          }}
-          disabled={isDisabled}
-        >
-          Revert Array
-        </button>
+        {/* Middle Section */}
+        <div className='flex flex-col justify-center w-full items-center'>
+        <div className="nes-select flex flex-col justify-center items-center px-1">
+          <select
+              className='default_select text-black'
+              disabled={isSorting}
+              onChange={(e) => setSortMethod(e.target.value)}
+            >
+              <option value="" disabled selected>Select Sort Method</option>
+              <option value="bubble">Bubble Sort</option>
+              <option value="selection">Selection Sort</option>
+              <option value="insertion">Insertion Sort</option>
+              <option value="merge">Merge Sort</option>
+              <option value="shell">Shell Sort</option>
+              <option value="quick">Quick Sort</option>
+              <option value="heap">Heap Sort</option>
+            </select>
+          </div>
+        {/*Buttons*/}
+        <div className='flex w-full justify-center items-center'>
+          <button
+            className='nes-btn is-primary w-full'
+            disabled={isSorting}
+            onClick={() => handleSort(sortMethod)}
+          >
+            Sort
+          </button>
+          <button
+            className='nes-btn is-error w-full'
+            onClick={() => {
+              setArr([...prevArr]);
+              setPrevArr([]);
+              setRedTube([]);
+              setGreenTube([]);
+              setYellowTube([]);
+              setSwapping([]);
+              setIsDisabled(true);
+            }}
+            disabled={isDisabled}
+          >
+            Unsort 
+          </button>
+          </div>
+        </div>
+
+        {/* Right Section */}
+        <div className='flex flex-col gap-2 justify-center items-end w-full h-full'>
+          <div className='relative'>
+          <p className='mr-5'>Delay: {delay}ms</p>
+          <button
+            className='absolute right-1 -top-1.5 focus:outline-none'
+            
+          >
+            <FontAwesomeIcon icon={faCaretUp} size="2xl" 
+            className='hover:text-red-500 active:scale-110' 
+            onClick={increaseDelay}/>
+          </button>
+          <button
+            className='absolute right-1 top-0.5 focus:outline-none'
+          >
+            <FontAwesomeIcon icon={faCaretDown} size="2xl"
+            className='hover:text-red-500 active:scale-110' 
+            onClick={decreaseDelay}/>
+          </button>
+          </div>
+          <p className='p-2'>Time Taken: 10 secs</p>
+
+        </div>
       </div>
 
       {/* Sorting Section */}
-      <div className="flex flex-grow items-end gap-2 bg-red-50 h-full w-full justify-center">
+      <div className="flex flex-grow items-end gap-2h-full w-full justify-center">
         {arr.map((num, index) => (
           <div key={index} className={`flex flex-col items-center ${swapping.includes(index) ? 'swapping' : ''}`}>
             <MarioTube
