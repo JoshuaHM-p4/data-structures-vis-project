@@ -5,25 +5,16 @@ import '../../styles/tube.css';
 const MarioTube = ({ index, num, height, mode }) => {
   const getClassNames = () => {
     let className = 'tube';
-    if (mode === 'comparing') {
-      className = 'tube comparing';
-      console.log('comparing. Index: ', index, 'num: ', num);
-    } else if (mode === 'sorted') {
-      className = 'tube sorted';
+    if (mode === 'red') {
+      className = 'tube red';
+      console.log('. Index: ', index, 'num: ', num);
+    } else if (mode === 'green') {
+      className = 'tube green';
       console.log('sorted. Index: ', index, 'num: ', num);
-    } else if (mode === 'reference') {
-      className = 'tube reference';
+    } else if (mode === 'yellow') {
+      className = 'tube yellow';
       console.log('reference. Index: ', index , 'num: ', num);
-
-    } else if (mode === 'leftArray') {
-      className = 'tube left-array';
-      console.log('leftArray. Index: ', index, 'num: ', num);
-      console.log('num: ', num);
-    } else if (mode === 'rightArray') {
-      className = 'tube right-array';
-      console.log('rightArray. Index: ', index, 'num: ', num);
-      console.log('num: ', num);
-    } else {
+    } else if (mode === 'blue') {
       className = 'tube';
       console.log('normal. Index: ', index, 'num: ', num);
     }

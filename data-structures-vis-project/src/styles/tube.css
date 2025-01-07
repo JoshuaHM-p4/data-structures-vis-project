@@ -1,3 +1,10 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Default State */
 .tube {
   width: 20px; /* Adjust the width as needed */
   height: 50px; /* Adjust the height as needed */
@@ -20,89 +27,7 @@
   margin: 0 5px;
 }
 
-.tube.comparing {
-  background-color: yellow;
-  background: linear-gradient(
-    to right,
-    #9c5757,
-    #9c5757 0.5px,
-    #ad6d6d 3px,
-    #ffe8e8 6px,
-    #d59191 10px,
-    #b76565 17px,
-    #2e1414 100%
-  );
-}
-
-.tube.left-array {
-  background: linear-gradient(
-    to right,
-    #9c5757,
-    #9c5757 0.5px,
-    #ad6d6d 3px,
-    #ffe8e8 6px,
-    #d59191 10px,
-    #b76565 17px,
-    #2e1414 100%
-  );
-}
-
-.tube.sorted.left-array {
-  background-color: yellow;
-  background: linear-gradient(
-    to right,
-    #9c5757,
-    #9c5757 0.5px,
-    #ad6d6d 3px,
-    #ffe8e8 6px,
-    #d59191 10px,
-    #b76565 17px,
-    #2e1414 100%
-  );
-}
-
-.tube.right-array {
-  background-color: purple;
-  background: linear-gradient(
-    to right,
-    #f4e04d, /* Light yellow */
-    #f4e04d 0.5px,
-    #f7e669 3px, /* Slightly lighter yellow */
-    #fff9d6 6px, /* Very light yellow */
-    #fde88b 10px, /* Sunny yellow */
-    #f7d357 17px, /* Medium yellow */
-    #4d3b10 100% /* Dark yellow-brown */
-  );
-}
-
-.tube.reference {
-  background-color: red;
-  background: linear-gradient(
-    to right,
-    #f4e04d, /* Light yellow */
-    #f4e04d 0.5px,
-    #f7e669 3px, /* Slightly lighter yellow */
-    #fff9d6 6px, /* Very light yellow */
-    #fde88b 10px, /* Sunny yellow */
-    #f7d357 17px, /* Medium yellow */
-    #4d3b10 100% /* Dark yellow-brown */
-  );
-}
-
-
-.tube.sorted {
-  background: linear-gradient(
-    to right,
-    #579c66,
-    #579c66 0.5px,
-    #6dad7b 3px,
-    #e9ffe8 6px,
-    #9dd591 10px,
-    #6bb765 17px,
-    #142e16 100%
-  );
-}
-
+/* Default After */
 .tube::after {
   content: "";
   position: absolute;
@@ -127,7 +52,22 @@
   transition: height 0.3s ease, background-color 0.3s ease; /* Add transition for height and background-color */
 }
 
-.tube.comparing::after {
+/* Comparing State - Red */
+.tube.red {
+  background-color: red;
+  background: linear-gradient(
+    to right,
+    #9c5757,
+    #9c5757 0.5px,
+    #ad6d6d 3px,
+    #ffe8e8 6px,
+    #d59191 10px,
+    #b76565 17px,
+    #2e1414 100%
+  );
+}
+
+.tube.red::after {
   background: linear-gradient(
     to right,
     #9c5757,
@@ -140,7 +80,49 @@
   );
 }
 
-.tube.sorted::after {
+/*Reference State - Yellow */
+.tube.yellow {
+  background-color: red;
+  background: linear-gradient(
+    to right,
+    #f4e04d, /* Light yellow */
+    #f4e04d 0.5px,
+    #f7e669 3px, /* Slightly lighter yellow */
+    #fff9d6 6px, /* Very light yellow */
+    #fde88b 10px, /* Sunny yellow */
+    #f7d357 17px, /* Medium yellow */
+    #4d3b10 100% /* Dark yellow-brown */
+  );
+}
+
+.tube.yellow::after {
+  background: linear-gradient(
+    to right,
+    #f4e04d, /* Light yellow */
+    #f4e04d 1px,
+    #f7e669 5px, /* Slightly lighter yellow */
+    #fff9d6 10px, /* Very light yellow */
+    #fde88b 15px, /* Sunny yellow */
+    #f7d357 17px, /* Medium yellow */
+    #4d3b10 100% /* Dark yellow-brown */
+  );
+}
+
+/* Sorted State */
+.tube.green {
+  background: linear-gradient(
+    to right,
+    #579c66,
+    #579c66 0.5px,
+    #6dad7b 3px,
+    #e9ffe8 6px,
+    #9dd591 10px,
+    #6bb765 17px,
+    #142e16 100%
+  );
+}
+
+.tube.green::after {
   background: linear-gradient(
     to right,
     #579c66,
@@ -152,59 +134,6 @@
     #142e16 100%
   );
 }
-
-.tube.left-array::after {
-  background: linear-gradient(
-    to right,
-    #9c5757,
-    #9c5757 1px,
-    #ad6d6d 5px,
-    #ffe8e8 10px,
-    #d59191 15px,
-    #b76565 17px,
-    #2e1414 100%
-  );
-}
-
-.tube.right-array::after {
-  background: linear-gradient(
-    to right,
-    #f4e04d, /* Light yellow */
-    #f4e04d 1px,
-    #f7e669 5px, /* Slightly lighter yellow */
-    #fff9d6 10px, /* Very light yellow */
-    #fde88b 15px, /* Sunny yellow */
-    #f7d357 17px, /* Medium yellow */
-    #4d3b10 100% /* Dark yellow-brown */
-  );
-}
-
-.tube.sorted.right-array{
-  background: linear-gradient(
-    to right,
-    #f4e04d, /* Light yellow */
-    #f4e04d 1px,
-    #f7e669 5px, /* Slightly lighter yellow */
-    #fff9d6 10px, /* Very light yellow */
-    #fde88b 15px, /* Sunny yellow */
-    #f7d357 17px, /* Medium yellow */
-    #4d3b10 100% /* Dark yellow-brown */
-  );
-}
-
-.tube.reference::after {
-  background: linear-gradient(
-    to right,
-    #f4e04d, /* Light yellow */
-    #f4e04d 1px,
-    #f7e669 5px, /* Slightly lighter yellow */
-    #fff9d6 10px, /* Very light yellow */
-    #fde88b 15px, /* Sunny yellow */
-    #f7d357 17px, /* Medium yellow */
-    #4d3b10 100% /* Dark yellow-brown */
-  );
-}
-
 
 @keyframes swap {
   0% {
@@ -220,84 +149,4 @@
 
 .swapping {
   animation: swap 0.3s ease;
-}
-
-.tube.left-array.sorted,
-.tube.right-array.sorted {
-  background: linear-gradient(
-    to right,
-    #579c66,
-    #579c66 0.5px,
-    #6dad7b 3px,
-    #e9ffe8 6px,
-    #9dd591 10px,
-    #6bb765 17px,
-    #142e16 100%
-  );
-}
-
-.tube.left-array.sorted::after,
-.tube.right-array.sorted::after{
-  background: linear-gradient(
-    to right,
-    #579c66,
-    #579c66 1px,
-    #6dad7b 5px,
-    #e9ffe8 10px,
-    #9dd591 15px,
-    #6bb765 17px,
-    #142e16 100%
-  );
-}
-
-.tube.sorted.right-array{
-  background: linear-gradient(
-    to right,
-    #f4e04d, /* Light yellow */
-    #f4e04d 1px,
-    #f7e669 5px, /* Slightly lighter yellow */
-    #fff9d6 10px, /* Very light yellow */
-    #fde88b 15px, /* Sunny yellow */
-    #f7d357 17px, /* Medium yellow */
-    #4d3b10 100% /* Dark yellow-brown */
-  );
-}
-
-.tube.sorted.right-array::after {
-  background: linear-gradient(
-    to right,
-    #f4e04d, /* Light yellow */
-    #f4e04d 1px,
-    #f7e669 5px, /* Slightly lighter yellow */
-    #fff9d6 10px, /* Very light yellow */
-    #fde88b 15px, /* Sunny yellow */
-    #f7d357 17px, /* Medium yellow */
-    #4d3b10 100% /* Dark yellow-brown */
-  );
-}
-
-.tube.sorted.left-array {
-  background: linear-gradient(
-    to right,
-    #9c5757,
-    #9c5757 1px,
-    #ad6d6d 5px,
-    #ffe8e8 10px,
-    #d59191 15px,
-    #b76565 17px,
-    #2e1414 100%
-  );
-}
-
-.tube.sorted.left-array::after {
-  background: linear-gradient(
-    to right,
-    #9c5757,
-    #9c5757 1px,
-    #ad6d6d 5px,
-    #ffe8e8 10px,
-    #d59191 15px,
-    #b76565 17px,
-    #2e1414 100%
-  );
 }
