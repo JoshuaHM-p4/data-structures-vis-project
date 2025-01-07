@@ -14,16 +14,12 @@
     const [sortedIndices, setSortedIndices] = useState([]);
     const [sortMethod, setSortMethod] = useState('');
     const [referenceIndex, setReferenceIndex] = useState(-1);
-    const [referenceIndices, setReferenceIndices] = useState([]);
     const [swapping, setSwapping] = useState([-1, -1]);
-
-    const [leftArray, setLeftArray] = useState([]);
-    const [rightArray, setRightArray] = useState([]);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
 
-    const [delay, setDelay] = useState(500);
+    const [delay, setDelay] = useState(100);
     const delayRef = useRef(delay);
 
     const handleModalClose = () => {
@@ -181,168 +177,91 @@
   };
 
   const mergeSort = async (array) => {
-    const delay = async () => {
-      await new Promise((resolve) => setTimeout(resolve, delayRef.current));
+    const delay = async (decreaseDelay = 1) => {
+      await new Promise((resolve) => setTimeout(resolve, delayRef.current/decreaseDelay));
     };
   
     const merge = async (arr, start, mid, end) => {
       let leftArray = arr.slice(start, mid + 1);
       let rightArray = arr.slice(mid + 1, end + 1);
-      
-
-      // Highlight the left and right subarrays
-      for (let i = 0; i < leftArray.length; i++) {
-        setLeftArray((prev) => [...prev, start + i]);
-        await delay();
-      }
-  
-      for (let i = 0; i < rightArray.length; i++) {
-        setRightArray((prev) => [...prev, mid + 1 + i]);
-        await delay();
-      }
   
       let i = 0, j = 0, k = start;
   
       // Merge the left and right subarrays
       while (i < leftArray.length && j < rightArray.length) {
         if (leftArray[i] <= rightArray[j]) {
-
+          setComparing([k]);
+          await delay();
           // IF STATEMENT
           arr[k] = leftArray[i];
           i++;
         } else {
 
           // ELSE STATEMENT
+          setComparing([k]);
+          await delay();
           arr[k] = rightArray[j];
           j++;
         }
         setArr([...arr]);
+        setComparing([-1, -1]);
         await delay();
         k++;
       }
   
       // Merge the remaining elements of leftArray
       while (i < leftArray.length) {
+        setComparing([k]);
+        await delay();
         arr[k] = leftArray[i];
         i++;
         k++;
         setArr([...arr]);
+        setComparing([-1, -1]);
         await delay();
       }
   
       // Merge the remaining elements of rightArray
       while (j < rightArray.length) {
+        setComparing([k]);
+        await delay();
         arr[k] = rightArray[j];
         j++;
         k++;
         setArr([...arr]);
+        setComparing([-1, -1]);
         await delay();
       }
-
+      setComparing([-1, -1]);
     };
 
-    const mergeRecursive = async (arr, start, end) => {
-      if (start >= end) return;
+  const mergeRecursive = async (arr, start, end) => {
+    if (start >= end) return;
 
-      let mid = Math.floor((start + end) / 2);
-      await mergeRecursive(arr, start, mid);
-      await mergeRecursive(arr, mid + 1, end);
-      await merge(arr, start, mid, end);
-    };
-
-    const arrCopy = [...array];
-    await mergeRecursive(arrCopy, 0, arrCopy.length - 1);
-    setIsSorting(false);
-    setPrevArr([...array]);
-    setSortedIndices([...Array(arrCopy.length).keys()]);
-    setComparing([-1, -1]);
-    setReferenceIndex(-1);
-    setLeftArray([]);
-    setRightArray([]);
-    setArr([...arrCopy]);
-    handleModalOpen('Merge Sort Completed');
+    let mid = Math.floor((start + end) / 2);
+    await mergeRecursive(arr, start, mid);
+    await mergeRecursive(arr, mid + 1, end);
+    await merge(arr, start, mid, end);
   };
 
 
+  const arrCopy = [...array];
+  await mergeRecursive(arrCopy, 0, arrCopy.length - 1);
+  setIsSorting(false);
 
-  //   const delay = async () => {
-  //     await new Promise((resolve) => setTimeout(resolve, delayRef.current));
-  //   };
+  setPrevArr([...array]);
+  
+  for (let i = 0; i < array.length; i++) {
+    setSortedIndices((prev) => [...prev, i]);
+    await delay(2);
+  }
 
-  //   const merge = async (left, mid, right) => {
-  //     let leftArray = arrCopy.slice(left, mid + 1);
-  //     let rightArray = arrCopy.slice(mid + 1, right + 1);
+  setComparing([-1, -1]);
+  setReferenceIndex(-1);
+  setArr([...arrCopy]);
 
-  //     let i = 0, j = 0, k = left;
-
-  //     while (i < leftArray.length && j < rightArray.length) {
-  //       setComparing([left + i, mid + 1 + j]);
-  //       await delay();
-
-  //       if (leftArray[i] <= rightArray[j]) {
-  //         arrCopy[k] = leftArray[i];
-  //         i++;
-  //       } else {
-  //         arrCopy[k] = rightArray[j];
-  //         j++;
-  //       }
-  //       setArr([...arrCopy]);
-  //       k++;
-  //       await delay();
-  //     }
-
-  //     while (i < leftArray.length) {
-  //       arrCopy[k] = leftArray[i];
-  //       i++;
-  //       k++;
-  //       setArr([...arrCopy]);
-  //       await delay();
-  //     }
-
-  //     while (j < rightArray.length) {
-  //       arrCopy[k] = rightArray[j];
-  //       j++;
-  //       k++;
-  //       setArr([...arrCopy]);
-  //       await delay();
-  //     }
-
-  //     // Mark the merged section as sorted
-  //     for (let i = left; i <= right; i++) {
-  //       setSortedIndices((prev) => [...prev, i]);
-  //       await delay();
-  //     }
-  //   };
-
-  //   const mergeSortRecursive = async (left, right) => {
-  //     if (left < right) {
-  //       let mid = Math.floor((left + right) / 2);
-        
-  //       // Mark the current section as comparing
-
-  //       // Mark the current section as reference
-  //       setReferenceIndices((prev) => [...prev, left, mid + 1, right]);      
-  //       await delay();
-
-  //       await mergeSortRecursive(left, mid);
-  //       await mergeSortRecursive(mid + 1, right);
-  //       await merge(left, mid, right);
-
-  //       // Clear the reference indices after merging
-  //       setReferenceIndices([]);
-  //     }
-  //   };
-
-  //   await mergeSortRecursive(0, n - 1);
-  //   setSortedIndices([...Array(n).keys()]);
-  //   setComparing([-1, -1]);
-  //   setReferenceIndices([]);
-  //   setIsSorting(false);
-  //   setPrevArr([...array]);
-  //   handleModalOpen('Merge Sort Completed');
-  // };
-
-
+  handleModalOpen('Merge Sort Completed');
+};
 
     const shellSort = async (array) => {
       let arrCopy = [...array];
@@ -487,7 +406,7 @@
     };
 
     const generateRandomArray = () => {
-      const randomArray = Array.from({ length: 20 }, () => Math.floor(Math.random() * 50) + 1);
+      const randomArray = Array.from({ length: 30 }, () => Math.floor(Math.random() * 50) + 1);
       setArr(randomArray);
       setPrevArr([]);
       setSortedIndices([]);
@@ -575,18 +494,11 @@
                 index={index}
                 num = {num}
                 height={num * 4.5} 
-                // comparing={comparing.includes(index)} 
-                // sorted={sortedIndices.includes(index)} 
-                // reference={referenceIndex === index && !comparing.includes(index) ||
-                // referenceIndices.includes(index) && !comparing.includes(index)}
-                // leftArray = {leftArray.includes(index)}
-                // rightArray ={rightArray.includes(index)}
+
                 mode={
                   comparing.includes(index) ? 'comparing' :
                   sortedIndices.includes(index) ? 'sorted' :
-                  referenceIndex === index && !comparing.includes(index) ? 'reference' :
-                  leftArray.includes(index) ? 'leftArray' :
-                  rightArray.includes(index) ? 'rightArray' : ''
+                  referenceIndex === index && !comparing.includes(index) ? 'reference' : ''
                 }
               />
               <p>{num}</p>
