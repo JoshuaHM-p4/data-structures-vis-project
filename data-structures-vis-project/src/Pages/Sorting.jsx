@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import MarioTube from '../components/MarioComponent/MarioTubes.jsx';
 import Modal from '../components/StackQueueModal/Modal.jsx';
 import Slider from '../components/Slider/Slider.jsx';
@@ -36,7 +36,9 @@ const Sorting = () => {
   const delayRef = useRef(delay);
 
   const [arraySize, setArraySize] = useState(20);
-  const [timeTaken, setTimeTaken] = useState(0);
+
+  const [timer, setTimer] = useState(0);
+  const timerRef = useRef(null);
 
   const getTubeMode = (index) => {
     if (redTube.includes(index)) return 'red';
@@ -70,16 +72,28 @@ const Sorting = () => {
     });
   };
 
+  const startTimer = () => {
+    setTimer(0);
+    timerRef.current = setInterval(() => {
+      setTimer((prevTimer) => prevTimer + 10);
+    }, 10);
+  };
+
+  const stopTimer = () => {
+    clearInterval(timerRef.current);
+    timerRef.current = null;
+  };
+
   const handleSort = (sortType) => {
     setIsSorting(true);
-    const startTime = performance.now();
+    setTimer(0);
+    startTimer();
     const sortCompleted = (sortName) => {
-      const endTime = performance.now();
-      const timeTaken = ((endTime - startTime) / 1000).toFixed(2);
-      setTimeTaken(timeTaken);
-      handleModalOpen(`${sortName} Completed in ${timeTaken} seconds`);
+      stopTimer();
+      handleModalOpen(`${sortName} Completed`); 
       setIsSorting(false);
     };
+    
 
     if (sortType === 'bubble') {
       bubbleSort(arr, setArr, setRedTube, setSwapping, setGreenTube, delayRef).then(() => sortCompleted('Bubble Sort'));
@@ -109,6 +123,16 @@ const Sorting = () => {
     setSwapping([]);
     setIsDisabled(false);
   };
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, []);
+
+  const formattedTimer = (timer / 1000).toFixed(2);
 
   return (
     <div className='flex h-full flex-col items-center gap-2 p-2'>
@@ -203,8 +227,7 @@ const Sorting = () => {
             onClick={decreaseDelay}/>
           </button>
           </div>
-          <p className='p-2'>Timer: {timeTaken} secs</p>
-
+          <p className='p-2'>Timer: {formattedTimer} secs</p>
         </div>
       </div>
 
