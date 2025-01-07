@@ -26,8 +26,6 @@
     const [delay, setDelay] = useState(500);
     const delayRef = useRef(delay);
 
-    
-
     const handleModalClose = () => {
       setIsModalOpen(false);
     };
@@ -190,7 +188,8 @@
     const merge = async (arr, start, mid, end) => {
       let leftArray = arr.slice(start, mid + 1);
       let rightArray = arr.slice(mid + 1, end + 1);
-  
+      
+
       // Highlight the left and right subarrays
       for (let i = 0; i < leftArray.length; i++) {
         setLeftArray((prev) => [...prev, start + i]);
@@ -204,13 +203,16 @@
   
       let i = 0, j = 0, k = start;
   
+      // Merge the left and right subarrays
       while (i < leftArray.length && j < rightArray.length) {
         if (leftArray[i] <= rightArray[j]) {
-          // setSortedIndices((prev) => [...prev, k]);
-          
+
+          // IF STATEMENT
           arr[k] = leftArray[i];
           i++;
         } else {
+
+          // ELSE STATEMENT
           arr[k] = rightArray[j];
           j++;
         }
@@ -219,6 +221,7 @@
         k++;
       }
   
+      // Merge the remaining elements of leftArray
       while (i < leftArray.length) {
         arr[k] = leftArray[i];
         i++;
@@ -227,6 +230,7 @@
         await delay();
       }
   
+      // Merge the remaining elements of rightArray
       while (j < rightArray.length) {
         arr[k] = rightArray[j];
         j++;
@@ -234,10 +238,6 @@
         setArr([...arr]);
         await delay();
       }
-
-      // Clear the left and right arrays after merging
-      setLeftArray([]);
-      setRightArray([]);
 
     };
 
@@ -571,15 +571,23 @@
         <div className="flex flex-grow items-end gap-2 bg-red-50 h-full w-full justify-center">
           {arr.map((num, index) => (
             <div key={index} className={`flex flex-col items-center ${swapping.includes(index) ? 'swapping' : ''}`}>
-              <MarioTube 
+              <MarioTube
+                index={index}
+                num = {num}
                 height={num * 4.5} 
-                comparing={comparing.includes(index)} 
-                sorted={sortedIndices.includes(index)} 
-                reference={referenceIndex === index && !comparing.includes(index) ||
-                referenceIndices.includes(index) && !comparing.includes(index)}
-                leftArray = {leftArray.includes(index)}
-                rightArray ={rightArray.includes(index)} 
-                color="yellow" // Add this line to set the color to yellow
+                // comparing={comparing.includes(index)} 
+                // sorted={sortedIndices.includes(index)} 
+                // reference={referenceIndex === index && !comparing.includes(index) ||
+                // referenceIndices.includes(index) && !comparing.includes(index)}
+                // leftArray = {leftArray.includes(index)}
+                // rightArray ={rightArray.includes(index)}
+                mode={
+                  comparing.includes(index) ? 'comparing' :
+                  sortedIndices.includes(index) ? 'sorted' :
+                  referenceIndex === index && !comparing.includes(index) ? 'reference' :
+                  leftArray.includes(index) ? 'leftArray' :
+                  rightArray.includes(index) ? 'rightArray' : ''
+                }
               />
               <p>{num}</p>
             </div>

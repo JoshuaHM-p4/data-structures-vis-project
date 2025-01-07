@@ -1,15 +1,33 @@
 import React from 'react';
 import '../../styles/tube.css';
 
-const MarioTube = ({ height, comparing, sorted, reference, leftArray, rightArray }) => {
+// modes are comparing, sorted, reference, leftArray, rightArray
+const MarioTube = ({ index, num, height, mode }) => {
   const getClassNames = () => {
-    let classNames = 'tube';
-    if (comparing) classNames += ' comparing';
-    if (sorted) classNames += ' sorted';
-    if (reference) classNames += ' reference';
-    if (leftArray) classNames += ' left-array';
-    if (rightArray) classNames += ' right-array';
-    return classNames;
+    let className = 'tube';
+    if (mode === 'comparing') {
+      className = 'tube comparing';
+      console.log('comparing. Index: ', index, 'num: ', num);
+    } else if (mode === 'sorted') {
+      className = 'tube sorted';
+      console.log('sorted. Index: ', index, 'num: ', num);
+    } else if (mode === 'reference') {
+      className = 'tube reference';
+      console.log('reference. Index: ', index , 'num: ', num);
+
+    } else if (mode === 'leftArray') {
+      className = 'tube left-array';
+      console.log('leftArray. Index: ', index, 'num: ', num);
+      console.log('num: ', num);
+    } else if (mode === 'rightArray') {
+      className = 'tube right-array';
+      console.log('rightArray. Index: ', index, 'num: ', num);
+      console.log('num: ', num);
+    } else {
+      className = 'tube';
+      console.log('normal. Index: ', index, 'num: ', num);
+    }
+    return className;
   };
 
   return (
