@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 
-const Slider = ({ min, max, value, onChange }) => {
+const Slider = ({ min, max, value, onChange, isDisabled }) => {
   const [sliderValue, setSliderValue] = useState(value);
 
   const handleChange = (event) => {
+    if (isDisabled) {
+      return;
+    }
     const newValue = event.target.value;
     setSliderValue(newValue);
     onChange(newValue);
@@ -18,6 +21,7 @@ const Slider = ({ min, max, value, onChange }) => {
         value={sliderValue}
         onChange={handleChange}
         className="slider w-full"
+        disabled={isDisabled}
       />
     </div>
   );

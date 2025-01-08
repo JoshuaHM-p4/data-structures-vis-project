@@ -157,12 +157,14 @@ const Sorting = () => {
                 generateRandomArray(value);
                 setIsFinished(false);
               }}
+              isDisabled={isSorting}
             />
           </div>
         
           <button
             onClick={() => generateRandomArray(arraySize)}
-            className='nes-btn is-warning '
+            className={`nes-btn ${isSorting ? 'is-disabled' : 'is-warning'}`}
+            disabled={isSorting}
           >
             Generate Random Array
           </button>
