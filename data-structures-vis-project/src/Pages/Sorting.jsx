@@ -15,10 +15,10 @@ import { quickSort } from '../sortingAlgorithms/quickSort';
 import { heapSort } from '../sortingAlgorithms/heapSort';
 
 const Sorting = () => {
-  const [arr, setArr] = useState([46, 21, 3, 12, 45, 2, 1, 5, 16, 10]);
+  const [arr, setArr] = useState([46, 21, 3, 12, 45, 2, 1, 5, 16, 10, 17, 28, 19, 13, 13, 11, 35, 17, 1, 19]);
   const [prevArr, setPrevArr] = useState([]);
 
-  const [isDisabled, setIsDisabled] = useState(false);
+  const [isFinished, setIsFinished] = useState(false);
 
   const [redTube, setRedTube] = useState([]);
   const [greenTube, setGreenTube] = useState([]);
@@ -66,6 +66,7 @@ const Sorting = () => {
 
   const decreaseDelay = () => {
     setDelay((prevDelay) => {
+    if (prevDelay <= 0) return prevDelay
       const newDelay = prevDelay - 100;
       delayRef.current = newDelay;
       return newDelay;
@@ -85,6 +86,9 @@ const Sorting = () => {
   };
 
   const handleSort = (sortType) => {
+    if (!sortType){
+      return;
+    }
     setIsSorting(true);
     setTimer(0);
     startTimer();
@@ -92,11 +96,13 @@ const Sorting = () => {
       stopTimer();
       handleModalOpen(`${sortName} Completed`); 
       setIsSorting(false);
+      setIsFinished(true);
+      setPrevArr([...arr]);
     };
     
 
     if (sortType === 'bubble') {
-      bubbleSort(arr, setArr, setRedTube, setSwapping, setGreenTube, delayRef).then(() => sortCompleted('Bubble Sort'));
+      bubbleSort(arr, setArr, setRedTube, setSwapping, setGreenTube, delayRef, setPrevArr).then(() => sortCompleted('Bubble Sort'));
     } else if (sortType === 'selection') {
       selectionSort(arr, setArr, setRedTube, setYellowTube, setSwapping, setGreenTube, delayRef).then(() => sortCompleted('Selection Sort'));
     } else if (sortType === 'insertion') {
@@ -114,14 +120,14 @@ const Sorting = () => {
   };
 
   const generateRandomArray = (size) => {
-    const randomArray = Array.from({ length: size }, () => Math.floor(Math.random() * 50) + 1);
+    const randomArray = Array.from({ length: size }, () => Math.floor(Math.random() * 100) + 1);
     setArr(randomArray);
     setPrevArr([]);
     setRedTube([]);
     setGreenTube([]);
     setYellowTube([]);
     setSwapping([]);
-    setIsDisabled(false);
+    setIsFinished(false);
   };
 
   useEffect(() => {
@@ -145,11 +151,11 @@ const Sorting = () => {
             <Slider 
               min={10}
               max={30}
-              step={10}
               value={arraySize}
               onChange={(value) => {
                 setArraySize(value);
                 generateRandomArray(value);
+                setIsFinished(false);
               }}
             />
           </div>
@@ -183,24 +189,23 @@ const Sorting = () => {
         {/*Buttons*/}
         <div className='flex w-full justify-center items-center'>
           <button
-            className='nes-btn is-primary w-full'
-            disabled={isSorting}
+            className= {`nes-btn w-full ${isSorting || isFinished || !sortMethod ? 'is-disabled' : 'is-primary'}`}
             onClick={() => handleSort(sortMethod)}
+            disabled={ isSorting || isFinished || !sortMethod} 
           >
             Sort
           </button>
           <button
-            className='nes-btn is-error w-full'
+            className= {`nes-btn w-full ${ !isFinished || isSorting ? 'is-disabled' : 'is-error'}`}
             onClick={() => {
-              setArr([...prevArr]);
-              setPrevArr([]);
+              setArr(prevArr);
               setRedTube([]);
               setGreenTube([]);
               setYellowTube([]);
               setSwapping([]);
-              setIsDisabled(true);
+              setIsFinished(false);
             }}
-            disabled={isDisabled}
+            disabled={ !isFinished || isSorting}
           >
             Unsort 
           </button>
