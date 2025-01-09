@@ -135,6 +135,33 @@
   );
 }
 
+.tube.orange {
+  background: linear-gradient(
+    to right,
+    #ff9500,
+    #ff9500 0.5px,
+    #ffa500 3px,
+    #ffebcc 6px,
+    #ffcc80 10px,
+    #ffab4d 17px,
+    #7a4400 100%
+  );
+}
+
+.tube.orange::after {
+  background: linear-gradient(
+    to right,
+    #ff9500,
+    #ff9500 1px,
+    #ffa500 5px,
+    #ffebcc 10px,
+    #ffcc80 15px,
+    #ffab4d 17px,
+    #7a4400 100%
+  );
+}
+
+
 @keyframes swap {
   0% {
     transform: translateY(0);

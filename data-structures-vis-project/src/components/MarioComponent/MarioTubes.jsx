@@ -17,6 +17,9 @@ const MarioTube = ({ index, num, height, mode }) => {
     } else if (mode === 'blue') {
       className = 'tube';
       console.log('normal. Index: ', index, 'num: ', num);
+    } else if (mode === 'orange') { 
+      className = 'tube orange';
+      console.log('orange. Index: ', index, 'num: ', num);
     }
     return className;
   };
