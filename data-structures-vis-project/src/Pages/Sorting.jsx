@@ -23,6 +23,7 @@ const Sorting = () => {
   const [redTube, setRedTube] = useState([]);
   const [greenTube, setGreenTube] = useState([]);
   const [yellowTube, setYellowTube] = useState([]);
+  const [orangeTube, setOrangeTube] = useState([]);
 
   const [isSorting, setIsSorting] = useState(false);
   const [sortMethod, setSortMethod] = useState('');
@@ -44,6 +45,7 @@ const Sorting = () => {
     if (redTube.includes(index)) return 'red';
     if (greenTube.includes(index)) return 'green';
     if (yellowTube.includes(index)) return 'yellow';
+    if (orangeTube.includes(index)) return 'orange';
     return ''; // Default mode if no conditions match
   };
 
@@ -112,9 +114,10 @@ const Sorting = () => {
     }
     // } else if (sortType === 'shell') {
     //   shellSort(arr, setArr, setRedTube, setReferenceIndex, setSortedIndices, delayRef).then(() => sortCompleted('Shell Sort'));
-    // } else if (sortType === 'quick') {
-    //   quickSort(arr, setArr, setComparing, setReferenceIndex, setSortedIndices, delayRef).then(() => sortCompleted('Quick Sort'));
-    // } else if (sortType === 'heap') {
+    else if (sortType === 'quick') {
+      quickSort(arr, setArr, setRedTube, setYellowTube, setGreenTube, setOrangeTube, delayRef).then(() => sortCompleted('Quick Sort'));
+    } 
+    // else if (sortType === 'heap') {
     //   heapSort(arr, setArr, setComparing, setReferenceIndex, setSortedIndices, delayRef).then(() => sortCompleted('Heap Sort'));
     // }
   };
