@@ -60,7 +60,8 @@ const Sorting = () => {
 
   const increaseDelay = () => {
     setDelay((prevDelay) => {
-      const newDelay = prevDelay + 100;
+    if (prevDelay >= 500) return prevDelay
+      const newDelay = prevDelay + 50;
       delayRef.current = newDelay;
       return newDelay;
     });
@@ -69,7 +70,7 @@ const Sorting = () => {
   const decreaseDelay = () => {
     setDelay((prevDelay) => {
     if (prevDelay <= 0) return prevDelay
-      const newDelay = prevDelay - 100;
+      const newDelay = prevDelay - 50;
       delayRef.current = newDelay;
       return newDelay;
     });
