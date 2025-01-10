@@ -171,8 +171,39 @@ const BinarySearchTreePage = () => {
     setTraversalResult(result);
   }, [traversal, tree]);
 
+  const generateTree = () => {
+    const newTree = new BinarySearchTree();
+    // generate values to create a complete binary tree
+    const values = [10, 5, 15, 3, 7, 12, 18, 2, 4, 6, 8, 11, 13, 17, 19];
+    // randomize values but retain the completeness
+    // values.sort(() => Math.random() - 0.5);
+    values.forEach(value => newTree.insert(value));
+    setTree(newTree);
+  };
+
+  const traversalText = (traversal) => {
+    switch (traversal) {
+      case 'inOrder':
+        return 'In-order';
+      case 'preOrder':
+        return 'Pre-order';
+      case 'postOrder':
+        return 'Post-order';
+      default:
+        return '';
+    }
+  }
+
+  // Generate a random tree on page load
+  useEffect(() => {
+    generateTree();
+  }
+    , []);
+
+
+
   return (
-    <div className='w-full h-full'>
+    <div className='w-full h-full overflow-hidden'>
       <div className='flex gap-2 justify-center top-20 left-0 absolute w-full h-fit'>
         <button onClick={() => setIsModalOpen(true)} className="nes-btn is-primary">
           Add Node
@@ -198,10 +229,11 @@ const BinarySearchTreePage = () => {
 
       {/* Traversal Result Overlay */}
       {traversalResult.length > 0 && (
-        <div className="w-full fixed bottom-0">
-          <div className="nes-container is-dark with-title">
-            <p className="title">Traversal Result</p>
-            <p>{traversal} Traversal: {traversalResult.join(', ')}</p>
+        <div className="fixed bottom-6 w-full flex justify-center">
+          <div className="nes-container is-centered is-dark is-rounded with-title w-4/5">
+            <p className="title">{traversalText(traversal)} Traversal Result</p>
+            <p>{traversalResult.join(', ')}</p>
+            <span className='nes-text is-success w-full d-flex flex-row-reverse'>(Length: {traversalResult.length})</span>
           </div>
         </div>
       )}

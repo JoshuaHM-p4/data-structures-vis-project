@@ -33,7 +33,9 @@ const BSTCanvas = ({ tree }) => {
 
       assignPositions(tree?.root, 0, 0, canvasWidth);
 
-      // console.log("Node Positions:", positions);
+      // Adjust canvas height based on the tree's height
+      const maxDepth = Math.max(...positions.map(pos => pos.y));
+      canvas.height = maxDepth + yGap;
 
       return positions;
     };
@@ -189,7 +191,12 @@ const BSTCanvas = ({ tree }) => {
 
     const resizeCanvas = () => {
       canvas.width = canvas.parentElement.clientWidth;
-      canvas.height = canvas.parentElement.clientHeight;
+
+      if (positions && positions.length) {
+        // Adjust canvas height dynamically
+        const maxDepth = Math.max(...positions.map(pos => pos.y));
+        canvas.height = maxDepth + yGap;
+      };
 
       // Store the canvas height in the ref
       canvasHeightRef.current = canvas.height;
@@ -224,7 +231,11 @@ const BSTCanvas = ({ tree }) => {
     };
   }, [tree]);
 
-  return <canvas ref={canvasRef} className="w-full"></canvas>
+  return (
+    <div className='overflow-y-auto max-h-screen'>
+      <canvas ref={canvasRef} className="w-full"></canvas>
+    </div>
+  );
 }
 
 export default BSTCanvas;
