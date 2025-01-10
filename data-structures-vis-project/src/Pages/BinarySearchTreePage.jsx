@@ -194,6 +194,12 @@ const BinarySearchTreePage = () => {
     }
   }
 
+  const handleClearTree = () => {
+    clearTree();
+    setTraversalResult([]);
+    setTraversal('');
+  }
+
   // Generate a random tree on page load
   useEffect(() => {
     generateTree();
@@ -209,16 +215,29 @@ const BinarySearchTreePage = () => {
           Add Node
         </button>
 
-        <div className="nes-select flex flex-col justify-center w-fit">
-          <select className="default_select text-black" onChange={(e) => setTraversal(e.target.value)} >
-            <option value="" disabled selected>Select Traversal</option>
-            <option value="inOrder">In-order</option>
-            <option value="preOrder">Pre-order</option>
-            <option value="postOrder">Post-order</option>
+        <div className="nes-select flex flex-col justify-center w-fit p-0">
+          <select
+            className="default_select text-black"
+            value={traversal}
+            onChange={(e) => setTraversal(e.target.value)}
+          >
+            <option value="" disabled>Select Traversal</option>
+            {tree?.root ?
+              ['inOrder', 'preOrder', 'postOrder'].map((traversal) => (
+                <option key={traversal} value={traversal}>
+                  {traversalText(traversal)}
+                </option>
+              ))
+            : (
+              <option value="" disabled>
+                No Tree Available
+              </option>
+            )
+            }
           </select>
         </div>
 
-        <button onClick={() => clearTree()} className="nes-btn">
+        <button onClick={handleClearTree} className="nes-btn">
           Clear Tree
         </button>
       </div>
