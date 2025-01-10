@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useRef, useEffect } from 'react';
 
-const BSTCanvas = ({ tree }) => {
+const BSTCanvas = ({ tree, traversal }) => {
   const canvasRef = useRef(null);
   const nodeSize = 30;
   const canvasHeightRef = useRef(0);
@@ -25,7 +25,7 @@ const BSTCanvas = ({ tree }) => {
         const y = depth * yGap + nodeSize + 50;
         const id = path + (path ? '-' : '') + node.value;
 
-        positions.push({ id, value: node.value, x, y });
+        positions.push({ id, value: node.value, x, y, applied: false });
 
         assignPositions(node.left, depth + 1, xStart, x, id + '-L');
         assignPositions(node.right, depth + 1, x, xEnd, id + '-R');
@@ -50,7 +50,24 @@ const BSTCanvas = ({ tree }) => {
     let mouse = { x: undefined, y: undefined };
 
     const update = () => {
-      console.log('update');
+      if (!positions || !positions.length || !tree?.root) return;
+
+      const traversalOrder = tree[`${traversal}Traversal`]();
+      let index = 0;
+
+      const applyTraversal = () => {
+        if (index < traversalOrder.length) {
+          const nodeValue = traversalOrder[index];
+          const node = positions.find(pos => pos.value === nodeValue);
+          if (node) {
+            node.applied = true;
+          }
+          index++;
+          setTimeout(applyTraversal, 500); // Adjust the delay as needed
+        }
+      };
+
+      applyTraversal();
     };
 
     const draw = () => {
@@ -107,10 +124,10 @@ const BSTCanvas = ({ tree }) => {
 
       // Draw nodes (circles)
       positions.forEach((node) => {
-        const { x, y, value } = node;
+        const { x, y, value, applied } = node;
 
         // Draw the circle
-        context.fillStyle = "white";
+        context.fillStyle = applied ? "red" : "white"; // Change color if applied
         context.beginPath();
         context.arc(x, y, nodeSize / 2, 0, Math.PI * 2);
         context.fill();
@@ -212,13 +229,14 @@ const BSTCanvas = ({ tree }) => {
       mouse.y = event.y;
     });
 
+    draw();
 
     const render = (currentTime) => {
       const deltaTime = currentTime - lastUpdateTime;
       lastUpdateTime = currentTime;
 
       if (deltaTime >= fixedDeltaTime) {
-        // update();
+        update();
         draw();
       }
       animationFrameId = requestAnimationFrame(render);
@@ -229,7 +247,7 @@ const BSTCanvas = ({ tree }) => {
       window.removeEventListener('resize', resizeCanvas);
       cancelAnimationFrame(animationFrameId);
     };
-  }, [tree]);
+  }, [tree, traversal]);
 
   return (
     <div className='overflow-y-auto max-h-screen'>

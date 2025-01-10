@@ -198,7 +198,7 @@ const BinarySearchTreePage = () => {
   useEffect(() => {
     generateTree();
   }
-    , []);
+  , []);
 
 
 
@@ -223,7 +223,7 @@ const BinarySearchTreePage = () => {
         </button>
       </div>
 
-      <BSTCanvas tree={tree} />
+      <BSTCanvas tree={tree} traversal={traversal}/>
 
       <Modal isModalOpen={isModalOpen} onClose={() => setIsModalOpen(false)} addNode={handleAddNode} />
 
