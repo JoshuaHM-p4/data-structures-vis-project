@@ -52,13 +52,13 @@ const BSTCanvas = ({ tree, traversal }) => {
     const update = () => {
       if (!positions || !positions.length || !tree?.root) return;
 
-      const traversalOrder = tree[`${traversal}Traversal`]();
+      const traversalOrder = generateTraversalOrder(positions, traversal);
       let index = 0;
 
       const applyTraversal = () => {
         if (index < traversalOrder.length) {
-          const nodeValue = traversalOrder[index];
-          const node = positions.find(pos => pos.value === nodeValue);
+          const nodeId = traversalOrder[index];
+          const node = positions.find(pos => pos.id === nodeId);
           if (node) {
             node.applied = true;
           }
@@ -68,6 +68,34 @@ const BSTCanvas = ({ tree, traversal }) => {
       };
 
       applyTraversal();
+    };
+
+    const generateTraversalOrder = (positions, traversal) => {
+      // Find the root node (node without any parent)
+      const root = positions[0];
+      if (!root) return [];
+
+      const order = [];
+      const traverse = (node, type) => {
+        if (!node) return;
+
+        // Find children
+        const leftChild = positions.find(
+          (child) => child.id.startsWith(`${node.id}-L`)
+        );
+        const rightChild = positions.find(
+          (child) => child.id.startsWith(`${node.id}-R`)
+        );
+
+        if (type === 'preOrder') order.push(node.id);
+        traverse(leftChild, type);
+        if (type === 'inOrder') order.push(node.id);
+        traverse(rightChild, type);
+        if (type === 'postOrder') order.push(node.id);
+      };
+
+      traverse(root, traversal);
+      return order;
     };
 
     const draw = () => {
@@ -83,9 +111,7 @@ const BSTCanvas = ({ tree, traversal }) => {
 
         // Find children
         const leftChild = positions.find(
-          (child) => {
-            return child.id.startsWith(`${id}-L`);
-          }
+          (child) => child.id.startsWith(`${id}-L`)
         );
         const rightChild = positions.find(
           (child) => child.id.startsWith(`${id}-R`)
