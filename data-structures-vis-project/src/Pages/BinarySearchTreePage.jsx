@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Modal from '../components/BinaryTreeComponents/BSTNodeModal.jsx';
 import BSTCanvas from '../components/BinaryTreeComponents/BSTCanvas.jsx';
@@ -126,6 +126,8 @@ const BinarySearchTreePage = () => {
   const [tree, setTree] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [nodeValue, setNodeValue] = useState('');
+  const [traversal, setTraversal] = useState('');
+  const [traversalResult, setTraversalResult] = useState([]);
 
   const handleAddNode = (value) => {
     if (!tree) {
@@ -145,12 +147,46 @@ const BinarySearchTreePage = () => {
     setTree(null);
   };
 
+  useEffect(() => {
+    if (!traversal || !tree || !tree.root) {
+      setTraversalResult([]);
+      return;
+    };
+
+    let result = [];
+    switch (traversal) {
+      case 'inOrder':
+        result = tree.inOrderTraversal();
+        break;
+      case 'preOrder':
+        result = tree.preOrderTraversal();
+        break;
+      case 'postOrder':
+        result = tree.postOrderTraversal();
+        break;
+      default:
+        break;
+    }
+    console.log(`${traversal} Traversal:`, result);
+    setTraversalResult(result);
+  }, [traversal, tree]);
+
   return (
     <div className='w-full h-full'>
       <div className='flex gap-2 justify-center top-20 left-0 absolute w-full h-fit'>
         <button onClick={() => setIsModalOpen(true)} className="nes-btn is-primary">
           Add Node
         </button>
+
+        <div className="nes-select flex flex-col justify-center w-fit">
+          <select className="default_select text-black" onChange={(e) => setTraversal(e.target.value)} >
+            <option value="" disabled selected>Select Traversal</option>
+            <option value="inOrder">In-order</option>
+            <option value="preOrder">Pre-order</option>
+            <option value="postOrder">Post-order</option>
+          </select>
+        </div>
+
         <button onClick={() => clearTree()} className="nes-btn">
           Clear Tree
         </button>
@@ -159,6 +195,16 @@ const BinarySearchTreePage = () => {
       <BSTCanvas tree={tree} />
 
       <Modal isModalOpen={isModalOpen} onClose={() => setIsModalOpen(false)} addNode={handleAddNode} />
+
+      {/* Traversal Result Overlay */}
+      {traversalResult.length > 0 && (
+        <div className="w-full fixed bottom-0">
+          <div className="nes-container is-dark with-title">
+            <p className="title">Traversal Result</p>
+            <p>{traversal} Traversal: {traversalResult.join(', ')}</p>
+          </div>
+        </div>
+      )}
 
     </div>
   );

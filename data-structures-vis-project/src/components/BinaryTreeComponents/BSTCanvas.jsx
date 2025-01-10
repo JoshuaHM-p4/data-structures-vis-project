@@ -33,7 +33,7 @@ const BSTCanvas = ({ tree }) => {
 
       assignPositions(tree?.root, 0, 0, canvasWidth);
 
-      console.log("Node Positions:", positions);
+      // console.log("Node Positions:", positions);
 
       return positions;
     };
@@ -47,11 +47,10 @@ const BSTCanvas = ({ tree }) => {
     let animationFrameId;
     let mouse = { x: undefined, y: undefined };
 
-
-
     const update = () => {
       console.log('update');
     };
+
     const draw = () => {
       // Clear the canvas
       context.clearRect(0, 0, context.canvas.width, context.canvas.height);
@@ -66,7 +65,6 @@ const BSTCanvas = ({ tree }) => {
         // Find children
         const leftChild = positions.find(
           (child) => {
-            console.log('child.id:', child.id, 'id:', id + '-L');
             return child.id.startsWith(`${id}-L`);
           }
         );
@@ -101,7 +99,6 @@ const BSTCanvas = ({ tree }) => {
         }
 
         elbowConfigs.forEach((elbow) => {
-          console.log('Drawing elbow:', elbow);
           drawElbow(elbow);
         });
       });
@@ -199,7 +196,7 @@ const BSTCanvas = ({ tree }) => {
 
       // Initialize tree positions after canvas resize
       positions = initializeTree(tree, canvas);
-      console.log("Tree initialized with positions:", positions);
+      // console.log("Tree initialized with positions:", positions);
     };
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
