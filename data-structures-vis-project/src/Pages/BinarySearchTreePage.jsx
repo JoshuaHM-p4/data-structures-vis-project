@@ -133,9 +133,16 @@ const BinarySearchTreePage = () => {
   const [tree, setTree] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [nodeValue, setNodeValue] = useState('');
+
   const [traversal, setTraversal] = useState('');
   const [traversalResult, setTraversalResult] = useState([]);
   const { playSound } = useSound();
+  const [showTraversalResult, setShowTraversalResult] = useState(true);
+
+  const toggleTraversalResult = () => {
+    playSound(cancelSound);
+    setShowTraversalResult(!showTraversalResult);
+  };
 
   const handleAddNode = (value) => {
     playSound(addNodeSound);
@@ -213,7 +220,7 @@ const BinarySearchTreePage = () => {
   useEffect(() => {
     generateTree();
   }
-  , []);
+    , []);
 
 
 
@@ -237,11 +244,11 @@ const BinarySearchTreePage = () => {
                   {traversalText(traversal)}
                 </option>
               ))
-            : (
-              <option value="" disabled>
-                No Tree Available
-              </option>
-            )
+              : (
+                <option value="" disabled>
+                  No Tree Available
+                </option>
+              )
             }
           </select>
         </div>
@@ -251,20 +258,35 @@ const BinarySearchTreePage = () => {
         </button>
       </div>
 
-      <BSTCanvas tree={tree} traversal={traversal}/>
+      <BSTCanvas tree={tree} traversal={traversal} />
 
-      <Modal isModalOpen={isModalOpen} onClose={() => {playSound(cancelSound); setIsModalOpen(false)}} addNode={handleAddNode} />
+      <Modal isModalOpen={isModalOpen} onClose={() => { playSound(cancelSound); setIsModalOpen(false) }} addNode={handleAddNode} />
 
       {/* Traversal Result Overlay */}
       {traversalResult.length > 0 && (
-        <div className="fixed bottom-6 w-full flex justify-center">
-          <div className="nes-container is-centered is-dark is-rounded with-title w-4/5">
-            <p className="title">{traversalText(traversal)} Traversal Result</p>
-            <p>{traversalResult.join(', ')}</p>
-            <span className='nes-text is-success w-full d-flex flex-row-reverse'>(Length: {traversalResult.length})</span>
-          </div>
-        </div>
-      )}
+        showTraversalResult ?
+          (
+            <div className="fixed bottom-6 w-full flex justify-center">
+              <div className="nes-container is-centered is-dark is-rounded with-title w-4/5">
+                <button onClick={toggleTraversalResult} className="absolute top-1 right-1 nes-btn px-2 py-1 rounded">
+                  {showTraversalResult ? '-' : '☰'}
+                </button>
+                <p className="title">{traversalText(traversal)} Traversal Result</p>
+                <p>{traversalResult.join(', ')}</p>
+                <span className='nes-text is-success w-full d-flex flex-row-reverse'>(Length: {traversalResult.length})</span>
+              </div>
+            </div>
+          )
+          :
+          (
+            <div className="fixed bottom-6 w-full flex justify-center">
+              <button onClick={toggleTraversalResult} className="nes-btn px-2 py-1 rounded">
+                {showTraversalResult ? '-' : '☰'}
+              </button>
+            </div>
+          )
+      )
+      }
 
     </div>
   );
