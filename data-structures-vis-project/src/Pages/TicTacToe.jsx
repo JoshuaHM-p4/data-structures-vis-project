@@ -29,6 +29,15 @@ const TicTacToe = () => {
   // Custom hook to play sound
   const { playSound } = useSound();
 
+  // Dictionary of background images
+  const backgroundImages = {
+    1: '/tictactoe/background/bg-1.gif',
+    2: '/tictactoe/background/bg-2.gif',
+    3: '/tictactoe/background/bg-3.gif',
+    4: '/tictactoe/background/bg-4.gif',
+    5: '/tictactoe/background/bg-5.gif',
+  };
+
   // Winning combinations
   const WINNING_COMBOS = [
     [0, 1, 2],
@@ -144,13 +153,22 @@ const TicTacToe = () => {
     OPressed: '/tictactoe/o-button-pressed.png',
   };
 
+  // Get the current background image based on the round
+  const currentBackgroundImage = backgroundImages[(round % 5) || 5];
+
   return (
-    <div className="flex flex-col items-center justify-around h-full bg-tictactoe">
+    <div className='flex flex-col items-center justify-around h-full'
+    style={{
+      backgroundImage: `url(${currentBackgroundImage})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+    }}
+    >
       <div className="flex justify-between w-full pt-2">
         {/* Left */}
         {/* Health Bar for X Player */}
         <div className="flex flex-col items-start w-full p-2">
-        <progress
+          <progress
             className={`nes-progress h-5 w-full ${
               XHealth < 25 ? 'is-error' : XHealth < 50 ? 'is-warning' : 'is-success'
             }`}
@@ -163,7 +181,7 @@ const TicTacToe = () => {
         <div className="flex flex-col items-center w-3/4 justify-center">
           <h1 className="text-2xl font-bold">Tic Tac Toe</h1>
           <p className="text-lg">{gameStatus}</p>
-          <p className="text-lg">Round:{round}</p>
+          <p className="text-lg">Round: {round}</p>
         </div>
         {/* Right */}
         {/* Health Bar for O Player */}

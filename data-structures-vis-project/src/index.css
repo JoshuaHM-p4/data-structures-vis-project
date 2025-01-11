@@ -60,10 +60,4 @@ a:hover {
   image-rendering: pixelated;
 }
 
-.bg-tictactoe {
-  background-image: url(/tictactoe/background/tictactoe-bg-2.gif);
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-}
 
