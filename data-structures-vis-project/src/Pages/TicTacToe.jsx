@@ -15,7 +15,7 @@ const TicTacToe = () => {
   const [currentPlayer, setCurrentPlayer] = useState("X"); // X goes first
   const [gameStatus, setGameStatus] = useState("Player X's Turn"); // Initial game status
   const [winningCombo, setWinningCombo] = useState([]); // State to store the winning combination
-
+  const [pressedState, setPressedState] = useState(Array(9).fill(false));
   // Custom hook to play sound
   const { playSound } = useSound();
 
@@ -44,7 +44,26 @@ const TicTacToe = () => {
 
   // Handle cell click
   const handleCellClick = (index) => {
-    if (board[index] || gameStatus.includes("wins")) return; // Ignore click if cell is already filled or game is over
+  if (gameStatus.includes("wins")) return; // Ignore click if the game is over
+
+  // Set the pressed state for the button
+  const updatedPressedState = [...pressedState];
+  updatedPressedState[index] = true;
+  setPressedState(updatedPressedState);
+
+  // If the cell is already filled, just reset the pressed state after a short delay
+  if (board[index]) {
+    setTimeout(() => {
+      const resetPressedState = [...pressedState];
+      resetPressedState[index] = false;
+      setPressedState(resetPressedState);
+      playSound(pingSound) // Play the sound
+    }, 200); // Adjust the delay as needed
+    return;
+  }
+
+  // Update the board after a short delay to show the pressed state
+  setTimeout(() => {
     const updatedBoard = [...board];
     updatedBoard[index] = currentPlayer; // Update the clicked cell with the current player's symbol
     setBoard(updatedBoard); // Update the board state
@@ -68,7 +87,14 @@ const TicTacToe = () => {
       setGameStatus(`Player ${nextPlayer}'s Turn`);
       playSound(pingSound); // Play the sound
     }
-  };
+
+    // Reset the pressed state after updating the board
+    const resetPressedState = [...pressedState];
+    resetPressedState[index] = false;
+    setPressedState(resetPressedState);
+  }, 200); // Adjust the delay as needed
+};
+
 
   // Restart the game
   const restartGame = () => {
@@ -78,6 +104,16 @@ const TicTacToe = () => {
     setWinningCombo([]); // Reset the winning combination
     playSound(resetSound);
   };
+
+    // Dictionary to map cell values to image URLs
+    const imageMap = {
+      null: '/tictactoe/default.png',
+      X: '/tictactoe/x-button.png',
+      O: '/tictactoe/o-button.png',
+      nullPressed: '/tictactoe/default-pressed.png',
+      XPressed: '/tictactoe/x-button-pressed.png',
+      OPressed: '/tictactoe/o-button-pressed.png',
+    };
 
   return (
     <div className="flex flex-col items-center justify-evenly h-full ">
@@ -101,7 +137,15 @@ const TicTacToe = () => {
             }`}
             onClick={() => handleCellClick(index)}
           >
-            {cell}
+            <img
+              src={
+                pressedState[index]
+                  ? imageMap[cell + "Pressed"]  // Use the pressed version of the image
+                  : imageMap[cell]              // Use the normal version
+              }
+              className="h-full w-full image-rendering"
+              alt={`${cell || 'blank'}-button`}
+            />
           </button>
         ))}
       </div>

@@ -55,3 +55,8 @@ a:hover {
 .walk-animation {
   animation: walk 6s infinite linear; 
 }
+
+.image-rendering {
+  image-rendering: pixelated;
+}
+
