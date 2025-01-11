@@ -1,26 +1,45 @@
-export const shellSort = async (array, setArr, setComparing, setSortedIndices, delayRef) => {
+export const shellSort = async (array, setArr, setRedTube, setGreenTube, delayRef) => {
+  const delay = async () => {
+    await new Promise((resolve) => setTimeout(resolve, delayRef.current));
+  };
+
   let arrCopy = [...array];
   let n = arrCopy.length;
-  let gap = Math.floor(n / 2);
+  let interval = 1;
 
-  while (gap > 0) {
-    for (let i = gap; i < n; i++) {
-      let temp = arrCopy[i];
-      let j = i;
-      while (j >= gap && arrCopy[j - gap] > temp) {
-        setComparing([j, j - gap]);
-        await new Promise((resolve) => setTimeout(resolve, delayRef.current));
-        arrCopy[j] = arrCopy[j - gap];
-        j -= gap;
-        setArr([...arrCopy]);
-        await new Promise((resolve) => setTimeout(resolve, delayRef.current));
-      }
-      arrCopy[j] = temp;
-      setArr([...arrCopy]);
-    }
-    gap = Math.floor(gap / 2);
+  // Calculate initial interval or gap
+  while (interval < n / 3) {
+    interval = interval * 3 + 1;
   }
 
-  setSortedIndices((prev) => [...prev, ...Array.from({ length: n }, (_, i) => i)]);
-  setComparing([-1, -1]);
+  while (interval > 0) {
+    for (let outer = interval; outer < n; outer++) {
+      let inner = outer;
+      setRedTube([inner, inner - interval]); // Highlight elements being compared
+      await delay();
+      // Shift elements towards right and swap for better visualization
+      while (inner >= interval && arrCopy[inner - interval] > arrCopy[inner]) {
+        setRedTube([inner, inner - interval]); // Highlight elements being compared
+        await delay();
+        
+        // Swap elements
+        [arrCopy[inner], arrCopy[inner - interval]] = [arrCopy[inner - interval], arrCopy[inner]];
+        setArr([...arrCopy]);
+        // Highlight sorted elements
+        await delay();
+        
+        inner -= interval;
+      }
+
+      // Clear highlights
+      setRedTube([]);
+    }
+
+    // Calculate next interval
+    interval = (interval - 1) / 3;
+  }
+
+  // Mark the entire array as sorted
+  setGreenTube([...Array(n).keys()]);
+  setRedTube([]);
 };

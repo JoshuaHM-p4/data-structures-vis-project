@@ -112,10 +112,9 @@ const Sorting = () => {
       insertionSort(arr, setArr, setRedTube, setYellowTube, setGreenTube, delayRef).then(() => sortCompleted('Insertion Sort'));
     } else if (sortType === 'merge') {
       mergeSort(arr, setArr, setRedTube, setGreenTube, delayRef).then(() => sortCompleted('Merge Sort'));
-    }
-    // } else if (sortType === 'shell') {
-    //   shellSort(arr, setArr, setRedTube, setReferenceIndex, setSortedIndices, delayRef).then(() => sortCompleted('Shell Sort'));
-    else if (sortType === 'quick') {
+    } else if (sortType === 'shell') {
+    shellSort(arr, setArr, setRedTube, setGreenTube, delayRef).then(() => sortCompleted('Shell Sort'));
+    }else if (sortType === 'quick') {
       quickSort(arr, setArr, setRedTube, setYellowTube, setGreenTube, setOrangeTube, delayRef).then(() => sortCompleted('Quick Sort'));
     } 
     // else if (sortType === 'heap') {
@@ -213,7 +212,7 @@ const Sorting = () => {
             }}
             disabled={ !isFinished || isSorting}
           >
-            Unsort 
+            Unsort
           </button>
           </div>
         </div>
