@@ -209,7 +209,7 @@ const BinarySearchTreePage = () => {
 
 
   return (
-    <div className='w-full h-full overflow-hidden'>
+    <div className='w-full h-full overflow-hidden bg-[url("/background/world-map.png")] bg-cover pixelated'>
       <div className='flex gap-2 justify-center top-20 left-0 absolute w-full h-fit'>
         <button onClick={() => setIsModalOpen(true)} className="nes-btn is-primary">
           Add Node

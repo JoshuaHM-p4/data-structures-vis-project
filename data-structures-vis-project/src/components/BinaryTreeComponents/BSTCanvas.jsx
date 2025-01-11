@@ -177,8 +177,8 @@ const BSTCanvas = ({ tree, traversal }) => {
       context.clearRect(0, 0, context.canvas.width, context.canvas.height);
 
       // Draw background
-      context.fillStyle = "#55d500";
-      context.fillRect(0, 0, context.canvas.width, context.canvas.height);
+      // context.fillStyle = "#55d500";
+      // context.fillRect(0, 0, context.canvas.width, context.canvas.height);
 
       // Don't draw empty tree
       if (!positions || !positions.length || !tree?.root) return;
