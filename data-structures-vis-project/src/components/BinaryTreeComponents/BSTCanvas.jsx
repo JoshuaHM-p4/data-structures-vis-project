@@ -30,6 +30,14 @@ const BSTCanvas = ({ tree, traversal }) => {
       return images;
     };
 
+    const marioFrames = {
+      North: loadImageFrames('/world-mario', 'WorldMario_North', 2),
+      South: loadImageFrames('/world-mario', 'WorldMario_South', 2),
+      East: loadImageFrames('/world-mario', 'WorldMario_East', 2),
+      West: loadImageFrames('/world-mario', 'WorldMario_West', 2),
+      Done: loadImageFrames('/world-mario', 'WorldMarioDone', 0)
+    };
+
     const initializeTree = (tree, canvas) => {
       if (!tree?.root) return null;
 
@@ -70,13 +78,19 @@ const BSTCanvas = ({ tree, traversal }) => {
     const rootImageFrames = loadImageFrames('/node', 'nodeSpriteRoot', 0);
     const nodeImageFrames = loadImageFrames('/node', 'nodeSprite', 3);
 
-    console.log('rootImage', rootImageFrames);
-    console.log('nodeImage', nodeImageFrames);
-
     let currentFrame = 0;
     const frameCount = 3;
     let frameDelay = 0;
     const frameDelayThreshold = 15;
+
+    let marioPosition = {x: 0, y: 0}
+    if (positions) {
+      marioPosition = { x: positions[0].x, y: positions[0].y };
+    }
+    let marioFrameIndex = 0;
+    let marioFrameDelay = 0;
+    const marioFrameDelayThreshold = 10;
+    let marioDirection = 'South';
 
     const update = () => {
       if (!positions || !positions.length || !tree?.root) return;
@@ -88,11 +102,42 @@ const BSTCanvas = ({ tree, traversal }) => {
         if (index < traversalOrder.length) {
           const nodeId = traversalOrder[index];
           const node = positions.find(pos => pos.id === nodeId);
-          if (node) {
+          if (node && !node.applied) {
             node.applied = true;
+            const startX = marioPosition.x;
+            const startY = marioPosition.y;
+            const endX = node.x;
+            const endY = node.y;
+
+            const steps = 15; // Number of steps to move from one node to another
+            let step = 0;
+
+            const moveMario = () => {
+              if (step <= steps) {
+                const midwayY = startY + (endY - startY) / 2;
+                if (step <= steps / 2) {
+                  marioPosition.x = startX;
+                  marioPosition.y = startY + (midwayY - startY) * (step / (steps / 2));
+                  marioDirection = 'South';
+                } else {
+                  marioPosition.x = startX + (endX - startX) * ((step - steps / 2) / (steps / 2));
+                  marioPosition.y = midwayY + (endY - midwayY) * ((step - steps / 2) / (steps / 2));
+                  marioDirection = endX > startX ? 'East' : 'West';
+                }
+                step++;
+                setTimeout(moveMario, 25); // Adjust the delay as needed
+              } else {
+                marioDirection = 'Done';
+                index++;
+                setTimeout(applyTraversal, 500); // Adjust the delay as needed
+              }
+            };
+
+            moveMario();
+          } else {
+            index++;
+            setTimeout(applyTraversal, 500); // Adjust the delay as needed
           }
-          index++;
-          setTimeout(applyTraversal, 500); // Adjust the delay as needed
         }
       };
 
@@ -150,8 +195,6 @@ const BSTCanvas = ({ tree, traversal }) => {
           (child) => child.id.startsWith(`${id}-R`)
         );
 
-        // console.log(`Node ${id}: leftChild=${leftChild?.id}, rightChild=${rightChild?.id}`);
-
         // Draw elbows to children
         const elbowConfigs = [];
         if (leftChild) {
@@ -206,6 +249,24 @@ const BSTCanvas = ({ tree, traversal }) => {
         context.textBaseline = "middle";
         context.fillText(value, x, y);
       });
+
+      // Draw Mario sprite following the traversal
+      const marioFrameSet = marioFrames[marioDirection];
+
+      context.drawImage(
+        marioDirection === 'Done' ?  marioFrameSet[0] : marioFrameSet[marioFrameIndex],
+        marioPosition.x - nodeSize / 2,
+        marioPosition.y - nodeSize / 2,
+        nodeSize,
+        nodeSize
+      );
+
+      // Update Mario frame with delay
+      marioFrameDelay++;
+      if (marioFrameDelay >= marioFrameDelayThreshold) {
+        marioFrameIndex = (marioFrameIndex + 1) % marioFrameSet.length;
+        marioFrameDelay = 0;
+      }
 
       // Update the current frame with delay
       frameDelay++;
@@ -292,7 +353,6 @@ const BSTCanvas = ({ tree, traversal }) => {
 
       // Initialize tree positions after canvas resize
       positions = initializeTree(tree, canvas);
-      // console.log("Tree initialized with positions:", positions);
     };
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
