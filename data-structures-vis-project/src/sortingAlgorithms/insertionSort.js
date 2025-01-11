@@ -50,12 +50,6 @@ export const insertionSort = async (array, setArr, setComparing, setReferenceInd
   }
 
   setArr([...arrCopy]);
-
-  for (let i = 0; i < n; i++) {
-    setSortedIndices((prev) => [...prev, i]);
-    await delay();
-  }
-
   setSortedIndices([...Array(n).keys()]);
   setComparing([-1, -1]);
   setReferenceIndex([]);
