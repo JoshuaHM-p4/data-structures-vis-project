@@ -117,9 +117,9 @@ const Sorting = () => {
     }else if (sortType === 'quick') {
       quickSort(arr, setArr, setRedTube, setYellowTube, setGreenTube, setOrangeTube, delayRef).then(() => sortCompleted('Quick Sort'));
     } 
-    // else if (sortType === 'heap') {
-    //   heapSort(arr, setArr, setComparing, setReferenceIndex, setSortedIndices, delayRef).then(() => sortCompleted('Heap Sort'));
-    // }
+    else if (sortType === 'heap') {
+      heapSort(arr, setArr, setRedTube, setGreenTube, delayRef).then(() => sortCompleted('Heap Sort'));
+    }
   };
 
   const generateRandomArray = (size) => {
