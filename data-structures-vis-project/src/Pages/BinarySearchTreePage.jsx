@@ -140,6 +140,8 @@ const BinarySearchTreePage = () => {
     }
     setIsModalOpen(false);
     setNodeValue('');
+    setTraversalResult([]);
+    setTraversal('');
     console.log(tree);
   };
 

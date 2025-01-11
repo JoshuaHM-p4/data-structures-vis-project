@@ -38,6 +38,37 @@ const BSTCanvas = ({ tree, traversal }) => {
       Done: loadImageFrames('/world-mario', 'WorldMarioDone', 0)
     };
 
+    const backgroundElements = {
+      hill: loadImageFrames('/background', 'bg-hill', 0),
+      hillSmall: loadImageFrames('/background', 'bg-hill-sm', 0),
+      rock: loadImageFrames('/background', 'bg-rock', 0),
+    }
+
+    const generateRandomPositions = (numElements, canvasWidth, canvasHeight, position, minDistance) => {
+      const randomPositions = [];
+      for (let i = 0; i < numElements; i++) {
+        let validPosition = false;
+        let x, y;
+
+        while (!validPosition) {
+          x = Math.random() * canvasWidth;
+          y = Math.random() * canvasHeight;
+          validPosition = true;
+
+          for (const node of position) {
+            const distance = Math.sqrt((x - node.x) ** 2 + (y - node.y) ** 2);
+            if (distance < minDistance) {
+              validPosition = false;
+              break;
+            }
+          }
+        }
+
+        randomPositions.push({ x, y });
+      }
+      return randomPositions;
+    };
+
     const initializeTree = (tree, canvas) => {
       if (!tree?.root) return null;
 
@@ -83,10 +114,22 @@ const BSTCanvas = ({ tree, traversal }) => {
     let frameDelay = 0;
     const frameDelayThreshold = 15;
 
-    let marioPosition = {x: 0, y: 0}
+    let marioPosition = { x: 0, y: 0 }
+
+    const backgroundElementSize = 45;
+    const minDistance = backgroundElementSize * 2.5;
+    const backgroundElementCount = 10;
+    let hillPositions = [];
+    let hillSmallPositions = [];
+    let rockPositions = [];
+
     if (positions) {
       marioPosition = { x: positions[0].x, y: positions[0].y };
+      hillPositions = generateRandomPositions(backgroundElementCount, canvas.width, canvas.height, positions, minDistance);
+      hillSmallPositions = generateRandomPositions(backgroundElementCount, canvas.width, canvas.height, positions, minDistance);
+      rockPositions = generateRandomPositions(backgroundElementCount, canvas.width, canvas.height, positions, minDistance);
     }
+
     let marioFrameIndex = 0;
     let marioFrameDelay = 0;
     const marioFrameDelayThreshold = 10;
@@ -243,18 +286,39 @@ const BSTCanvas = ({ tree, traversal }) => {
         context.drawImage(img, x - nodeSize / 2, y - nodeSize / 2, nodeSize, nodeSize);
 
         // Draw the value
-        context.fillStyle = "black";
-        context.font = "16px Arial";
+        context.fillStyle = traversal === '' ? "white" : applied ? "white" : "#558000";
+        context.font = "16px 'Press Start 2P'";
         context.textAlign = "center";
         context.textBaseline = "middle";
-        context.fillText(value, x, y);
+        context.fillText(value, x + (35), y);
       });
+
+
+      if (backgroundElements.hill[0].complete && hillPositions.length) {
+        // Draw random background elements
+        hillPositions.forEach(pos => {
+          context.drawImage(backgroundElements.hill[0], pos.x, pos.y, backgroundElementSize, backgroundElementSize);
+        });
+      };
+
+      if (backgroundElements.hillSmall[0].complete && hillSmallPositions.length) {
+        hillSmallPositions.forEach(pos => {
+          context.drawImage(backgroundElements.hillSmall[0], pos.x, pos.y, backgroundElementSize, backgroundElementSize);
+        });
+      }
+
+      if (backgroundElements.rock[0].complete && rockPositions.length) {
+        rockPositions.forEach(pos => {
+          context.drawImage(backgroundElements.rock[0], pos.x, pos.y, backgroundElementSize, backgroundElementSize);
+        });
+      }
+
 
       // Draw Mario sprite following the traversal
       const marioFrameSet = marioFrames[marioDirection];
 
       context.drawImage(
-        marioDirection === 'Done' ?  marioFrameSet[0] : marioFrameSet[marioFrameIndex],
+        marioDirection === 'Done' ? marioFrameSet[0] : marioFrameSet[marioFrameIndex],
         marioPosition.x - nodeSize / 2,
         marioPosition.y - nodeSize / 2,
         nodeSize,
@@ -383,7 +447,7 @@ const BSTCanvas = ({ tree, traversal }) => {
 
   return (
     <div className='overflow-y-auto max-h-screen'>
-      <canvas ref={canvasRef} className="w-full"></canvas>
+      <canvas ref={canvasRef} className="w-full h-full"></canvas>
     </div>
   );
 }
