@@ -3,6 +3,13 @@ import React, { useState, useEffect } from 'react';
 import Modal from '../components/BinaryTreeComponents/BSTNodeModal.jsx';
 import BSTCanvas from '../components/BinaryTreeComponents/BSTCanvas.jsx';
 
+import useSound from '../hooks/useSound.js';
+import clearTreeSound from "../assets/sounds/smw_kick.wav";
+import addNodeSound from "../assets/sounds/smw_message_block.wav";
+import cancelSound from "../assets/sounds/smw_kick.wav";
+import traversalSelectSound from "../assets/sounds/smw_fireball.wav";
+
+
 class Node {
   constructor(value) {
     this.value = value;
@@ -128,8 +135,10 @@ const BinarySearchTreePage = () => {
   const [nodeValue, setNodeValue] = useState('');
   const [traversal, setTraversal] = useState('');
   const [traversalResult, setTraversalResult] = useState([]);
+  const { playSound } = useSound();
 
   const handleAddNode = (value) => {
+    playSound(addNodeSound);
     if (!tree) {
       const newTree = new BinarySearchTree();
       newTree.insert(value);
@@ -143,10 +152,6 @@ const BinarySearchTreePage = () => {
     setTraversalResult([]);
     setTraversal('');
     console.log(tree);
-  };
-
-  const clearTree = () => {
-    setTree(null);
   };
 
   useEffect(() => {
@@ -170,6 +175,7 @@ const BinarySearchTreePage = () => {
         break;
     }
     console.log(`${traversal} Traversal:`, result);
+    playSound(traversalSelectSound);
     setTraversalResult(result);
   }, [traversal, tree]);
 
@@ -197,7 +203,8 @@ const BinarySearchTreePage = () => {
   }
 
   const handleClearTree = () => {
-    clearTree();
+    setTree(null);
+    playSound(clearTreeSound);
     setTraversalResult([]);
     setTraversal('');
   }
@@ -246,7 +253,7 @@ const BinarySearchTreePage = () => {
 
       <BSTCanvas tree={tree} traversal={traversal}/>
 
-      <Modal isModalOpen={isModalOpen} onClose={() => setIsModalOpen(false)} addNode={handleAddNode} />
+      <Modal isModalOpen={isModalOpen} onClose={() => {playSound(cancelSound); setIsModalOpen(false)}} addNode={handleAddNode} />
 
       {/* Traversal Result Overlay */}
       {traversalResult.length > 0 && (

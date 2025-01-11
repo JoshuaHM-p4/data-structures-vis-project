@@ -1,10 +1,42 @@
 /* eslint-disable react/prop-types */
 import { useRef, useEffect } from 'react';
+import useSound from "../../hooks/useSound.js";
+
+import mapMusic from '../../assets/sounds/smw_map_yoshi_island.mp3';
+import mapMoveSound from '../../assets/sounds/smw_map_move_to_spot.wav';
+import traversalDoneSound from '../../assets/sounds/smw_1-up.wav';
 
 const BSTCanvas = ({ tree, traversal }) => {
   const canvasRef = useRef(null);
   const nodeSize = 30;
   const canvasHeightRef = useRef(0);
+
+  const { playSound } = useSound();
+  const mapMusicAudioRef = useRef(null);
+
+  const playMapMusic = () => {
+    mapMusicAudioRef.current = playSound(mapMusic, { volume: 0.5, loop: true });
+  };
+
+  const stopMapMusic = () => {
+    if (mapMusicAudioRef.current) {
+      mapMusicAudioRef.current.pause();
+      mapMusicAudioRef.current.currentTime = 0;
+      mapMusicAudioRef.current = null;
+    }
+  };
+
+  const playTraversalSound = () => { playSound(mapMoveSound); };
+  const playTraversalDoneSound = () => { playSound(traversalDoneSound); };
+
+  useEffect(() => {
+    playMapMusic();
+    return () => {
+      stopMapMusic();
+    };
+  }, []);
+
+
 
   useEffect(() => {
 
@@ -135,6 +167,8 @@ const BSTCanvas = ({ tree, traversal }) => {
     const marioFrameDelayThreshold = 10;
     let marioDirection = 'South';
 
+    let traversalDonePlayed = false;
+
     const update = () => {
       if (!positions || !positions.length || !tree?.root) return;
 
@@ -170,6 +204,7 @@ const BSTCanvas = ({ tree, traversal }) => {
                 step++;
                 setTimeout(moveMario, 25); // Adjust the delay as needed
               } else {
+                playTraversalSound();
                 marioDirection = 'Done';
                 index++;
                 setTimeout(applyTraversal, 500); // Adjust the delay as needed
@@ -181,6 +216,9 @@ const BSTCanvas = ({ tree, traversal }) => {
             index++;
             setTimeout(applyTraversal, 500); // Adjust the delay as needed
           }
+        } else if (!traversalDonePlayed && traversalOrder.length) {
+          playTraversalDoneSound();
+          traversalDonePlayed = true;
         }
       };
 
