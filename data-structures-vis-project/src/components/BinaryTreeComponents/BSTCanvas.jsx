@@ -11,6 +11,24 @@ const BSTCanvas = ({ tree, traversal }) => {
     const xScale = 0.75;
     const yGap = 100;
 
+    const loadImageFrames = (imagePaths, filename, numFrames) => {
+      let images = [];
+      let loadedImages = 0;
+
+      if (numFrames === 0) {
+        const image = new Image();
+        image.src = `${imagePaths}/${filename}.png`;
+        images.push(image);
+        return images;
+      }
+
+      for (let i = 0; i < numFrames; i++) {
+        const image = new Image();
+        image.src = `${imagePaths}/${filename}${i}.png`;
+        images.push(image);
+      }
+      return images;
+    };
 
     const initializeTree = (tree, canvas) => {
       if (!tree?.root) return null;
@@ -48,6 +66,17 @@ const BSTCanvas = ({ tree, traversal }) => {
     const fixedDeltaTime = 16;
     let animationFrameId;
     let mouse = { x: undefined, y: undefined };
+
+    const rootImageFrames = loadImageFrames('/node', 'nodeSpriteRoot', 0);
+    const nodeImageFrames = loadImageFrames('/node', 'nodeSprite', 3);
+
+    console.log('rootImage', rootImageFrames);
+    console.log('nodeImage', nodeImageFrames);
+
+    let currentFrame = 0;
+    const frameCount = 3;
+    let frameDelay = 0;
+    const frameDelayThreshold = 15;
 
     const update = () => {
       if (!positions || !positions.length || !tree?.root) return;
@@ -103,7 +132,8 @@ const BSTCanvas = ({ tree, traversal }) => {
       context.clearRect(0, 0, context.canvas.width, context.canvas.height);
 
       // Draw background
-      context.fillStyle = "#f0f0f0";
+      context.fillStyle = "#55d500";
+      context.fillRect(0, 0, context.canvas.width, context.canvas.height);
 
       // Don't draw empty tree
       if (!positions || !positions.length || !tree?.root) return;
@@ -151,17 +181,23 @@ const BSTCanvas = ({ tree, traversal }) => {
         });
       });
 
-      // Draw nodes (circles)
-      positions.forEach((node) => {
+      // Draw nodes (animated sprites)
+      positions.forEach((node, index) => {
         const { x, y, value, applied } = node;
 
-        // Draw the circle
-        context.fillStyle = applied ? "red" : "white"; // Change color if applied
-        context.beginPath();
-        context.arc(x, y, nodeSize / 2, 0, Math.PI * 2);
-        context.fill();
-        context.strokeStyle = "black";
-        context.stroke();
+        // Select the appropriate image frames
+        let img;
+        if (index === 0) {
+          img = rootImageFrames[0]; // Root node
+        } else if (applied) {
+          img = nodeImageFrames[1]; // Applied node
+        } else {
+          img = nodeImageFrames[currentFrame]; // Regular node
+        }
+
+        // Draw the sprite image
+        context.imageSmoothingEnabled = false;
+        context.drawImage(img, x - nodeSize / 2, y - nodeSize / 2, nodeSize, nodeSize);
 
         // Draw the value
         context.fillStyle = "black";
@@ -170,6 +206,13 @@ const BSTCanvas = ({ tree, traversal }) => {
         context.textBaseline = "middle";
         context.fillText(value, x, y);
       });
+
+      // Update the current frame with delay
+      frameDelay++;
+      if (frameDelay >= frameDelayThreshold) {
+        currentFrame = (currentFrame + 1) % frameCount;
+        frameDelay = 0;
+      }
     };
 
     // Elbow drawing function
