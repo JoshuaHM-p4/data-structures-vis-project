@@ -102,6 +102,9 @@ const BSTCanvas = ({ tree, traversal }) => {
       // Clear the canvas
       context.clearRect(0, 0, context.canvas.width, context.canvas.height);
 
+      // Draw background
+      context.fillStyle = "#f0f0f0";
+
       // Don't draw empty tree
       if (!positions || !positions.length || !tree?.root) return;
 
@@ -126,9 +129,9 @@ const BSTCanvas = ({ tree, traversal }) => {
             type: 'branchLeft',
             start: { x, y },
             end: { x: leftChild.x, y: leftChild.y },
-            cornerRadius: 10,
-            color: "white",
-            linewidth: 4,
+            cornerRadius: 15,
+            color: "#ffffaa",
+            linewidth: 10,
           });
         }
 
@@ -137,9 +140,9 @@ const BSTCanvas = ({ tree, traversal }) => {
             type: 'branchRight',
             start: { x, y },
             end: { x: rightChild.x, y: rightChild.y },
-            cornerRadius: 10,
-            color: "white",
-            linewidth: 4,
+            cornerRadius: 15,
+            color: "#ffffaa",
+            linewidth: 10,
           });
         }
 
