@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Confetti from "react-confetti";
 import useSound from "../hooks/useSound.js";
 
@@ -31,11 +31,30 @@ const TicTacToe = () => {
 
   // Dictionary of background images
   const backgroundImages = {
-    1: '/tictactoe/background/bg-1.gif',
-    2: '/tictactoe/background/bg-2.gif',
-    3: '/tictactoe/background/bg-3.gif',
-    4: '/tictactoe/background/bg-4.gif',
-    5: '/tictactoe/background/bg-5.gif',
+    0: '/tictactoe/background/bg-1.gif',
+    1: '/tictactoe/background/bg-2.gif',
+    2: '/tictactoe/background/bg-3.gif',
+    3: '/tictactoe/background/bg-4.gif',
+    4: '/tictactoe/background/bg-5.gif',
+  };
+
+  const [currentBackgroundImage, setCurrentBackgroundImage] = useState(backgroundImages[0]);
+  const [nextBackgroundImage, setNextBackgroundImage] = useState('');
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
+  useEffect(() => {
+    if (isTransitioning) {
+      const timeout = setTimeout(() => {
+        setCurrentBackgroundImage(nextBackgroundImage);
+        setIsTransitioning(false);
+      }, 150); // Duration of the fade-out transition
+      return () => clearTimeout(timeout);
+    }
+  }, [isTransitioning, nextBackgroundImage]);
+
+  const changeBackgroundImage = (newImageUrl) => {
+    setNextBackgroundImage(newImageUrl);
+    setIsTransitioning(true);
   };
 
   // Winning combinations
@@ -77,7 +96,7 @@ const TicTacToe = () => {
         resetPressedState[index] = false;
         setPressedState(resetPressedState);
         playSound(pingSound); // Play the sound
-      }, 200); // Adjust the delay as needed
+      }, 100); // Adjust the delay as needed
       return;
     }
 
@@ -123,19 +142,22 @@ const TicTacToe = () => {
 
   // Restart the game
   const restartGame = () => {
+    changeBackgroundImage(backgroundImages[round  % 5]);
     setBoard(Array(9).fill(null)); // Reset the board
     setCurrentPlayer("X"); // Set X as the starting player
     setGameStatus("Player X's Turn"); // Reset the game status
     setWinningCombo([]); // Reset the winning combination
     setPressedState(Array(9).fill(false)); // Reset the pressed state
+    setRound(round + 1);
     playSound(resetSound);
+
+
   };
 
   // Modal functions
   const handleModalClose = () => {
     setIsModalOpen(false);
-    setTimeout(restartGame, 2000); // Delay before restarting the game
-    setRound(round + 1);
+    setTimeout(restartGame, 1000); // Delay before restarting the game
   };
 
   const handleModalOpen = (message) => {
@@ -153,15 +175,14 @@ const TicTacToe = () => {
     OPressed: '/tictactoe/o-button-pressed.png',
   };
 
-  // Get the current background image based on the round
-  const currentBackgroundImage = backgroundImages[(round % 5) || 5];
-
   return (
     <div className='flex flex-col items-center justify-around h-full'
     style={{
-      backgroundImage: `url(${currentBackgroundImage})`,
+      backgroundImage: `url(${isTransitioning ? nextBackgroundImage : currentBackgroundImage})`,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      animation: isTransitioning ? 'fadeOut 0.2s ease-in-out' : 'fadeIn 0.2s ease-in-out',
     }}
     >
       <div className="flex justify-between w-full pt-2">
@@ -175,7 +196,7 @@ const TicTacToe = () => {
             value={XHealth}
             max="100"
           ></progress>
-          <h1 className="text-xl font-bold pl-1">Player X</h1>
+          <h1 className="text-xl font-bold pl-2">Player X</h1>
         </div>
         {/* Middle */}
         <div className="flex flex-col items-center w-3/4 justify-center">
@@ -193,16 +214,16 @@ const TicTacToe = () => {
             value={OHealth}
             max="100"
           ></progress>
-          <h1 className="text-xl font-bold pr-1">Player O</h1>
+          <h1 className="text-xl font-bold pr-2">Player O</h1>
         </div>
       </div>
       {/* Game Board */}
       <div className="flex flex-col h-full w-full items-center justify-center relative">
-        <div className="grid grid-cols-3">
+        <div className="grid grid-cols-3 h-5/6 p-2">
           {board.map((cell, index) => (
             <button
               key={index}
-              className={`nes-pointer w-24 h-24 flex items-center text-center justify-center text-4xl font-["Gluten"] hover:bg-gray-200 hover:text-black active:opacity-90 focus:outline-none   
+              className={`nes-pointer flex items-center text-center justify-center text-4xl font-["Gluten"] hover:bg-gray-200 hover:text-black active:opacity-90 focus:outline-none   
               ${
                 Array.isArray(winningCombo) && winningCombo.includes(index)
                   ? "bg-red-600 text-black hover:bg-red-800 hover:text-white"
@@ -222,7 +243,7 @@ const TicTacToe = () => {
                     ? imageMap[cell + "Pressed"]  // Use the pressed version of the image
                     : imageMap[cell]              // Use the normal version
                 }
-                className="h-full w-full image-rendering"
+                className=" h-full image-rendering"
                 alt={`${cell || 'blank'}-button`}
               />
             </button>
@@ -244,4 +265,4 @@ const TicTacToe = () => {
   );
 };
 
-export default TicTacToe;
+export default TicTacToe; 
