@@ -4,6 +4,18 @@ import Modal from '../components/StackQueueModal/Modal.jsx';
 import MarioAnimation from '../components/MarioComponent/MarioAnimation.jsx';
 import Slider from '../components/Slider/Slider.jsx';
 
+import useSound from '../hooks/useSound.js';
+import editMusic from '/music/overworld_edit.mp3';
+import overworldMusic from '/music/overworld.mp3';
+import courseClearSound from '/music/course_clear.mp3';
+
+import generateSound from '../assets/sounds/smw_fireball.wav';
+import startSort from '../assets/sounds/smw_kick.wav';
+import sortingSound from '/sounds/sort/sorting-soundeffect.mp3'
+
+import startSound from '/sounds/mario_maker/play_start.wav';
+import marioSound from '/sounds/mario_maker/mario_start.wav';
+
 import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -45,6 +57,59 @@ const Sorting = () => {
   const [timer, setTimer] = useState(0);
   const timerRef = useRef(null);
 
+  const { playSound } = useSound();
+  const musicAudioRef = useRef(null);
+  const sortingAudioRef = useRef(null);
+
+  const playMusic = (music) => {
+    musicAudioRef.current = playSound(music, { volume: 0.2, loop: true });
+  };
+
+  const stopMusic = () => {
+    if (musicAudioRef.current) {
+      musicAudioRef.current.pause();
+      musicAudioRef.current.currentTime = 0;
+      musicAudioRef.current = null;
+    }
+  };
+
+  const playSorting = () => {
+    sortingAudioRef.current = playSound(sortingSound, { volume: 0.1, loop: true });
+  };
+
+  const stopSortingSound = () => {
+    if (sortingAudioRef.current) {
+      sortingAudioRef.current.pause();
+      sortingAudioRef.current.currentTime = 0;
+      sortingAudioRef.current = null;
+    }
+  }
+
+  useEffect(() => {
+    if (!isFinished) {
+      stopMusic();
+      playMusic(editMusic);
+    } else {
+      stopMusic();
+      playMusic(overworldMusic);
+    }
+    return () => {
+      stopMusic();
+    };
+  }, [isFinished]);
+
+
+  useEffect(() => {
+    if (isSorting) {
+      playSorting();
+    } else {
+      stopSortingSound();
+    }
+    return () => {
+      stopSortingSound();
+    }
+  }, [isSorting]);
+
   const getTubeMode = (index) => {
     if (redTube.includes(index)) return 'red';
     if (greenTube.includes(index)) return 'green';
@@ -73,11 +138,19 @@ const Sorting = () => {
     getPipePosition();
   }, [arr, isFinished]);
 
-  const handleComplete = () => {
-    console.log('Mario Animation Completed');
+  const capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
   };
 
-  const handleModalClose = () => setIsModalOpen(false);
+  const handleComplete = () => {
+    handleModalOpen(`${capitalizeFirstLetter(sortMethod)} Sort Completed`);
+    stopMusic();
+    playSound(courseClearSound, { volume: 0.1 });
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+  }
 
   const handleModalOpen = (message) => {
     setAlertMessage(message);
@@ -122,12 +195,14 @@ const Sorting = () => {
     setIsSorting(true);
     setTimer(0);
     startTimer();
+    playSound(startSort);
     const sortCompleted = (sortName) => {
       stopTimer();
-      handleModalOpen(`${sortName} Completed`);
       setIsSorting(false);
       setIsFinished(true);
       getPipePosition();
+      playSound(startSound);
+      playSound(marioSound, { volume: 0.5 });
       setPrevArr([...arr]);
     };
 
@@ -158,6 +233,7 @@ const Sorting = () => {
     setYellowTube([]);
     setSwapping([]);
     setIsFinished(false);
+    playSound(generateSound);
   };
 
   useEffect(() => {
@@ -236,6 +312,7 @@ const Sorting = () => {
                 setYellowTube([]);
                 setSwapping([]);
                 setIsFinished(false);
+                playSound(startSound);
               }}
               disabled={!isFinished || isSorting}
             >

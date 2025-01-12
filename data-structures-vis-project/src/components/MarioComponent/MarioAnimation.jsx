@@ -8,13 +8,14 @@ const MarioAnimation = ({ pipes, onComplete }) => {
   const marioRef = useRef();
   const flagRef = useRef();
   const [marioState, setMarioState] = useState('idle'); // 'idle' or 'jump'
+  const [animationCompleted, setAnimationCompleted] = useState(false); // Track animation completion
 
   useEffect(() => {
-    // console.log(pipes.map((pipe) => `${pipe.x.toFixed(2)} ${pipe.y.toFixed(2)}`));
-    if (pipes.length > 1) {
+    if (pipes.length > 1 && !animationCompleted) {
       const tl = gsap.timeline({
         onComplete: () => {
           setMarioState('idle');
+          setAnimationCompleted(true); // Mark animation as completed
           if (onComplete) onComplete();
         },
       });
@@ -97,7 +98,7 @@ const MarioAnimation = ({ pipes, onComplete }) => {
         },
       });
     }
-  }, [pipes]);
+  }, [pipes, animationCompleted]);
 
   useEffect(() => {
     const logPosition = () => {
