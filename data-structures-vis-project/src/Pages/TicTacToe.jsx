@@ -8,6 +8,12 @@ import explodeSound from "../assets/sounds/explode.mp3";
 import failSound from "../assets/sounds/fail.wav";
 import jingleWin from "../assets/sounds/jingle-win.wav";
 
+import punchHigh from '/sounds/punches/punch-high.wav';
+import punchLow from '/sounds/punches/punch-low.wav';
+import punchLowest from '/sounds/punches/punch-lowest.wav';
+import punchMid from '/sounds/punches/punch-mid.wav';
+import punchThud from '/sounds/punches/punch-thud.wav';
+
 import Modal from '../components/StackQueueModal/Modal.jsx';
 
 // Define the TicTacToe component
@@ -46,6 +52,7 @@ const TicTacToe = () => {
 
   useEffect(() => {
     if (isTransitioning) {
+      console.log('Transitioning to new background image:', nextBackgroundImage);
       const timeout = setTimeout(() => {
         setCurrentBackgroundImage(nextBackgroundImage);
         setIsTransitioning(false);
@@ -55,6 +62,7 @@ const TicTacToe = () => {
   }, [isTransitioning, nextBackgroundImage]);
 
   const changeBackgroundImage = (newImageUrl) => {
+    console.log('Changing background image to:', newImageUrl);
     setNextBackgroundImage(newImageUrl);
     setIsTransitioning(true);
   };
@@ -82,6 +90,12 @@ const TicTacToe = () => {
     return board.every((cell) => cell !== null) ? "Draw" : null; // Return "Draw" if all cells are filled, otherwise null
   };
 
+  const playRandomHit = () => {
+    const punches = [punchHigh, punchLow, punchLowest, punchMid, punchThud];
+    const randomIndex = Math.floor(Math.random() * punches.length);
+    playSound(punches[randomIndex]);
+  }
+
   // Handle cell click
   const handleCellClick = (index) => {
     if (gameStatus.includes("wins")) return; // Ignore click if the game is over
@@ -93,12 +107,10 @@ const TicTacToe = () => {
 
     // If the cell is already filled, just reset the pressed state after a short delay
     if (board[index]) {
-      setTimeout(() => {
-        const resetPressedState = [...pressedState];
-        resetPressedState[index] = false;
-        setPressedState(resetPressedState);
-        playSound(pingSound); // Play the sound
-      }, 100); // Adjust the delay as needed
+      const resetPressedState = [...pressedState];
+      resetPressedState[index] = false;
+      setPressedState(resetPressedState);
+      playRandomHit();
       return;
     }
 
@@ -118,49 +130,79 @@ const TicTacToe = () => {
         } else {
           const { winner, combination } = result;
           setWinningCombo(combination); // Set the winning combination
-          setGameStatus(`Player ${winner} wins!`);
           playSound(explodeSound);
-          playSound(jingleWin);
-          checkGameProgress(winner);
+
+          let newXhealth = XHealth;
+          let newOHealth = OHealth;
+          if (winner === "X") {
+            newOHealth -= 20;
+            setOHealth((prevOHealth) => prevOHealth - 20);
+          } else {
+            newXhealth -= 20;
+            setXHealth((prevXHealth) => prevXHealth - 20);
+          }
+
+          if (newXhealth <= 0 || newOHealth <= 0) {
+            const result = checkWinner(updatedBoard);
+            const { winner } = result;
+
+            setGameStatus(`Player ${winner} wins!`);
+            playSound(jingleWin);
+            checkGameProgress(winner);
+
+          } else {
+            // reset board after delay post-combo
+            setTimeout(() => {
+              resetBoard();
+            }, 1000);
+          }
         }
       } else {
         const nextPlayer = currentPlayer === "X" ? "O" : "X";
         setCurrentPlayer(nextPlayer);
         setGameStatus(`Player ${nextPlayer}'s Turn`);
-        playSound(pingSound); // Play the sound
+        playRandomHit();
       }
 
       // Reset the pressed state after updating the board
       const resetPressedState = [...pressedState];
       resetPressedState[index] = false;
       setPressedState(resetPressedState);
-    }, 200); // Adjust the delay as needed
+    }, 50); // Adjust the delay as needed
+
   };
 
   const checkGameProgress = (winner) => {
-    const updatedXHealth = winner === "O" ? XHealth - 20 : XHealth;
-    const updatedOHealth = winner === "X" ? OHealth - 20 : OHealth;
-    
-    setXHealth(updatedXHealth);
-    setOHealth(updatedOHealth);
-
-    if (updatedXHealth <= 0 || updatedOHealth <= 0) {
-      setChampion(winner);
-      handleModalOpen(`Player ${winner} wins the game! Restarting...`);
-    } else {
-      handleModalOpen(`Player ${winner} wins the round!`);
-    }
+    setChampion(winner);
+    handleModalOpen(`Player ${winner} wins the game! Restarting...`);
+    setTimeout(() => {
+      nextRound();
+    }, 3000);
   };
-  
+
   // Change Round
-  const changeRound = () => {
-    changeBackgroundImage(backgroundImages[round  % 5]);
+  const nextRound = () => {
+    setXHealth(100);
+    setOHealth(100);
+
+    changeBackgroundImage(backgroundImages[round % 5]);
+    setCurrentPlayer("X"); // Set X as the starting player
+    setGameStatus("Player X's Turn"); // Reset the game status
+
+    setBoard(Array(9).fill(null)); // Reset the board
+    setWinningCombo([]); // Reset the winning combination
+    setPressedState(Array(9).fill(false)); // Reset the pressed state
+
+    setRound((round) => round + 1);
+    playSound(resetSound);
+  };
+
+  const resetBoard = () => {
     setBoard(Array(9).fill(null)); // Reset the board
     setCurrentPlayer("X"); // Set X as the starting player
     setGameStatus("Player X's Turn"); // Reset the game status
     setWinningCombo([]); // Reset the winning combination
     setPressedState(Array(9).fill(false)); // Reset the pressed state
-    setRound(round + 1);
     playSound(resetSound);
   };
 
@@ -168,9 +210,9 @@ const TicTacToe = () => {
   const handleModalClose = () => {
     setIsModalOpen(false);
     if (champion) {
-      declareWinner();
+      console.log(champion);
     } else {
-    setTimeout(changeRound, 1000); // Delay before changing the round
+      setTimeout(changeRound, 1000); // Delay before changing the round
     }
   };
 
@@ -184,7 +226,7 @@ const TicTacToe = () => {
       setChampion('');
       resetGame();
       setIsModalOpen(false);
-    }, 1000 ); // Delay before restarting the game
+    }, 1000); // Delay before restarting the game
   };
 
   const resetGame = () => {
@@ -199,7 +241,6 @@ const TicTacToe = () => {
     setCurrentBackgroundImage(backgroundImages[0]); // Reset to the initial background image
     playSound(resetSound); // Play reset sound
   };
-  
 
   // Dictionary to map cell values to image URLs
   const imageMap = {
@@ -213,22 +254,21 @@ const TicTacToe = () => {
 
   return (
     <div className='flex flex-col items-center justify-around h-full'
-    style={{
-      backgroundImage: `url(${isTransitioning ? nextBackgroundImage : currentBackgroundImage})`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
-      animation: isTransitioning ? 'fadeOut 0.2s ease-in-out' : 'fadeIn 0.2s ease-in-out',
-    }}
+      style={{
+        backgroundImage: `url(${isTransitioning ? nextBackgroundImage : currentBackgroundImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        animation: isTransitioning ? 'fadeOut 0.2s ease-in-out' : 'fadeIn 0.2s ease-in-out',
+      }}
     >
       <div className="flex justify-between w-full pt-2">
         {/* Left */}
         {/* Health Bar for X Player */}
         <div className="flex flex-col items-start w-full p-2">
           <progress
-            className={`nes-progress h-5 w-full ${
-              XHealth < 25 ? 'is-error' : XHealth < 50 ? 'is-warning' : 'is-success'
-            }`}
+            className={`nes-progress h-5 w-full ${XHealth < 25 ? 'is-error' : XHealth < 50 ? 'is-warning' : 'is-success'
+              }`}
             value={XHealth}
             max="100"
           ></progress>
@@ -244,9 +284,8 @@ const TicTacToe = () => {
         {/* Health Bar for O Player */}
         <div className="flex flex-col items-end w-full p-2">
           <progress
-            className={`nes-progress h-5 w-full ${
-              OHealth < 25 ? 'is-error' : OHealth < 50 ? 'is-warning' : 'is-success'
-            }`}
+            className={`nes-progress h-5 w-full ${OHealth < 25 ? 'is-error' : OHealth < 50 ? 'is-warning' : 'is-success'
+              }`}
             value={OHealth}
             max="100"
           ></progress>
@@ -259,19 +298,18 @@ const TicTacToe = () => {
           {board.map((cell, index) => (
             <button
               key={index}
-              className={`nes-pointer p-1 w-28 h-28 flex items-center text-center justify-center text-4xl font-["Gluten"] hover:bg-gray-200 hover:text-black active:opacity-90 focus:outline-none   
-              ${
-                Array.isArray(winningCombo) && winningCombo.includes(index)
+              className={`nes-pointer p-1 w-28 h-28 flex items-center text-center justify-center text-4xl font-["Gluten"] hover:bg-gray-200 hover:text-black active:opacity-90 focus:outline-none
+              ${Array.isArray(winningCombo) && winningCombo.includes(index)
                   ? "bg-red-600 text-black hover:bg-red-800 hover:text-white"
                   : "bg-transparent"
-              } ${
-                index === 1 ? "border-r-4 border-l-4" :
-                index === 3 ? "border-y-4" :
-                index === 4 ? "border-4" :
-                index === 5 ? "border-t-4 border-b-4" :
-                index === 7 ? "border-x-4" : ""
-              }`}
+                } ${index === 1 ? "border-r-4 border-l-4" :
+                  index === 3 ? "border-y-4" :
+                    index === 4 ? "border-4" :
+                      index === 5 ? "border-t-4 border-b-4" :
+                        index === 7 ? "border-x-4" : ""
+                }`}
               onClick={() => handleCellClick(index)}
+              disabled={winningCombo.length > 0} // Disable button if there is a winning combination
             >
               <img
                 src={
@@ -301,4 +339,4 @@ const TicTacToe = () => {
   );
 };
 
-export default TicTacToe; 
+export default TicTacToe;
