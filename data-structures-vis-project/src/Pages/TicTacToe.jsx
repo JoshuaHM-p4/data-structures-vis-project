@@ -66,6 +66,7 @@ const TicTacToe = () => {
     2: '/tictactoe/background/bg-3.gif',
     3: '/tictactoe/background/bg-4.gif',
     4: '/tictactoe/background/bg-5.gif',
+    5: '/tictactoe/background/bg-6.gif',
   };
 
   const [currentBackgroundImage, setCurrentBackgroundImage] = useState(backgroundImages[0]);
@@ -210,7 +211,7 @@ const TicTacToe = () => {
 
     playMusic();
 
-    changeBackgroundImage(backgroundImages[round % 5]);
+    changeBackgroundImage(backgroundImages[round % 6]);
     setCurrentPlayer("X"); // Set X as the starting player
     setGameStatus("Player X's Turn"); // Reset the game status
 
@@ -349,8 +350,8 @@ const TicTacToe = () => {
           ))}
         </div>
 
-        <img src="/tictactoe/character-1.gif" className="absolute bottom-0 left-20" />
-        <img src="/tictactoe/character-2.gif" className="absolute bottom-0 right-20 transform scale-x-[-1]" />
+        <img src="/tictactoe/character-1.gif" className="absolute bottom-0 left-20 w-[300px]" />
+        <img src="/tictactoe/character-3.gif" className="absolute bottom-0 right-20 w-[300px]" />
       </div>
       {/* {gameStatus.includes("wins") && <Confetti className="w-full h-full"/>} */}
 
