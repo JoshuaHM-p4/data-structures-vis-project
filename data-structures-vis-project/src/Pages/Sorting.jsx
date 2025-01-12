@@ -247,7 +247,7 @@ const Sorting = () => {
   const formattedTimer = (timer / 1000).toFixed(2);
 
   return (
-    <div className='flex h-full flex-col items-center gap-2 p-2'>
+    <div className='flex h-full flex-col items-center gap-2 p-2 bg-[url("/background/bg-overworld.png")] bg-right-bottom bg-cover pixelated'>
       {/* Upper Section */}
       <div className='flex flex-row justify-between items-center w-full gap-2'>
         {/* Left Section */}
