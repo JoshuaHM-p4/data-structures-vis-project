@@ -264,7 +264,7 @@ const Stacks = () => {
   };
 
   return (
-    <div className="w-full h-full">
+    <div className='w-full h-full bg-[url("/stacks/city-bg.png")] bg-center bg-cover pixelated'>
       <div className='flex gap-2 justify-center top-20 left-0 absolute w-full h-fit'>
         <button onClick={handleArrivalClick} className="nes-btn is-primary rounded z-50">
           Arrival
