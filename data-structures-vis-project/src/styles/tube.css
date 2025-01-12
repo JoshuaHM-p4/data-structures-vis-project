@@ -1,143 +1,179 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Default State */
 .tube {
-    width: 20px; /* Adjust the width as needed */
-    height: 50px; /* Adjust the height as needed */
-    background-color: green;
-    position: relative;
-    margin: 5px auto;
-    box-shadow: 0 8px 10px rgba(0, 0, 0, 0.3);
-    outline: black 1px solid;
-    background: linear-gradient(
-      to right,
-      #4a90e2, /* Light blue */
-      #4a90e2 0.5px,
-      #5ba4ee 3px, /* Slightly lighter blue */
-      #d0eaff 6px, /* Very light blue */
-      #7fc7f7 10px, /* Sky blue */
-      #4b9cd3 17px, /* Medium blue */
-      #102a4c 100% /* Dark blue */
-    );
-    transition: height 0.3s ease, background-color 0.3s ease; /* Add transition for height and background-color */
+  width: 20px; /* Adjust the width as needed */
+  height: 50px; /* Adjust the height as needed */
+  background-color: blue;
+  position: relative;
+  margin: 5px auto;
+  box-shadow: 0 8px 10px rgba(0, 0, 0, 0.3);
+  outline: black 1px solid;
+  background: linear-gradient(
+    to right,
+    #4a90e2, /* Light blue */
+    #4a90e2 2.5%,
+    #5ba4ee 15%, /* Slightly lighter blue */
+    #d0eaff 30%, /* Very light blue */
+    #7fc7f7 50%, /* Sky blue */
+    #4b9cd3 85%, /* Medium blue */
+    #102a4c 100% /* Dark blue */
+  );
+  transition: height 0.3s ease, background-color 0.3s ease; /* Add transition for height and background-color */
+  margin: 0 5px;
 }
 
-.tube.comparing {
-    background: linear-gradient(
-      to right,
-      #9c5757,
-      #9c5757 0.5px,
-      #ad6d6d 3px,
-      #ffe8e8 6px,
-      #d59191 10px,
-      #b76565 17px,
-      #2e1414 100%
-    );
+/* Default After */
+.tube::after {
+  content: "";
+  position: absolute;
+  left: -5px;
+  top: -10px;
+  height: 10px;
+  width: 30px;
+  border-radius: 3px;
+  border-bottom: solid 5px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 5px rgba(0, 0, 0, 0.5);
+  outline: black 1px solid;
+  background: linear-gradient(
+    to right,
+    #4a90e2, /* Light blue */
+    #4a90e2 3.33%,
+    #5ba4ee 16%, /* Slightly lighter blue */
+    #d0eaff 33%, /* Very light blue */
+    #7fc7f7 50%, /* Sky blue */
+    #4b9cd3 57%, /* Medium blue */
+    #102a4c 100% /* Dark blue */
+  );
+  transition: height 0.3s ease, background-color 0.3s ease; /* Add transition for height and background-color */
 }
 
-.tube.reference {
+/* Comparing State - Red */
+.tube.red {
+  background-color: red;
+  background: linear-gradient(
+    to right,
+    #9c5757,
+    #9c5757 2.5%,
+    #ad6d6d 15%,
+    #ffe8e8 30%,
+    #d59191 50%,
+    #b76565 85%,
+    #2e1414 100%
+  );
+}
+
+.tube.red::after {
+  background: linear-gradient(
+    to right,
+    #9c5757,
+    #9c5757 3.33%,
+    #ad6d6d 16%,
+    #ffe8e8 33%,
+    #d59191 50%,
+    #b76565 57%,
+    #2e1414 100%
+  );
+}
+
+/* Reference State - Yellow */
+.tube.yellow {
+  background-color: red;
   background: linear-gradient(
     to right,
     #f4e04d, /* Light yellow */
-    #f4e04d 0.5px,
-    #f7e669 3px, /* Slightly lighter yellow */
-    #fff9d6 6px, /* Very light yellow */
-    #fde88b 10px, /* Sunny yellow */
-    #f7d357 17px, /* Medium yellow */
+    #f4e04d 2.5%,
+    #f7e669 15%, /* Slightly lighter yellow */
+    #fff9d6 30%, /* Very light yellow */
+    #fde88b 50%, /* Sunny yellow */
+    #f7d357 85%, /* Medium yellow */
     #4d3b10 100% /* Dark yellow-brown */
   );
-}  
+}
 
-
-.tube.sorted {
+.tube.yellow::after {
   background: linear-gradient(
-  to right,
-  #579c66,
-  #579c66 0.5px,
-  #6dad7b 3px,
-  #e9ffe8 6px,
-  #9dd591 10px,
-  #6bb765 17px,
-  #142e16 100%
-);
+    to right,
+    #f4e04d, /* Light yellow */
+    #f4e04d 3.33%,
+    #f7e669 16%, /* Slightly lighter yellow */
+    #fff9d6 33%, /* Very light yellow */
+    #fde88b 50%, /* Sunny yellow */
+    #f7d357 57%, /* Medium yellow */
+    #4d3b10 100% /* Dark yellow-brown */
+  );
 }
 
-.tube::after {
-    content: "";
-    position: absolute;
-    left:-5px;
-    top: -10px;
-    height: 10px;
-    width: 30px;
-    border-radius: 3px;
-    border-bottom: solid 5px rgba(0, 0, 0, 0.4);
-    box-shadow: 0 4px 5px rgba(0, 0, 0, 0.5);
-    outline: black 1px solid;
-    background: linear-gradient(
-      to right,
-      #4a90e2, /* Light blue */
-      #4a90e2 1px,
-      #5ba4ee 5px, /* Slightly lighter blue */
-      #d0eaff 10px, /* Very light blue */
-      #7fc7f7 15px, /* Sky blue */
-      #4b9cd3 17px, /* Medium blue */
-      #102a4c 100% /* Dark blue */
-    );
-    transition: height 0.3s ease, background-color 0.3s ease,; /* Add transition for height and background-color */
-    
-}
-
-.tube.comparing::after{
-    background: linear-gradient(
-      to right,
-      #9c5757,
-      #9c5757 1px,
-      #ad6d6d 5px,
-      #ffe8e8 10px,
-      #d59191 15px,
-      #b76565 17px,
-      #2e1414 100%
-    );
-}
-
-.tube.sorted::after {
+/* Sorted State */
+.tube.green {
   background: linear-gradient(
     to right,
     #579c66,
-    #579c66 1px,
-    #6dad7b 5px,
-    #e9ffe8 10px,
-    #9dd591 15px,
-    #6bb765 17px,
+    #579c66 2.5%,
+    #6dad7b 15%,
+    #e9ffe8 30%,
+    #9dd591 50%,
+    #6bb765 85%,
     #142e16 100%
   );
 }
 
-.tube.reference::after {
+.tube.green::after {
   background: linear-gradient(
     to right,
-    #f4e04d, /* Light yellow */
-    #f4e04d 1px,
-    #f7e669 5px, /* Slightly lighter yellow */
-    #fff9d6 10px, /* Very light yellow */
-    #fde88b 15px, /* Sunny yellow */
-    #f7d357 17px, /* Medium yellow */
-    #4d3b10 100% /* Dark yellow-brown */
-  );  
+    #579c66,
+    #579c66 3.33%,
+    #6dad7b 16%,
+    #e9ffe8 33%,
+    #9dd591 50%,
+    #6bb765 57%,
+    #142e16 100%
+  );
 }
 
+/* Orange State */
+.tube.orange {
+  background: linear-gradient(
+    to right,
+    #ff9500,
+    #ff9500 2.5%,
+    #ffa500 15%,
+    #ffebcc 30%,
+    #ffcc80 50%,
+    #ffab4d 85%,
+    #7a4400 100%
+  );
+}
+
+.tube.orange::after {
+  background: linear-gradient(
+    to right,
+    #ff9500,
+    #ff9500 3.33%,
+    #ffa500 16%,
+    #ffebcc 33%,
+    #ffcc80 50%,
+    #ffab4d 57%,
+    #7a4400 100%
+  );
+}
 
 @keyframes swap {
-    0% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-20px);
-    }
-    100% {
-        transform: translateY(0);
-    }
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
 
 .swapping {
-    animation: swap 0.3s ease;
+  animation: swap 0.3s ease;
 }
-
-

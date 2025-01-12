@@ -10,7 +10,7 @@ const MarioAnimation = ({ pipes, onComplete }) => {
   const [marioState, setMarioState] = useState('idle'); // 'idle' or 'jump'
 
   useEffect(() => {
-    console.log(pipes.map((pipe) => `${pipe.x.toFixed(2)} ${pipe.y.toFixed(2)}`));
+    // console.log(pipes.map((pipe) => `${pipe.x.toFixed(2)} ${pipe.y.toFixed(2)}`));
     if (pipes.length > 1) {
       const tl = gsap.timeline({
         onComplete: () => {
@@ -30,9 +30,9 @@ const MarioAnimation = ({ pipes, onComplete }) => {
             ease: 'power1.inOut',
             motionPath: {
               path: [
-                { x: pipe.x, y: -pipe.height },
+                { x: pipe.x, y: -pipe.height - 5 },
                 { x: (pipe.x + nextPipe.x) / 2, y: -pipe.height - 50 }, // Peak of the jump
-                { x: nextPipe.x, y: -nextPipe.height - 5 },
+                { x: nextPipe.x, y: -nextPipe.height - 15 },
               ],
               curviness: 1,
             },
@@ -40,7 +40,7 @@ const MarioAnimation = ({ pipes, onComplete }) => {
             onUpdate: () => {
               if (marioRef.current) {
                 const rect = marioRef.current.getBoundingClientRect();
-                console.log(`Mario's position - x: ${rect.left}, y: ${rect.top}`);
+                // console.log(`Mario's position - x: ${rect.left}, y: ${rect.top}`);
               }
             },
             onComplete: () => setMarioState('idle'),
@@ -50,7 +50,7 @@ const MarioAnimation = ({ pipes, onComplete }) => {
 
       // Add final jump to the flagpole
       const lastPipe = pipes[pipes.length - 1];
-      const flagPoleBase = lastPipe.y - lastPipe.height;
+      const flagPoleBase = 20;
       const flagPoleX = lastPipe.x + 100; // Adjust the x position of the flagpole as needed
       const flagPoleY = -lastPipe.height - 100; // Adjust the y position of the flagpole as needed
 
@@ -63,7 +63,7 @@ const MarioAnimation = ({ pipes, onComplete }) => {
         onUpdate: () => {
           if (marioRef.current) {
             const rect = marioRef.current.getBoundingClientRect();
-            console.log(`Mario's position - x: ${rect.left}, y: ${rect.top}`);
+            // console.log(`Mario's position - x: ${rect.left}, y: ${rect.top}`);
           }
         },
         onComplete: () => setMarioState('pole'),
@@ -75,7 +75,7 @@ const MarioAnimation = ({ pipes, onComplete }) => {
         onUpdate: () => {
           if (marioRef.current) {
             const rect = marioRef.current.getBoundingClientRect();
-            console.log(`Mario's position - x: ${rect.left}, y: ${rect.top}`);
+            // console.log(`Mario's position - x: ${rect.left}, y: ${rect.top}`);
           }
         },
         onComplete: () => setMarioState('idle'),
@@ -83,7 +83,7 @@ const MarioAnimation = ({ pipes, onComplete }) => {
 
       // Add flag falling animation after Mario starts falling
       tl.to(flagRef.current, {
-        y: flagPoleBase + 16, // Adjust this to make the flag fall along with Mario
+        bottom: flagPoleBase + 32, // Adjust this to make the flag fall along with Mario
         duration: 1,
         ease: 'power1.out',
         onStart: () => {
@@ -92,7 +92,7 @@ const MarioAnimation = ({ pipes, onComplete }) => {
         onUpdate: () => {
           if (flagRef.current) {
             const rect = flagRef.current.getBoundingClientRect();
-            console.log(`Flag position - x: ${rect.left}, y: ${rect.top}`);
+            // console.log(`Flag position - x: ${rect.left}, y: ${rect.top}`);
           }
         },
       });
@@ -103,7 +103,7 @@ const MarioAnimation = ({ pipes, onComplete }) => {
     const logPosition = () => {
       if (marioRef.current) {
         const rect = marioRef.current.getBoundingClientRect();
-        console.log(`Mario's position - x: ${rect.left}, y: ${rect.top}`);
+        // console.log(`Mario's position - x: ${rect.left}, y: ${rect.top}`);
       }
     };
 
@@ -138,13 +138,13 @@ const MarioAnimation = ({ pipes, onComplete }) => {
         src="/flag/flag.png"
         ref={flagRef}
         style={{
-          top: `${320 + 18}px`,
+          bottom: `${320 - 25}px`,
           left: `${pipes[pipes.length - 1].x + 100 - 18}px`,
         }}
       />
 
       {/*  Pole */}
-      <img className={`fixed bottom-[20px] border h-80 border-red-600 pixelated`} src="/flag/pole.png"
+      <img className={`fixed bottom-[20px] border h-[320px] border-red-600 pixelated`} src="/flag/pole.png"
       style={{
         left: `${pipes[pipes.length - 1].x + 100}px`,
       }}/>

@@ -2,31 +2,58 @@ import React, { useState, useRef, useEffect } from 'react';
 import MarioTube from '../components/MarioComponent/MarioTubes.jsx';
 import Modal from '../components/StackQueueModal/Modal.jsx';
 import MarioAnimation from '../components/MarioComponent/MarioAnimation.jsx';
+import Slider from '../components/Slider/Slider.jsx';
+
+import { faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import { bubbleSort } from '../sortingAlgorithms/bubbleSort';
+import { selectionSort } from '../sortingAlgorithms/selectionSort';
+import { insertionSort } from '../sortingAlgorithms/insertionSort';
+import { mergeSort } from '../sortingAlgorithms/mergeSort';
+import { shellSort } from '../sortingAlgorithms/shellSort';
+import { quickSort } from '../sortingAlgorithms/quickSort';
+import { heapSort } from '../sortingAlgorithms/heapSort';
 
 const Sorting = () => {
-  const [arr, setArr] = useState([46, 21, 3, 12, 45, 2, 1, 5, 16, 10]);
+  const [arr, setArr] = useState([46, 21, 3, 12, 45, 2, 1, 5, 16, 10, 17, 28, 19, 13, 13, 11, 35, 17, 1, 19]);
   const [prevArr, setPrevArr] = useState([]);
 
-  const [isDisabled, setIsDisabled] = useState(false);
+  const [isFinished, setIsFinished] = useState(false);
 
+  const [redTube, setRedTube] = useState([]);
+  const [greenTube, setGreenTube] = useState([]);
+  const [yellowTube, setYellowTube] = useState([]);
+  const [orangeTube, setOrangeTube] = useState([]);
 
   const [isSorting, setIsSorting] = useState(false);
-  const [comparing, setComparing] = useState([-1, -1]);
-  const [sortedIndices, setSortedIndices] = useState([]);
   const [sortMethod, setSortMethod] = useState('');
-  const [referenceIndex, setReferenceIndex] = useState(-1);
+
   const [swapping, setSwapping] = useState([-1, -1]);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
 
-  const [delay, setDelay] = useState(500);
+  const [delay, setDelay] = useState(100);
   const delayRef = useRef(delay);
 
-  const [isSortingComplete, setIsSortingComplete] = useState(false);
   const [pipes, setPipes] = useState([]);
   const divRefs = useRef([]);
 
-  useEffect(() => {
+  const [arraySize, setArraySize] = useState(20);
+
+  const [timer, setTimer] = useState(0);
+  const timerRef = useRef(null);
+
+  const getTubeMode = (index) => {
+    if (redTube.includes(index)) return 'red';
+    if (greenTube.includes(index)) return 'green';
+    if (yellowTube.includes(index)) return 'yellow';
+    if (orangeTube.includes(index)) return 'orange';
+    return ''; // Default mode if no conditions match
+  };
+
+  const getPipePosition = () => {
     const newPipes = divRefs.current.map((div) => {
       if (div) {
         const rect = div.getBoundingClientRect();
@@ -38,8 +65,17 @@ const Sorting = () => {
       }
       return null;
     }).filter(pipe => pipe !== null);
+
     setPipes(newPipes);
-  }, [arr, isSortingComplete]);
+  };
+
+  useEffect(() => {
+    getPipePosition();
+  }, [arr, isFinished]);
+
+  const handleComplete = () => {
+    console.log('Mario Animation Completed');
+  };
 
   const handleModalClose = () => setIsModalOpen(false);
 
@@ -50,7 +86,8 @@ const Sorting = () => {
 
   const increaseDelay = () => {
     setDelay((prevDelay) => {
-      const newDelay = prevDelay + 100;
+      if (prevDelay >= 500) return prevDelay
+      const newDelay = prevDelay + 50;
       delayRef.current = newDelay;
       return newDelay;
     });
@@ -58,442 +95,203 @@ const Sorting = () => {
 
   const decreaseDelay = () => {
     setDelay((prevDelay) => {
-      const newDelay = prevDelay - 100;
+      if (prevDelay <= 0) return prevDelay
+      const newDelay = prevDelay - 50;
       delayRef.current = newDelay;
       return newDelay;
     });
   };
 
-  const bubbleSort = async (array) => {
-    let arrCopy = [...array];
-    let n = arrCopy.length;
-    for (let i = 0; i < n - 1; i++) {
-      for (let j = 0; j < n - i - 1; j++) {
-        setComparing([j, j + 1]);
-        await new Promise((resolve) => setTimeout(resolve, delayRef.current)); // Adjust the delay as needed
-        if (arrCopy[j] > arrCopy[j + 1]) {
-          setSwapping([j, j + 1]);
-          await new Promise((resolve) => setTimeout(resolve, delayRef.current)); // Add delay for swapping animation
-          let temp = arrCopy[j];
-          arrCopy[j] = arrCopy[j + 1];
-          arrCopy[j + 1] = temp;
-          setArr([...arrCopy]);
-          setSwapping([-1, -1]);
-        }
-        setComparing([-1, -1]);
-        await new Promise((resolve) => setTimeout(resolve, delayRef.current)); // Adjust the delay as needed
-      }
-      setSortedIndices((prev) => [...prev, n - i - 1]);
-    }
-    setSortedIndices((prev) => [...prev, 0]);
-    setComparing([-1, -1]);
-    setIsSorting(false);
-    setPrevArr([...array]);
-    setIsSortingComplete(true);
-    handleModalOpen('Bubble Sort Completed');
+
+  const startTimer = () => {
+    setTimer(0);
+    timerRef.current = setInterval(() => {
+      setTimer((prevTimer) => prevTimer + 10);
+    }, 10);
   };
 
-  const selectionSort = async (array) => {
-    let arrCopy = [...array];
-    let n = arrCopy.length;
-    for (let i = 0; i < n - 1; i++) {
-      let minIndex = i;
-      for (let j = i + 1; j < n; j++) {
-        setComparing([i, minIndex]);
-        setReferenceIndex(j);
-        await new Promise((resolve) => setTimeout(resolve, delayRef.current));
-        if (arrCopy[j] < arrCopy[minIndex]) {
-          minIndex = j;
-        }
-        await new Promise((resolve) => setTimeout(resolve, delayRef.current)); // Adjust the delay as needed
-      }
-      if (minIndex !== i) {
-        setComparing([i, minIndex]);
-        setSwapping([i, minIndex]);
-        setReferenceIndex(-1);
-        await new Promise((resolve) => setTimeout(resolve, delayRef.current)); // Add delay for swapping animation
-        let temp = arrCopy[i];
-        arrCopy[i] = arrCopy[minIndex];
-        arrCopy[minIndex] = temp;
-        setArr([...arrCopy]);
-        setSwapping([-1, -1]);
-      }
-      setSortedIndices((prev) => [...prev, i]);
-    }
-    setSortedIndices((prev) => [...prev, n - 1]);
-    setComparing([-1, -1]);
-    setReferenceIndex(-1);
-    setIsSorting(false);
-    setPrevArr([...array]);
-    setIsSortingComplete(true);
-    handleModalOpen('Selection Sort Completed');
-  };
-
-  const insertionSort = async (array) => {
-    let arrCopy = [...array];
-    let n = arrCopy.length;
-
-    const delay = async () => {
-      await new Promise((resolve) => setTimeout(resolve, delayRef.current));
-    };
-
-    for (let i = 1; i < n; i++) {
-      let currentValue = arrCopy[i];
-      let j = i - 1;
-
-      setReferenceIndex(i);
-      let localReferenceIndex = i;
-      await delay();
-
-      let lastComparedIndex = [i, i - 1];
-
-      while (j >= 0 && arrCopy[j] > currentValue) {
-        if (localReferenceIndex === j + 1) {
-          setReferenceIndex(-1);
-          setComparing([j, j + 1]);
-          await delay();
-          setReferenceIndex(i);
-        } else {
-          setComparing([j, j + 1]);
-          await delay();
-        }
-
-        [arrCopy[j + 1], arrCopy[j]] = [arrCopy[j], arrCopy[j + 1]];
-        j--;
-
-        lastComparedIndex = [j, j + 1];
-        setArr([...arrCopy]);
-        await delay();
-      }
-
-      if (lastComparedIndex[0] === localReferenceIndex) {
-        setReferenceIndex(-1);
-        setComparing(lastComparedIndex);
-        await delay();
-        setReferenceIndex(i);
-      } else {
-        setComparing(lastComparedIndex);
-        await delay();
-      }
-
-      setReferenceIndex(-1);
-      setComparing([-1, -1]);
-    }
-
-    setArr([...arrCopy]);
-
-    for (let i = 0; i < n; i++) {
-      setSortedIndices((prev) => [...prev, i]);
-      await new Promise((resolve) => setTimeout(resolve, 100));
-    }
-
-    setSortedIndices([...Array(n).keys()]);
-    setComparing([-1, -1]);
-    setReferenceIndex(-1);
-    setIsSorting(false);
-    setPrevArr([...array]);
-    setIsSortingComplete(true);
-    handleModalOpen('Insertion Sort Completed');
-  };
-
-  const mergeSort = async (array) => {
-    let arrCopy = [...array];
-
-    const merge = async (left, right) => {
-      let result = [];
-      let leftIndex = 0;
-      let rightIndex = 0;
-
-      while (leftIndex < left.length && rightIndex < right.length) {
-        setComparing([leftIndex, rightIndex]);
-        await new Promise((resolve) => setTimeout(resolve, delayRef.current)); // Adjust the delay as needed
-        if (left[leftIndex] < right[rightIndex]) {
-          result.push(left[leftIndex]);
-          leftIndex++;
-        } else {
-          result.push(right[rightIndex]);
-          rightIndex++;
-        }
-      }
-
-      return result.concat(left.slice(leftIndex)).concat(right.slice(rightIndex));
-    };
-
-    const mergeSortRecursive = async (arr) => {
-      if (arr.length <= 1) {
-        return arr;
-      }
-
-      const middle = Math.floor(arr.length / 2);
-      const left = await mergeSortRecursive(arr.slice(0, middle));
-      const right = await mergeSortRecursive(arr.slice(middle));
-
-      const merged = await merge(left, right);
-      setArr([...merged]);
-      setSortedIndices((prev) => [...prev, ...Array.from({ length: merged.length }, (_, i) => i)]);
-      return merged;
-    };
-
-    await mergeSortRecursive(arrCopy);
-    setComparing([-1, -1]);
-    setIsSorting(false);
-    setPrevArr([...array]);
-    setIsSortingComplete(true);
-    handleModalOpen('Merge Sort Completed');
-  };
-
-  const shellSort = async (array) => {
-    let arrCopy = [...array];
-    let n = arrCopy.length;
-    let gap = Math.floor(n / 2);
-
-    while (gap > 0) {
-      for (let i = gap; i < n; i++) {
-        let temp = arrCopy[i];
-        let j = i;
-        while (j >= gap && arrCopy[j - gap] > temp) {
-          setComparing([j, j - gap]);
-          await new Promise((resolve) => setTimeout(resolve, delayRef.current));
-          arrCopy[j] = arrCopy[j - gap];
-          j -= gap;
-          setArr([...arrCopy]);
-          await new Promise((resolve) => setTimeout(resolve, delayRef.current)); // Adjust the delay as needed
-        }
-        arrCopy[j] = temp;
-        setArr([...arrCopy]);
-      }
-      gap = Math.floor(gap / 2);
-    }
-
-    setSortedIndices((prev) => [...prev, ...Array.from({ length: n }, (_, i) => i)]);
-    setComparing([-1, -1]);
-    setIsSorting(false);
-    setPrevArr([...array]);
-    setIsSortingComplete(true);
-    handleModalOpen('Shell Sort Completed');
-  };
-
-  const quickSort = async (array) => {
-    let arrCopy = [...array];
-
-    const partition = async (low, high) => {
-      let pivot = arrCopy[high];
-      let i = low - 1;
-      for (let j = low; j < high; j++) {
-        setComparing([j, high]);
-        await new Promise((resolve) => setTimeout(resolve, delayRef.current)); // Adjust the delay as needed
-        if (arrCopy[j] < pivot) {
-          i++;
-          [arrCopy[i], arrCopy[j]] = [arrCopy[j], arrCopy[i]];
-          setArr([...arrCopy]);
-        }
-        setComparing([-1, -1]);
-        await new Promise((resolve) => setTimeout(resolve, delayRef.current)); // Adjust the delay as needed
-      }
-      [arrCopy[i + 1], arrCopy[high]] = [arrCopy[high], arrCopy[i + 1]];
-      setArr([...arrCopy]);
-      return i + 1;
-    };
-
-    const quickSortRecursive = async (low, high) => {
-      if (low < high) {
-        let pi = await partition(low, high);
-        await quickSortRecursive(low, pi - 1);
-        await quickSortRecursive(pi + 1, high);
-      }
-    };
-
-    await quickSortRecursive(0, arrCopy.length - 1);
-    setSortedIndices((prev) => [...prev, ...Array.from({ length: arrCopy.length }, (_, i) => i)]);
-    setComparing([-1, -1]);
-    setIsSorting(false);
-    setPrevArr([...array]);
-    setIsSortingComplete(true);
-    handleModalOpen('Quick Sort Completed');
-  };
-
-  const heapSort = async (array) => {
-    let arrCopy = [...array];
-    let n = arrCopy.length;
-
-    const heapify = async (n, i) => {
-      let largest = i;
-      let left = 2 * i + 1;
-      let right = 2 * i + 2;
-
-      if (left < n && arrCopy[left] > arrCopy[largest]) {
-        largest = left;
-      }
-
-      if (right < n && arrCopy[right] > arrCopy[largest]) {
-        largest = right;
-      }
-
-      if (largest !== i) {
-        setComparing([i, largest]);
-        await new Promise((resolve) => setTimeout(resolve, delayRef.current)); // Adjust the delay as needed
-        [arrCopy[i], arrCopy[largest]] = [arrCopy[largest], arrCopy[i]];
-        setArr([...arrCopy]);
-        await new Promise((resolve) => setTimeout(resolve, delayRef.current)); // Adjust the delay as needed
-        await heapify(n, largest);
-      }
-    };
-
-    for (let i = Math.floor(n / 2) - 1; i >= 0; i--) {
-      await heapify(n, i);
-    }
-
-    for (let i = n - 1; i > 0; i--) {
-      setComparing([0, i]);
-      await new Promise((resolve) => setTimeout(resolve, delayRef.current)); // Adjust the delay as needed
-      [arrCopy[0], arrCopy[i]] = [arrCopy[i], arrCopy[0]];
-      setArr([...arrCopy]);
-      await new Promise((resolve) => setTimeout(resolve, delayRef.current)); // Adjust the delay as needed
-      await heapify(i, 0);
-      setSortedIndices((prev) => [...prev, i]);
-    }
-
-    setSortedIndices((prev) => [...prev, 0]);
-    setComparing([-1, -1]);
-    setIsSorting(false);
-    setPrevArr([...array]);
-    setIsSortingComplete(true);
-    handleModalOpen('Heap Sort Completed');
+  const stopTimer = () => {
+    clearInterval(timerRef.current);
+    timerRef.current = null;
   };
 
   const handleSort = (sortType) => {
+    if (!sortType) {
+      return;
+    }
     setIsSorting(true);
-    setIsSortingComplete(false);
+    setTimer(0);
+    startTimer();
+    const sortCompleted = (sortName) => {
+      stopTimer();
+      handleModalOpen(`${sortName} Completed`);
+      setIsSorting(false);
+      setIsFinished(true);
+      getPipePosition();
+      setPrevArr([...arr]);
+    };
+
     if (sortType === 'bubble') {
-      bubbleSort(arr);
+      bubbleSort(arr, setArr, setRedTube, setSwapping, setGreenTube, delayRef, setPrevArr).then(() => sortCompleted('Bubble Sort'));
     } else if (sortType === 'selection') {
-      selectionSort(arr);
+      selectionSort(arr, setArr, setRedTube, setYellowTube, setSwapping, setGreenTube, delayRef).then(() => sortCompleted('Selection Sort'));
     } else if (sortType === 'insertion') {
-      insertionSort(arr);
+      insertionSort(arr, setArr, setRedTube, setYellowTube, setGreenTube, delayRef).then(() => sortCompleted('Insertion Sort'));
     } else if (sortType === 'merge') {
-      mergeSort(arr);
+      mergeSort(arr, setArr, setRedTube, setGreenTube, delayRef).then(() => sortCompleted('Merge Sort'));
     } else if (sortType === 'shell') {
-      shellSort(arr);
+      shellSort(arr, setArr, setRedTube, setGreenTube, delayRef).then(() => sortCompleted('Shell Sort'));
     } else if (sortType === 'quick') {
-      quickSort(arr);
-    } else if (sortType === 'heap') {
-      heapSort(arr);
+      quickSort(arr, setArr, setRedTube, setYellowTube, setGreenTube, setOrangeTube, delayRef).then(() => sortCompleted('Quick Sort'));
+    }
+    else if (sortType === 'heap') {
+      heapSort(arr, setArr, setRedTube, setGreenTube, delayRef).then(() => sortCompleted('Heap Sort'));
     }
   };
 
-  const generateRandomArray = () => {
-    const randomArray = Array.from({ length: 10 }, () => Math.floor(Math.random() * 50) + 1);
+  const generateRandomArray = (size) => {
+    const randomArray = Array.from({ length: size }, () => Math.floor(Math.random() * 100) + 1);
     setArr(randomArray);
     setPrevArr([]);
-    setSortedIndices([]);
-    setIsSortingComplete(false);
-    setComparing([-1, -1]);
+    setRedTube([]);
+    setGreenTube([]);
+    setYellowTube([]);
+    setSwapping([]);
+    setIsFinished(false);
   };
 
-  const handleAnimationComplete = () => {
-    console.log('Mario animation complete!');
-  };
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, []);
+
+  const formattedTimer = (timer / 1000).toFixed(2);
 
   return (
-    <div className='flex h-full bg-green-100 flex-col items-center gap-3'>
-      {/* Array Section */}
-      <div className='flex gap-2 pt-2'>
-        <button
-          onClick={generateRandomArray}
-          className='p-2 bg-blue-500 text-white rounded'
-        >
-          Generate Random Array
-        </button>
-        <button
-          onClick={decreaseDelay}
-          className='p-2 bg-blue-500 text-white rounded'
-        >
-          Decrease Delay
-        </button>
-        <button
-          onClick={increaseDelay}
-          className='p-2 bg-blue-500 text-white rounded'
-        >
-          Increase Delay
-        </button>
-      </div>
-
-      {/* Display Array */}
-      <div className='flex gap-2 justify-center items-center w-full'>
-        <p>Array:</p>
-        {arr.map((num, index) => (
-          <div key={index} className='p-2 bg-blue-500 text-white rounded'>
-            {num}
+    <div className='flex h-full flex-col items-center gap-2 p-2'>
+      {/* Upper Section */}
+      <div className='flex flex-row justify-between items-center w-full gap-2'>
+        {/* Left Section */}
+        <div className='flex flex-col gap-2 p-2 w-full h-full justify-center items-start'>
+          <div className='flex gap-2 justify-start items-center'>
+            <p className='pr-2'>Array Size: </p>
+            <Slider
+              min={10}
+              max={30}
+              value={arraySize}
+              onChange={(value) => {
+                setArraySize(value);
+                generateRandomArray(value);
+                setIsFinished(false);
+              }}
+              isDisabled={isSorting}
+            />
           </div>
-        ))}
-        <p>Delay: {delay}</p>
-      </div>
 
-      {/* Button Section */}
-      <div className='flex gap-2 justify-center items-center w-full bg-red-50'>
-        <select
-          className='p-2 h-full bg-blue-500 text-white rounded'
-          disabled={isSorting}
-          onChange={(e) => setSortMethod(e.target.value)}
-        >
-          <option value="" disabled selected>Select Sort Method</option>
-          <option value="bubble">Bubble Sort</option>
-          <option value="selection">Selection Sort</option>
-          <option value="insertion">Insertion Sort</option>
-          <option value="merge">Merge Sort</option>
-          <option value="shell">Shell Sort</option>
-          <option value="quick">Quick Sort</option>
-          <option value="heap">Heap Sort</option>
-        </select>
-        <button
-          className='p-2 h-full bg-blue-500 text-white rounded'
-          disabled={isSorting}
-          onClick={() => handleSort(sortMethod)}
-        >
-          Sort
-        </button>
-        <button
-          className='p-2 h-full bg-blue-500 text-white rounded'
-          onClick={() => {
-            setArr([...prevArr]);
-            setPrevArr([]);
-            setSortedIndices([]);
-            setComparing([-1, -1]);
-            setIsDisabled(true)
-          }}
-          disabled={isDisabled}
-        >
-          Revert Array
-        </button>
+          <button
+            onClick={() => generateRandomArray(arraySize)}
+            className={`nes-btn ${isSorting ? 'is-disabled' : 'is-warning'}`}
+            disabled={isSorting}
+          >
+            Generate Random Array
+          </button>
+        </div>
+
+        {/* Middle Section */}
+        <div className='flex flex-col justify-center w-full items-center'>
+          <div className="nes-select flex flex-col justify-center items-center px-1">
+            <select
+              className='default_select text-black'
+              disabled={isSorting}
+              onChange={(e) => setSortMethod(e.target.value)}
+            >
+              <option value="" disabled selected>Select Sort Method</option>
+              <option value="bubble">Bubble Sort</option>
+              <option value="selection">Selection Sort</option>
+              <option value="insertion">Insertion Sort</option>
+              <option value="merge">Merge Sort</option>
+              <option value="shell">Shell Sort</option>
+              <option value="quick">Quick Sort</option>
+              <option value="heap">Heap Sort</option>
+            </select>
+          </div>
+          {/*Buttons*/}
+          <div className='flex w-full justify-center items-center'>
+            <button
+              className={`nes-btn w-full ${isSorting || isFinished || !sortMethod ? 'is-disabled' : 'is-primary'}`}
+              onClick={() => handleSort(sortMethod)}
+              disabled={isSorting || isFinished || !sortMethod}
+            >
+              Sort
+            </button>
+            <button
+              className={`nes-btn w-full ${!isFinished || isSorting ? 'is-disabled' : 'is-error'}`}
+              onClick={() => {
+                setArr(prevArr);
+                setRedTube([]);
+                setGreenTube([]);
+                setYellowTube([]);
+                setSwapping([]);
+                setIsFinished(false);
+              }}
+              disabled={!isFinished || isSorting}
+            >
+              Unsort
+            </button>
+          </div>
+        </div>
+
+        {/* Right Section */}
+        <div className='flex flex-col gap-2 justify-center items-end w-full h-full'>
+          <div className='relative'>
+            <p className='mr-5'>Delay: {delay}ms</p>
+            <button
+              className='absolute right-1 -top-1.5 focus:outline-none'
+
+            >
+              <FontAwesomeIcon icon={faCaretUp} size="2xl"
+                className='hover:text-red-500 active:scale-110'
+                onClick={increaseDelay} />
+            </button>
+            <button
+              className='absolute right-1 top-0.5 focus:outline-none'
+            >
+              <FontAwesomeIcon icon={faCaretDown} size="2xl"
+                className='hover:text-red-500 active:scale-110'
+                onClick={decreaseDelay} />
+            </button>
+          </div>
+          <p className='p-2'>Timer: {formattedTimer} secs</p>
+        </div>
       </div>
 
       {/* Sorting Section */}
-      <div className="flex flex-grow items-end gap-2 bg-red-50 h-full w-full justify-center">
+
+      <div className="flex flex-grow items-end gap-2h-full w-full justify-center">
         {arr.map((num, index) => {
-          const height = num * 4.5;
-          // const x = index * 60;
+          const height = num * 3;
           return (
-            <div
-              key={index}
-              className={`flex flex-col items-center ${swapping.includes(index) ? 'swapping' : ''}`}
-              ref={(el) => (divRefs.current[index] = el)}
-            >
+            <div key={index} className={`flex flex-col items-center ${swapping.includes(index) ? 'swapping' : ''}`} ref={(el) => (divRefs.current[index] = el)}>
               <MarioTube
+                index={index}
+                num={num}
                 height={height}
-                comparing={comparing.includes(index)}
-                sorted={sortedIndices.includes(index)}
-                reference={referenceIndex === index} />
+                mode={getTubeMode(index)}
+              />
               <p>{num}</p>
             </div>
-          )
+          );
         })}
       </div>
 
       {/* Mario Animation */}
-      {isSortingComplete && (
+      {isFinished && (
         <MarioAnimation
           pipes={pipes}
-          onComplete={handleAnimationComplete}
+          onComplete={handleComplete}
         />
       )}
 
