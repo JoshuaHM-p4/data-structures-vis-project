@@ -26,6 +26,8 @@ const TicTacToe = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
 
+  const [champion, setChampion] = useState('');
+
   // Custom hook to play sound
   const { playSound } = useSound();
 
@@ -119,12 +121,7 @@ const TicTacToe = () => {
           setGameStatus(`Player ${winner} wins!`);
           playSound(explodeSound);
           playSound(jingleWin);
-          if (winner === "X") {
-            setOHealth(OHealth - 20);
-          } else {
-            setXHealth(XHealth - 20);
-          }
-          handleModalOpen(`Player ${winner} wins!`);
+          checkGameProgress(winner);
         }
       } else {
         const nextPlayer = currentPlayer === "X" ? "O" : "X";
@@ -140,8 +137,23 @@ const TicTacToe = () => {
     }, 200); // Adjust the delay as needed
   };
 
-  // Restart the game
-  const restartGame = () => {
+  const checkGameProgress = (winner) => {
+    const updatedXHealth = winner === "O" ? XHealth - 50 : XHealth;
+    const updatedOHealth = winner === "X" ? OHealth - 50 : OHealth;
+    
+    setXHealth(updatedXHealth);
+    setOHealth(updatedOHealth);
+    
+    if (updatedXHealth <= 0 || updatedOHealth <= 0) {
+      setChampion(winner);
+      handleModalOpen(`Player ${winner} wins the game! Restarting...`);
+    } else {
+      handleModalOpen(`Player ${winner} wins the round!`);
+    }
+  };
+  
+  // Change Round
+  const changeRound = () => {
     changeBackgroundImage(backgroundImages[round  % 5]);
     setBoard(Array(9).fill(null)); // Reset the board
     setCurrentPlayer("X"); // Set X as the starting player
@@ -150,20 +162,43 @@ const TicTacToe = () => {
     setPressedState(Array(9).fill(false)); // Reset the pressed state
     setRound(round + 1);
     playSound(resetSound);
-
-
   };
 
   // Modal functions
   const handleModalClose = () => {
     setIsModalOpen(false);
-    setTimeout(restartGame, 1000); // Delay before restarting the game
+    if (champion) {
+      declareWinner();
+    } else {
+    setTimeout(changeRound, 1000); // Delay before changing the round
+    }
   };
 
   const handleModalOpen = (message) => {
     setAlertMessage(message);
     setIsModalOpen(true);
   };
+
+  const declareWinner = () => {
+    setTimeout(() => {
+      resetGame();
+      setIsModalOpen(false);
+    }, 1000 ); // Delay before restarting the game
+  };
+
+  const resetGame = () => {
+    setXHealth(100);
+    setOHealth(100);
+    setRound(1); // Directly reset the round to 1
+    setBoard(Array(9).fill(null)); // Reset the board
+    setCurrentPlayer("X"); // Reset the current player to X
+    setGameStatus("Player X's Turn"); // Reset the game status
+    setWinningCombo([]); // Clear the winning combination
+    setPressedState(Array(9).fill(false)); // Reset the pressed state
+    setCurrentBackgroundImage(backgroundImages[0]); // Reset to the initial background image
+    playSound(resetSound); // Play reset sound
+  };
+  
 
   // Dictionary to map cell values to image URLs
   const imageMap = {
