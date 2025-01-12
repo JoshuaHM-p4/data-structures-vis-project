@@ -138,8 +138,8 @@ const TicTacToe = () => {
   };
 
   const checkGameProgress = (winner) => {
-    const updatedXHealth = winner === "O" ? XHealth - 50 : XHealth;
-    const updatedOHealth = winner === "X" ? OHealth - 50 : OHealth;
+    const updatedXHealth = winner === "O" ? XHealth - 20 : XHealth;
+    const updatedOHealth = winner === "X" ? OHealth - 20 : OHealth;
     
     setXHealth(updatedXHealth);
     setOHealth(updatedOHealth);
