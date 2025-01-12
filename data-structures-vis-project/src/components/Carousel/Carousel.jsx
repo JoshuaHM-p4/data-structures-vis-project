@@ -5,6 +5,7 @@ import Tooltip from '../Tooltip/Tooltip.jsx';
 
 import useSound from '../../hooks/useSound.js';
 import select from '../../assets/sounds/select.mp3';
+import cardPicking from '../../assets/sounds/card-picking.mp3';
 
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
@@ -18,6 +19,7 @@ const Carousel = ({ items }) => {
 
   const { playSound } = useSound();
   const selectSound = () => { playSound(select) };
+  const cardPickingSound = () => { playSound(cardPicking) };
 
 
   return (
@@ -43,7 +45,7 @@ const Carousel = ({ items }) => {
         className="swiper_container"
         onSlideChange={(swiper) => {
           setActiveIndex(swiper.activeIndex);
-          selectSound();
+          cardPickingSound();
         }}
       >
         {items.map((item, index) => (

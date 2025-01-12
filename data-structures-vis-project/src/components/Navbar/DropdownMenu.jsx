@@ -2,12 +2,14 @@ import { Link } from 'react-router-dom';
 import useSound from '../../hooks/useSound.js';
 import powerUp from '../../assets/sounds/power-up.mp3';
 import select from '../../assets/sounds/select.mp3';
+import hover from '../../assets/sounds/hover.mp3';
 
 const DropdownMenu = ({ isDropdownOpen, gameLinks, isActive, setIsDropdownOpen, setCurrentGame, setIsActive, dropdownRef }) => {
 
   const { playSound } = useSound();
   const playPowerUp = () => { playSound(powerUp) };
   const selectSound = () => { playSound(select) };
+  const playHover = () => { playSound(hover) };
 
   const clickPowerUp = () => {
     playPowerUp();
@@ -28,6 +30,7 @@ const DropdownMenu = ({ isDropdownOpen, gameLinks, isActive, setIsDropdownOpen, 
               setCurrentGame(gameLink.title);
               setIsActive(gameLink.link);
             }}
+            onMouseEnter={() => playHover()}
           >
             {gameLink.title}
           </Link>
