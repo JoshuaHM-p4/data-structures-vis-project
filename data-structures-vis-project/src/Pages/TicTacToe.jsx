@@ -163,14 +163,14 @@ const TicTacToe = () => {
           let newXhealth = XHealth;
           let newOHealth = OHealth;
           if (winner === "X") {
-            newOHealth -= 20;
-            setOHealth((prevOHealth) => prevOHealth - 20);
+            newOHealth -= 33.33;
+            setOHealth((prevOHealth) => prevOHealth - 33.33);
           } else {
-            newXhealth -= 20;
-            setXHealth((prevXHealth) => prevXHealth - 20);
+            newXhealth -= 33.33;
+            setXHealth((prevXHealth) => prevXHealth - 33.33);
           }
 
-          if (newXhealth <= 0 || newOHealth <= 0) {
+          if (newXhealth <= 1 || newOHealth <= 1) {
             const result = checkWinner(updatedBoard);
             const { winner } = result;
             setGameStatus(`Player ${winner} wins!`);
@@ -297,7 +297,7 @@ const TicTacToe = () => {
         {/* Health Bar for X Player */}
         <div className="flex flex-col items-start w-full p-2">
           <progress
-            className={`nes-progress h-5 w-full ${XHealth < 25 ? 'is-error' : XHealth < 50 ? 'is-warning' : 'is-success'
+            className={`nes-progress h-5 w-full ${XHealth <= 34 ? 'is-error' : XHealth <= 67 ? 'is-warning' : 'is-success'
               }`}
             value={XHealth}
             max="100"
@@ -314,7 +314,7 @@ const TicTacToe = () => {
         {/* Health Bar for O Player */}
         <div className="flex flex-col items-end w-full p-2">
           <progress
-            className={`nes-progress h-5 w-full ${OHealth < 25 ? 'is-error' : OHealth < 50 ? 'is-warning' : 'is-success'
+            className={`nes-progress h-5 w-full ${OHealth < 34 ? 'is-error' : OHealth < 67 ? 'is-warning' : 'is-success'
               }`}
             value={OHealth}
             max="100"
