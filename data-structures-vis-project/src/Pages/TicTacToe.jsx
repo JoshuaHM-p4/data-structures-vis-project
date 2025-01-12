@@ -278,7 +278,7 @@ const TicTacToe = () => {
                     ? imageMap[cell + "Pressed"]  // Use the pressed version of the image
                     : imageMap[cell]              // Use the normal version
                 }
-                className="h-full image-rendering"
+                className="h-[90%] image-rendering"
                 alt={`${cell || 'blank'}-button`}
               />
             </button>
