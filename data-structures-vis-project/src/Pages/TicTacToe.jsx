@@ -181,6 +181,7 @@ const TicTacToe = () => {
 
   const declareWinner = () => {
     setTimeout(() => {
+      setChampion('');
       resetGame();
       setIsModalOpen(false);
     }, 1000 ); // Delay before restarting the game
