@@ -143,7 +143,7 @@ const TicTacToe = () => {
     
     setXHealth(updatedXHealth);
     setOHealth(updatedOHealth);
-    
+
     if (updatedXHealth <= 0 || updatedOHealth <= 0) {
       setChampion(winner);
       handleModalOpen(`Player ${winner} wins the game! Restarting...`);
@@ -254,11 +254,11 @@ const TicTacToe = () => {
       </div>
       {/* Game Board */}
       <div className="flex flex-col h-full w-full items-center justify-center relative">
-        <div className="grid grid-cols-3 h-5/6 p-2">
+        <div className="grid grid-cols-3 ">
           {board.map((cell, index) => (
             <button
               key={index}
-              className={`nes-pointer flex items-center text-center justify-center text-4xl font-["Gluten"] hover:bg-gray-200 hover:text-black active:opacity-90 focus:outline-none   
+              className={`nes-pointer p-1 w-28 h-28 flex items-center text-center justify-center text-4xl font-["Gluten"] hover:bg-gray-200 hover:text-black active:opacity-90 focus:outline-none   
               ${
                 Array.isArray(winningCombo) && winningCombo.includes(index)
                   ? "bg-red-600 text-black hover:bg-red-800 hover:text-white"
@@ -278,7 +278,7 @@ const TicTacToe = () => {
                     ? imageMap[cell + "Pressed"]  // Use the pressed version of the image
                     : imageMap[cell]              // Use the normal version
                 }
-                className=" h-full image-rendering"
+                className="h-full image-rendering"
                 alt={`${cell || 'blank'}-button`}
               />
             </button>
