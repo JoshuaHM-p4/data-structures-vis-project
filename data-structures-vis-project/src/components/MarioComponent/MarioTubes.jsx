@@ -7,19 +7,19 @@ const MarioTube = ({ index, num, height, mode }) => {
     let className = 'tube';
     if (mode === 'red') {
       className = 'tube red';
-      console.log('. Index: ', index, 'num: ', num);
+      // console.log('. Index: ', index, 'num: ', num);
     } else if (mode === 'green') {
       className = 'tube green';
-      console.log('sorted. Index: ', index, 'num: ', num);
+      // console.log('sorted. Index: ', index, 'num: ', num);
     } else if (mode === 'yellow') {
       className = 'tube yellow';
-      console.log('reference. Index: ', index , 'num: ', num);
+      // console.log('reference. Index: ', index , 'num: ', num);
     } else if (mode === 'blue') {
       className = 'tube';
-      console.log('normal. Index: ', index, 'num: ', num);
-    } else if (mode === 'orange') { 
+      // console.log('normal. Index: ', index, 'num: ', num);
+    } else if (mode === 'orange') {
       className = 'tube orange';
-      console.log('orange. Index: ', index, 'num: ', num);
+      // console.log('orange. Index: ', index, 'num: ', num);
     }
     return className;
   };
