@@ -130,12 +130,16 @@ const TicTacToe = () => {
 
     // If the cell is already filled, just reset the pressed state after a short delay
     if (board[index]) {
+      setTimeout (() => {
       const resetPressedState = [...pressedState];
       resetPressedState[index] = false;
       setPressedState(resetPressedState);
       playRandomHit();
+    }, 100);
       return;
     }
+
+    
 
     // Update the board after a short delay to show the pressed state
     setTimeout(() => {
