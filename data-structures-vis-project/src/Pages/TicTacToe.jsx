@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Confetti from "react-confetti";
 import useSound from "../hooks/useSound.js";
 
@@ -6,7 +6,6 @@ import pingSound from "../assets/sounds/ping.wav";
 import resetSound from "../assets/sounds/move-up.wav";
 import explodeSound from "../assets/sounds/explode.mp3";
 import failSound from "../assets/sounds/fail.wav";
-import jingleWin from "../assets/sounds/jingle-win.wav";
 
 import punchHigh from '/sounds/punches/punch-high.wav';
 import punchLow from '/sounds/punches/punch-low.wav';
@@ -15,6 +14,10 @@ import punchMid from '/sounds/punches/punch-mid.wav';
 import punchThud from '/sounds/punches/punch-thud.wav';
 
 import Modal from '../components/StackQueueModal/Modal.jsx';
+
+import guileTheme from '/music/guile_theme.mp3';
+import winTheme from '/sounds/street_fighter/sf_win_theme.mp3';
+import youWinSound from '/sounds/street_fighter/sf_you_win.mp3';
 
 // Define the TicTacToe component
 const TicTacToe = () => {
@@ -36,6 +39,25 @@ const TicTacToe = () => {
 
   // Custom hook to play sound
   const { playSound } = useSound();
+
+  const musicAudioRef = useRef(null);
+  const playMusic = () => {
+    musicAudioRef.current = playSound(guileTheme, { volume: 0.3, loop: true });
+  };
+  const stopMusic = () => {
+    if (musicAudioRef.current) {
+      musicAudioRef.current.pause();
+      musicAudioRef.current.currentTime = 0;
+      musicAudioRef.current = null;
+    }
+  };
+
+  useEffect(() => {
+    playMusic();
+    return () => {
+      stopMusic();
+    };
+  }, []);
 
   // Dictionary of background images
   const backgroundImages = {
@@ -125,8 +147,9 @@ const TicTacToe = () => {
       if (result) {
         if (result === "Draw") {
           setGameStatus("It's a Draw!");
-          playSound(failSound);
-          handleModalOpen("It's a Draw!");
+          setTimeout(() => {
+            resetBoard();
+          }, 2000);
         } else {
           const { winner, combination } = result;
           setWinningCombo(combination); // Set the winning combination
@@ -145,11 +168,8 @@ const TicTacToe = () => {
           if (newXhealth <= 0 || newOHealth <= 0) {
             const result = checkWinner(updatedBoard);
             const { winner } = result;
-
             setGameStatus(`Player ${winner} wins!`);
-            playSound(jingleWin);
             checkGameProgress(winner);
-
           } else {
             // reset board after delay post-combo
             setTimeout(() => {
@@ -175,15 +195,20 @@ const TicTacToe = () => {
   const checkGameProgress = (winner) => {
     setChampion(winner);
     handleModalOpen(`Player ${winner} wins the game! Restarting...`);
+    stopMusic();
+    playSound(winTheme, { volume: 0.5 });
+    setTimeout(() => playSound(youWinSound), 2000);
     setTimeout(() => {
       nextRound();
-    }, 3000);
+    }, 5000);
   };
 
   // Change Round
   const nextRound = () => {
     setXHealth(100);
     setOHealth(100);
+
+    playMusic();
 
     changeBackgroundImage(backgroundImages[round % 5]);
     setCurrentPlayer("X"); // Set X as the starting player
