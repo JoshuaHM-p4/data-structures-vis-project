@@ -265,16 +265,16 @@ const Stacks = () => {
 
   return (
     <div className="w-full h-full">
-      <div className='flex gap-2 justify-center top-20 left-0 absolute w-full h-fit z-40'>
-        <button onClick={handleArrivalClick} className="nes-btn is-primary rounded">
+      <div className='flex gap-2 justify-center top-20 left-0 absolute w-full h-fit'>
+        <button onClick={handleArrivalClick} className="nes-btn is-primary rounded z-50">
           Arrival
         </button>
 
-        <button onClick={handleDepartureClick} className="nes-btn is-error rounded">
+        <button onClick={handleDepartureClick} className="nes-btn is-error rounded z-50">
           Departure
         </button>
 
-        <button onClick={() => clearStack()} className="nes-btn ">
+        <button onClick={() => clearStack()} className="nes-btn z-50">
           Clear
         </button>
       </div>
