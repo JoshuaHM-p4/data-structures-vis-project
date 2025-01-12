@@ -258,7 +258,7 @@ const BinarySearchTreePage = () => {
         </button>
       </div>
 
-      <BSTCanvas tree={tree} traversal={traversal} />
+      <BSTCanvas tree={tree} traversal={traversal} mode={'BST'} />
 
       <Modal isModalOpen={isModalOpen} onClose={() => { playSound(cancelSound); setIsModalOpen(false) }} addNode={handleAddNode} />
 

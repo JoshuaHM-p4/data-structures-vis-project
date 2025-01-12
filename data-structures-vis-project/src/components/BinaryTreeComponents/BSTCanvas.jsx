@@ -2,11 +2,12 @@
 import { useRef, useEffect } from 'react';
 import useSound from "../../hooks/useSound.js";
 
-import mapMusic from '../../assets/sounds/smw_map_yoshi_island.mp3';
+import worldMusic from '/music/smw_map_yoshi_island.mp3';
+import smb3Music from '/music/smb3-map.mp3';
 import mapMoveSound from '../../assets/sounds/smw_map_move_to_spot.wav';
 import traversalDoneSound from '../../assets/sounds/smw_1-up.wav';
 
-const BSTCanvas = ({ tree, traversal }) => {
+const BSTCanvas = ({ tree, traversal, mode }) => {
   const canvasRef = useRef(null);
   const nodeSize = 30;
   const canvasHeightRef = useRef(0);
@@ -15,7 +16,8 @@ const BSTCanvas = ({ tree, traversal }) => {
   const mapMusicAudioRef = useRef(null);
 
   const playMapMusic = () => {
-    mapMusicAudioRef.current = playSound(mapMusic, { volume: 0.5, loop: true });
+    if (mode !== 'BST') mapMusicAudioRef.current = playSound(smb3Music, { volume: 0.2, loop: true });
+    else mapMusicAudioRef.current = playSound(worldMusic, { volume: 0.5, loop: true });
   };
 
   const stopMapMusic = () => {
@@ -62,18 +64,43 @@ const BSTCanvas = ({ tree, traversal }) => {
       return images;
     };
 
-    const marioFrames = {
-      North: loadImageFrames('/world-mario', 'WorldMario_North', 2),
-      South: loadImageFrames('/world-mario', 'WorldMario_South', 2),
-      East: loadImageFrames('/world-mario', 'WorldMario_East', 2),
-      West: loadImageFrames('/world-mario', 'WorldMario_West', 2),
-      Done: loadImageFrames('/world-mario', 'WorldMarioDone', 0)
-    };
+    let marioFrames = {}
+    let backgroundElements = {}
 
-    const backgroundElements = {
-      hill: loadImageFrames('/background', 'bg-hill', 0),
-      hillSmall: loadImageFrames('/background', 'bg-hill-sm', 0),
-      rock: loadImageFrames('/background', 'bg-rock', 0),
+    let rootImageFrames = null;
+    let nodeImageFrames = null;
+
+    switch (mode) {
+      case 'BST':
+        marioFrames = {
+          North: loadImageFrames('/world-mario', 'WorldMario_North', 2),
+          South: loadImageFrames('/world-mario', 'WorldMario_South', 2),
+          East: loadImageFrames('/world-mario', 'WorldMario_East', 2),
+          West: loadImageFrames('/world-mario', 'WorldMario_West', 2),
+          Done: loadImageFrames('/world-mario', 'WorldMarioDone', 0)
+        };
+
+        backgroundElements = {
+          hill: loadImageFrames('/background', 'bg-hill', 0),
+          hillSmall: loadImageFrames('/background', 'bg-hill-sm', 0),
+          rock: loadImageFrames('/background', 'bg-rock', 0),
+        }
+
+        rootImageFrames = loadImageFrames('/node', 'nodeSpriteRoot', 0);
+        nodeImageFrames = loadImageFrames('/node', 'nodeSprite', 3);
+
+        break;
+      case 'treeTraversal':
+        marioFrames = {
+          South: loadImageFrames('/smb3-mario', 'SMB3_', 2),
+        }
+        backgroundElements = {
+          hill: loadImageFrames('/background', 'bg-hill-', 4),
+          rock: loadImageFrames('/background', 'bg-rock-smb', 0),
+        }
+
+        rootImageFrames = loadImageFrames('/node', 'smbNodeSpriteRoot', 0);
+        nodeImageFrames = loadImageFrames('/node', 'smbNodeSprite', 3);
     }
 
     const generateRandomPositions = (numElements, canvasWidth, canvasHeight, position, minDistance) => {
@@ -137,9 +164,6 @@ const BSTCanvas = ({ tree, traversal }) => {
     const fixedDeltaTime = 16;
     let animationFrameId;
     let mouse = { x: undefined, y: undefined };
-
-    const rootImageFrames = loadImageFrames('/node', 'nodeSpriteRoot', 0);
-    const nodeImageFrames = loadImageFrames('/node', 'nodeSprite', 3);
 
     let currentFrame = 0;
     const frameCount = 3;
@@ -264,6 +288,8 @@ const BSTCanvas = ({ tree, traversal }) => {
       // Don't draw empty tree
       if (!positions || !positions.length || !tree?.root) return;
 
+      const isWorldTheme = mode === 'BST';
+
       // Draw edges (lines between nodes using elbows)
       positions.forEach((node) => {
         const { x, y, id } = node;
@@ -283,9 +309,10 @@ const BSTCanvas = ({ tree, traversal }) => {
             type: 'branchLeft',
             start: { x, y },
             end: { x: leftChild.x, y: leftChild.y },
-            cornerRadius: 15,
-            color: "#ffffaa",
+            cornerRadius: isWorldTheme ? 15 : 1,
+            color: isWorldTheme ? "#ffffaa" : "#ffbaaa",
             linewidth: 10,
+            withBorder: !isWorldTheme,
           });
         }
 
@@ -294,9 +321,10 @@ const BSTCanvas = ({ tree, traversal }) => {
             type: 'branchRight',
             start: { x, y },
             end: { x: rightChild.x, y: rightChild.y },
-            cornerRadius: 15,
-            color: "#ffffaa",
+            cornerRadius: isWorldTheme ? 15 : 1,
+            color: isWorldTheme ? "#ffffaa" : "#ffbaaa",
             linewidth: 10,
+            withBorder: !isWorldTheme,
           });
         }
 
@@ -324,39 +352,66 @@ const BSTCanvas = ({ tree, traversal }) => {
         context.drawImage(img, x - nodeSize / 2, y - nodeSize / 2, nodeSize, nodeSize);
 
         // Draw the value
-        context.fillStyle = traversal === '' ? "white" : applied ? "white" : "#558000";
+        let fillStyle = null;
+        switch (mode) {
+          case "BST":
+            fillStyle = (traversal === '' ? "white" : applied ? "white" : "#558000")
+            break;
+          case "treeTraversal":
+            fillStyle = (traversal === '' ? "black" : applied ? "black" : "#ffbaaa")
+            break;
+          default:
+            break;
+        }
+        context.fillStyle = fillStyle;
         context.font = "16px 'Press Start 2P'";
         context.textAlign = "center";
         context.textBaseline = "middle";
         context.fillText(value, x + (35), y);
       });
 
+      if (isWorldTheme) {
+        if (backgroundElements.hill[0].complete && hillPositions.length) {
+          // Draw random background elements
+          hillPositions.forEach(pos => {
+            context.drawImage(backgroundElements.hill[0], pos.x, pos.y, backgroundElementSize, backgroundElementSize);
+          });
+        };
 
-      if (backgroundElements.hill[0].complete && hillPositions.length) {
-        // Draw random background elements
-        hillPositions.forEach(pos => {
-          context.drawImage(backgroundElements.hill[0], pos.x, pos.y, backgroundElementSize, backgroundElementSize);
-        });
+        if (backgroundElements.hillSmall[0].complete && hillSmallPositions.length) {
+          hillSmallPositions.forEach(pos => {
+            context.drawImage(backgroundElements.hillSmall[0], pos.x, pos.y, backgroundElementSize, backgroundElementSize);
+          });
+        }
+
+        if (backgroundElements.rock[0].complete && rockPositions.length) {
+          rockPositions.forEach(pos => {
+            context.drawImage(backgroundElements.rock[0], pos.x, pos.y, backgroundElementSize, backgroundElementSize);
+          });
+        }
+      } else {
+        if (backgroundElements.hill[0].complete && hillPositions.length) {
+          hillPositions.forEach(pos => {
+            context.drawImage(backgroundElements.hill[currentFrame], pos.x, pos.y, backgroundElementSize, backgroundElementSize);
+          })
+        }
+        if (backgroundElements.rock[0].complete && rockPositions.length) {
+          rockPositions.forEach(pos => {
+            context.drawImage(backgroundElements.rock[0], pos.x, pos.y, backgroundElementSize, backgroundElementSize);
+          })
+        }
       };
 
-      if (backgroundElements.hillSmall[0].complete && hillSmallPositions.length) {
-        hillSmallPositions.forEach(pos => {
-          context.drawImage(backgroundElements.hillSmall[0], pos.x, pos.y, backgroundElementSize, backgroundElementSize);
-        });
-      }
-
-      if (backgroundElements.rock[0].complete && rockPositions.length) {
-        rockPositions.forEach(pos => {
-          context.drawImage(backgroundElements.rock[0], pos.x, pos.y, backgroundElementSize, backgroundElementSize);
-        });
-      }
-
-
       // Draw Mario sprite following the traversal
-      const marioFrameSet = marioFrames[marioDirection];
+      let marioFrameSet = [];
+      if (isWorldTheme) {
+        marioFrameSet = marioFrames[marioDirection];
+      } else {
+        marioFrameSet = marioFrames['South'];
+      }
 
       context.drawImage(
-        marioDirection === 'Done' ? marioFrameSet[0] : marioFrameSet[marioFrameIndex],
+        isWorldTheme ? ((marioDirection === 'Done') ? marioFrameSet[0] : marioFrameSet[marioFrameIndex]) : marioFrameSet[marioFrameIndex],
         marioPosition.x - nodeSize / 2,
         marioPosition.y - nodeSize / 2,
         nodeSize,
@@ -380,7 +435,7 @@ const BSTCanvas = ({ tree, traversal }) => {
 
     // Elbow drawing function
     const drawElbow = (elbow) => {
-      const { type, start, end, cornerRadius, color, linewidth } = elbow;
+      const { type, start, end, cornerRadius, color, linewidth, withBorder } = elbow;
 
       context.beginPath();
       context.moveTo(start.x, start.y);
@@ -435,10 +490,18 @@ const BSTCanvas = ({ tree, traversal }) => {
           break;
       }
 
+      if (withBorder) {
+        context.lineTo(end.x, end.y);
+        context.strokeStyle = 'black';
+        context.lineWidth = linewidth + 4;
+        context.stroke();
+      }
+
       context.lineTo(end.x, end.y);
       context.strokeStyle = color;
       context.lineWidth = linewidth;
       context.stroke();
+
     };
 
     const resizeCanvas = () => {
