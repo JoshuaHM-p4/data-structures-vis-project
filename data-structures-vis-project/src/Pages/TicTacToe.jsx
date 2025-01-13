@@ -193,7 +193,7 @@ const TicTacToe = () => {
       const resetPressedState = [...pressedState];
       resetPressedState[index] = false;
       setPressedState(resetPressedState);
-    }, 50); // Adjust the delay as needed
+    }, 100); // Adjust the delay as needed
 
   };
 
