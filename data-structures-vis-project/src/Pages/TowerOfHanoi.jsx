@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import 'snes.css/dist/snes.min.css';
 import MarioBlock from '../components/MarioComponent/MarioBlocks.jsx';
 import { use } from 'react';
 
@@ -186,6 +187,12 @@ const TowerOfHanoi = () => {
     console.log("confirmAction")
     console.log("from raw:", from)
     console.log("to raw:", to)
+    setActiveFirstTower('bg-red-600')
+    setActiveSecondTower('bg-gray-600')
+    setActiveThirdTower('bg-emerald-500')
+    setActiveFirstTower2('bg-red-600')
+    setActiveSecondTower2('bg-gray-600')
+    setActiveThirdTower2('bg-emerald-500')  
     if(from && to){
       tower.moveDisk(from,to)
       const newTower = new TowersOfHanoi();
@@ -206,6 +213,23 @@ const TowerOfHanoi = () => {
   }
 
   const changeFromVar = (value) => {
+    switch(value){
+      case tower.firstTower:
+        setActiveFirstTower('bg-red-800')
+        setActiveSecondTower('bg-gray-600')
+        setActiveThirdTower('bg-emerald-500')
+        break
+      case tower.secondTower:
+        setActiveFirstTower('bg-red-600')
+        setActiveSecondTower('bg-gray-800')
+        setActiveThirdTower('bg-emerald-500')
+        break
+      case tower.thirdTower:
+        setActiveFirstTower('bg-red-600')
+        setActiveSecondTower('bg-gray-600')
+        setActiveThirdTower('bg-emerald-700')
+        break
+    }
     if(value.length == 0){
       setNoticeBoard("Invalid Move!!!")
       return
@@ -216,6 +240,23 @@ const TowerOfHanoi = () => {
   }
 
   const changeToVar = (value) => {
+    switch(value){
+      case tower.firstTower:
+        setActiveFirstTower2('bg-red-800')
+        setActiveSecondTower2('bg-gray-600')
+        setActiveThirdTower2('bg-emerald-500')
+        break
+      case tower.secondTower:
+        setActiveFirstTower2('bg-red-600')
+        setActiveSecondTower2('bg-gray-800')
+        setActiveThirdTower2('bg-emerald-500')
+        break
+      case tower.thirdTower:
+        setActiveFirstTower2('bg-red-600')
+        setActiveSecondTower2('bg-gray-600')
+        setActiveThirdTower2('bg-emerald-700')
+        break
+    }
     console.log("to raw:", value)
     setToVar(value)
     console.log("to altered:",toVar, "\n")
@@ -239,12 +280,19 @@ const TowerOfHanoi = () => {
     }
   }, [tower.moveDisk])
 
+  const [activeFirstTower, setActiveFirstTower] = useState('bg-red-600')
+  const [activeSecondTower, setActiveSecondTower] = useState('bg-gray-600')
+  const [activeThirdTower, setActiveThirdTower] = useState('bg-emerald-500')
+  const [activeFirstTower2, setActiveFirstTower2] = useState('bg-red-600')
+  const [activeSecondTower2, setActiveSecondTower2] = useState('bg-gray-600')
+  const [activeThirdTower2, setActiveThirdTower2] = useState('bg-emerald-500')
+
   return (
     <>
       {/* PARENT */}
-      <div className='h-full w-full flex flex-col md:flex-row'>
+      <div className='h-full w-full flex flex-col md:flex-row bg-[#d2cfca]'>
         {/* LEFT */}
-        <div className='bg-red-500 h-full w-full place-content-center flex-shrink-0 lg:max-w-[70%] md:max-w-[70%] aspect-video'>
+        <div className=' bg-[#C1BEB9] md:border-r-4 lg:border-r-4 sm:max-md:border-b-4 border-[#d2cfca] h-full w-full place-content-center flex-shrink-0 lg:max-w-[70%] md:max-w-[70%] aspect-video'>
           <div className='h-[97%] w-[97%] bg-blue-500 mx-auto flex'>
             <div className='w-1/3 h-full bg-yellow-400 flex flex-col'> <FirstTower/> </div>
             <div className='w-1/3 h-full bg-pink-500 flex flex-col'> <SecondTower/> </div>
@@ -253,24 +301,24 @@ const TowerOfHanoi = () => {
         {/* LEFT */}
         </div>
         {/* RIGHT */}
-        <div className='bg-white h-full w-full hover:bg-green-400 p-5 flex flex-col gap-1 justify-between flex-shrink-0 lg:max-w-[30%] md:max-w-[30%]'>
-          <div className='w-full h-[30%] bg-violet-500'>{noticeBoard}</div>
-          <p className=''>Moves:</p>
-          <div className='w-full h-[11%] bg-cyan-500'>{moves}</div>
-          <p className=''>From:</p> 
-          <div className='w-full h-[11%] bg-purple-600 flex p-1 gap-2 justify-evenly'>
-            <button  className='bg-red-700 w-full' onClick={ () => changeFromVar(tower.firstTower)}>1</button>
-            <button  className='bg-gray-500 w-full' onClick={ () => changeFromVar(tower.secondTower)}>2</button>  
-            <button  className='bg-emerald-400 w-full' onClick={ () => changeFromVar(tower.thirdTower)}>3</button>
+        <div className=' bg-[#C1BEB9] h-full w-full p-5 flex flex-col gap-1 justify-between flex-shrink-0 lg:max-w-[30%] md:max-w-[30%]'>
+          <div className='w-full h-[30%] bg-[#899d58] p-2 snes-blockquote text-[#52686A] place-content-center'>{noticeBoard}</div>
+          <p className='text-white'>Moves:</p>
+          <div className='w-full h-[11%] bg-[#899d58] p-2 snes-blockquote text-[#52686A]'>{moves}</div>
+          <p className='text-white'>From:</p> 
+          <div className='w-full h-[11%] flex p-1 gap-5 justify-evenly'>
+            <button  className={`${activeFirstTower} w-full md:max-lg:w-[18%] snes-button focus:outline-none hover:bg-red-400 text-white`} onClick={ () => changeFromVar(tower.firstTower)}>1</button>
+            <button  className={`${activeSecondTower} w-full md:max-lg:w-[18%] snes-button focus:outline-none hover:bg-gray-400 text-white`} onClick={ () => changeFromVar(tower.secondTower)}>2</button>  
+            <button  className={`${activeThirdTower} w-full md:max-lg:w-[18%] snes-button focus:outline-none hover:bg-emerald-400 text-white`} onClick={ () => changeFromVar(tower.thirdTower)}>3</button>  
           </div>  
-          <p className=''>To:</p>
-          <div className='w-full h-[11%] bg-orange-600 flex p-1 gap-2 justify-evenly'>
-            <button  className='bg-red-700 w-full' onClick={ () => changeToVar(tower.firstTower)}>1b</button>
-            <button  className='bg-gray-500 w-full' onClick={ () => changeToVar(tower.secondTower)}>2</button>
-            <button  className='bg-emerald-400 w-full' onClick={ () => changeToVar(tower.thirdTower)}>3</button>
-          </div>
-          <div className='w-full h-[11%] bg-black'>
-            <button className='w-full h-full nes-btn' onClick={ () => confirmAction(fromVar, toVar)}>Confirm</button>
+          <p className='text-white'>To:</p>
+          <div className='w-full h-[11%] flex p-1 gap-5 justify-evenly'>
+            <button  className={`${activeFirstTower2} w-full md:max-lg:w-[18%] snes-button focus:outline-none hover:bg-red-400 text-white`}onClick={ () => changeToVar(tower.firstTower)}>1</button>
+            <button  className={`${activeSecondTower2} w-full md:max-lg:w-[18%] snes-button focus:outline-none hover:bg-gray-400 text-white`} onClick={ () => changeToVar(tower.secondTower)}>2</button>
+            <button  className={`${activeThirdTower2} w-full md:max-lg:w-[18%] snes-button focus:outline-none hover:bg-emerald-400 text-white`} onClick={ () => changeToVar(tower.thirdTower)}>3</button>
+          </div>  
+          <div className='w-full h-[11%] p-2 margin-top-2'>  
+            <button className=' bg-[#807B81] w-full h-full snes-button focus:outline-none hover:bg-[#a39ca4] text-white' onClick={ () => confirmAction(fromVar, toVar)}>Confirm</button>
           </div>
         {/* RIGHT */}
         </div>
