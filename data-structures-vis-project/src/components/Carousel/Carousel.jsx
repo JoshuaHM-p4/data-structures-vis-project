@@ -21,6 +21,16 @@ const Carousel = ({ items }) => {
   const selectSound = () => { playSound(select) };
   const cardPickingSound = () => { playSound(cardPicking) };
 
+  const imagesMap = {
+    0: '/main-menu/tictactoeCard.png',
+    1: '/main-menu/stacksCard.png',
+    2: '/main-menu/queueCard.png',
+    3: '/main-menu/bttCard.png',
+    4: '/main-menu/bstCard.png',
+    5: '/main-menu/tohCard.png',
+    6: '/main-menu/sortingCard.png',
+  };
+
 
   return (
     <div className="relative w-full max-w-3xl mx-auto my-auto">
@@ -49,25 +59,25 @@ const Carousel = ({ items }) => {
         }}
       >
         {items.map((item, index) => (
-          <SwiperSlide key={index} className="w-64 h-96 nes-pointer flex items-center justify-center bg-gray-500 text-white font-bold text-lg rounded-lg shadow-md hover:scale-105 transition-transform duration-300">
+          <SwiperSlide key={index} className="w-64 h-96 nes-pointer flex items-center justify-center bg-[#262137]  text-white font-bold text-lg rounded-lg shadow-md hover:scale-105 transition-transform duration-300 relative">
             {index === activeIndex ? (
-              <Link to={item.Link} className="w-full h-full flex items-center justify-center">
-                <Tooltip text={item.description}>
-                  <div className="w-full h-full flex items-center justify-center">
-                    {item.title}
-                  </div>
-                </Tooltip>
-              </Link>
+                <Link to={item.Link} className="w-full h-full flex items-center justify-center relative">
+                  <Tooltip text={item.title} optionalText={item.description}  >
+                    <img src={imagesMap[index]} alt={item.title}   className="w-full h-full object-cover image-rendering fixed transform -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2" />
+                  </Tooltip>
+
+                </Link>
             ) : (
-              item.title
+              <img src={imagesMap[index]} alt={item.title} className="w-full h-full image-rendering"/>
             )}
+            
           </SwiperSlide>
         ))}
       </Swiper>
 
       <div className="swiper-button-prev text-gray-300 hover:text-white active:scale-110 transition-transform duration-200"></div>
       <div className="swiper-button-next text-gray-300 hover:text-white active:scale-110 transition-transform duration-200"></div>
-      <div className="swiper-pagination"></div>
+      <div className="swiper-pagination "></div>
     </div>
   );
 };
