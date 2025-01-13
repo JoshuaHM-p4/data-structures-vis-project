@@ -102,6 +102,8 @@ const TowerOfHanoi = () => {
           let disk = selectedTower.pop()
           console.log("disk:", disk)
           endTower.push(disk)
+          setNoticeBoard("Move Successful!!!")
+          setMoves(m => m + 1)
         }
 
       switch(temporarySelected){
@@ -193,16 +195,21 @@ const TowerOfHanoi = () => {
       setTower(newTower);
       setFromVar(null)
       setToVar(null)
-      setNoticeBoard("Move Successful!!!")
       console.log("from altered:", from)
       console.log("to altered:", to, "\n")
       console.log("firstTower:", tower.firstTower)
       console.log("secondTower:", tower.secondTower)
       console.log("thirdTower:", tower.thirdTower)
+    }else{
+      setNoticeBoard("Invalid Move!!!")
     }
   }
 
   const changeFromVar = (value) => {
+    if(value.length == 0){
+      setNoticeBoard("Invalid Move!!!")
+      return
+    }
     console.log("from raw:", value)
     setFromVar(value)
     console.log("from altered:",fromVar, "\n")
@@ -215,20 +222,19 @@ const TowerOfHanoi = () => {
   }
 
   const [noticeBoard, setNoticeBoard] = useState("Welcome to Towers of Hanoi!!!")
-  const [moves, setMoves] = useState(-1)
+  const [moves, setMoves] = useState(0)
 
   useEffect(() => {
     if(tower.thirdTower.length == 5){
       setNoticeBoard("Congratulations!!! You have won!!!")
       const newTower = new TowersOfHanoi();
       setTower(newTower)
-      setMoves(-2)
+      setMoves(0)
     }
   }, [tower.thirdTower])
 
   useEffect(() => {
-    setMoves(m => m + 1)
-    if(moves == 0){
+    if(moves == 1){
       setNoticeBoard("Welcome to Towers of Hanoi!!!")
     }
   }, [tower.moveDisk])
@@ -236,9 +242,9 @@ const TowerOfHanoi = () => {
   return (
     <>
       {/* PARENT */}
-      <div className='h-full w-full flex'>
+      <div className='h-full w-full flex flex-col md:flex-row'>
         {/* LEFT */}
-        <div className='bg-red-500 h-full w-[70%] place-content-center'>
+        <div className='bg-red-500 h-full w-full place-content-center flex-shrink-0 lg:max-w-[70%] md:max-w-[70%] aspect-video'>
           <div className='h-[97%] w-[97%] bg-blue-500 mx-auto flex'>
             <div className='w-1/3 h-full bg-yellow-400 flex flex-col'> <FirstTower/> </div>
             <div className='w-1/3 h-full bg-pink-500 flex flex-col'> <SecondTower/> </div>
@@ -247,7 +253,7 @@ const TowerOfHanoi = () => {
         {/* LEFT */}
         </div>
         {/* RIGHT */}
-        <div className='bg-white h-full w-[30%] hover:bg-green-400 p-5 flex flex-col gap-1 justify-between'>
+        <div className='bg-white h-full w-full hover:bg-green-400 p-5 flex flex-col gap-1 justify-between flex-shrink-0 lg:max-w-[30%] md:max-w-[30%]'>
           <div className='w-full h-[30%] bg-violet-500'>{noticeBoard}</div>
           <p className=''>Moves:</p>
           <div className='w-full h-[11%] bg-cyan-500'>{moves}</div>
