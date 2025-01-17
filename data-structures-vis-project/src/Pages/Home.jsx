@@ -1,10 +1,7 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Carousel from '../components/Carousel/Carousel.jsx';
-import { useState } from 'react';
-
 import useSound from '../hooks/useSound.js';
 import select from '../assets/sounds/select.mp3';
-
 
 const Home = () => {
   const [openCarousel, setOpenCarousel] = useState(false);
@@ -23,20 +20,21 @@ const Home = () => {
   ];
 
   return (
-    <div className='bg-[url("/main-menu/mainBG.png")] bg-center h-full p-2 sm:p-4'>
+    <div className='bg-[url("/main-menu/mainBG.png")] bg-center bg-cover h-full p-2 sm:p-4'>
       <div className="h-full w-full flex flex-col items-center justify-center text-center gap-3 relative">
-        {/* <h1 className="text-2xl font-bold no-text-border bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-transparent bg-clip-text">
-          Welcome to Data Structures Visualization
-        </h1> */}
-      <button className="nes-btn is-primary absolute top-0 left-0" 
+        <button className="nes-btn is-primary absolute top-0 left-0" 
           onClick={() => {
-          setOpenCarousel(prevState => !prevState);
-          selectSound();
-      }}>
-        Draw Cards
-      </button>        
+            setOpenCarousel(prevState => !prevState);
+            selectSound();
+          }}>
+          Draw Cards
+        </button>        
 
-      {openCarousel && <Carousel items={navLinks} />}
+        {openCarousel && <div className='fixed top-0 left-0 w-full h-full z-10 bg-black opacity-75'/>}
+        {openCarousel && (
+        <Carousel items={navLinks} setOpenCarousel={setOpenCarousel} />
+
+        )}
       </div>
     </div>
   );

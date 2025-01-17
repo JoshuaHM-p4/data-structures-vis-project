@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Link } from 'react-router-dom';
 import Tooltip from '../Tooltip/Tooltip.jsx';
@@ -14,8 +14,10 @@ import 'swiper/css/navigation';
 
 import { EffectCoverflow, Pagination, Navigation } from 'swiper/modules';
 
-const Carousel = ({ items }) => {
+const Carousel = ({ items, setOpenCarousel }) => {
   const [activeIndex, setActiveIndex] = useState(0);
+
+  const swiperSlideRef = useRef(null);
 
   const { playSound } = useSound();
   const selectSound = () => { playSound(select) };
@@ -31,9 +33,22 @@ const Carousel = ({ items }) => {
     6: '/main-menu/sortingCard.png',
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (swiperSlideRef.current && !swiperSlideRef.current.contains(event.target)) {
+        setOpenCarousel(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [setOpenCarousel]);
+    
 
   return (
-    <div className="relative w-full max-w-3xl mx-auto my-auto">
+    <div className="relative w-full max-w-3xl mx-auto my-auto z-20">
       <Swiper
         effect={'coverflow'}
         grabCursor={true}
@@ -59,7 +74,8 @@ const Carousel = ({ items }) => {
         }}
       >
         {items.map((item, index) => (
-          <SwiperSlide key={index} className="w-64 h-96 nes-pointer flex items-center justify-center bg-[#262137]  text-white font-bold text-lg rounded-lg shadow-md hover:scale-105 transition-transform duration-300 relative">
+          <SwiperSlide key={index} className="w-64 h-96 nes-pointer flex items-center justify-center bg-[#262137]  text-white font-bold text-lg rounded-lg shadow-md hover:scale-105 transition-transform duration-300 relative"
+          ref={swiperSlideRef}>
             {index === activeIndex ? (
                 <Link to={item.Link} className="w-full h-full flex items-center justify-center relative">
                   <Tooltip text={item.title} optionalText={item.description}  >
