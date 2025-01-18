@@ -28,6 +28,7 @@ const Stacks = () => {
   const [tempContainer, setTempContainer] = useState([]);
   const [pastCars, setPastCars] = useState([]); // Changed to an array to hold multiple past cars
   const [isTooltipClosed, setIsTooltipClosed] = useState(true);
+  const [showOverlay, setShowOverlay] = useState(false);
   const { playSound } = useSound();
 
   // Add a car to the stack
@@ -147,6 +148,7 @@ const Stacks = () => {
         removedCar = currentCar;
         carFound = true;
         setPoppedItem(removedCar);
+        setShowOverlay(true);
         const randomRevSound = Math.random() >= 0.5 ? carRev1 : carRev2;
         playSound(randomRevSound);
         playSound(successSound);
@@ -308,7 +310,7 @@ const Stacks = () => {
 
       <StacksCanvas stack={stack} />
 
-      {poppedItem && <StackOverlay car={poppedItem} colorMap={fasIconColorMap} />}
+      {showOverlay && <StackOverlay car={poppedItem} colorMap={fasIconColorMap} setShowOverlay={setShowOverlay} />}
 
       <Modal
         isModalOpen={isModalOpen}
