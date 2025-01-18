@@ -6,12 +6,26 @@ import useSound from '../hooks/useSound.js';
 import select from '../assets/sounds/select.mp3';
 import ping from '../assets/sounds/ping.wav';
 
+import mainMenuSound from '/music/mainMenu.mp3';
+
 const Home = () => {
   const [openCarousel, setOpenCarousel] = useState(false);
 
   const { playSound } = useSound();
   const selectSound = () => { playSound(select) };
   const pingSound = () => { playSound(ping) };
+
+  const musicAudioRef = useRef(null);
+    const playMusic = () => {
+      musicAudioRef.current = playSound(mainMenuSound, { volume: 0.3, loop: true });
+    };
+
+  useEffect(() => {
+    playMusic();
+    return () => {
+      musicAudioRef.current.pause();
+    };
+  }, []);
 
   const navLinks = [
     { Link: '/tic-tac-toe', title: 'Tic Tac Toe', description: 'Array application with the use of column and row coordinates.' },
