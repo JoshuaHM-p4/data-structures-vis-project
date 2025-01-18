@@ -1,13 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faX } from '@fortawesome/free-solid-svg-icons';
 import Carousel from '../components/Carousel/Carousel.jsx';
 import useSound from '../hooks/useSound.js';
 import select from '../assets/sounds/select.mp3';
+import ping from '../assets/sounds/ping.wav';
 
 const Home = () => {
   const [openCarousel, setOpenCarousel] = useState(false);
 
   const { playSound } = useSound();
   const selectSound = () => { playSound(select) };
+  const pingSound = () => { playSound(ping) };
 
   const navLinks = [
     { Link: '/tic-tac-toe', title: 'Tic Tac Toe', description: 'Array application with the use of column and row coordinates.' },
@@ -20,21 +24,35 @@ const Home = () => {
   ];
 
   return (
-    <div className='bg-[url("/main-menu/mainBG.png")] bg-center bg-cover h-full p-2 sm:p-4'>
-      <div className="h-full w-full flex flex-col items-center justify-center text-center gap-3 relative">
-        <button className="nes-btn is-primary absolute top-0 left-0" 
+    <div className='bg-[url("/main-menu/mainBGv1.png")] bg-center bg-cover bg-no-repeat h-full p-2 sm:p-4 relative pixelated'>
+      <div className="h-full w-full flex flex-col items-center justify-end text-center relative">
+        {/* <button className="nes-btn is-primary absolute top-0 left-0" 
           onClick={() => {
             setOpenCarousel(prevState => !prevState);
             selectSound();
           }}>
           Draw Cards
-        </button>        
+        </button>         */}
 
-        {openCarousel && <div className='fixed top-0 left-0 w-full h-full z-10 bg-black opacity-75'/>}
+        {openCarousel && <div className='fixed top-0 left-0 w-full h-full z-20 bg-black opacity-75'/>}
+        {openCarousel && <FontAwesomeIcon icon={faX} size='2xl' className='z-20 absolute top-0 right-0 rounded-full p-3 text-white w-6 h-6 hover:bg-gray-500 hover:bg-opacity-60 transform ease-in-out active:scale-110 transition-all '
+          onClick={() => {
+            setOpenCarousel(false); 
+            pingSound();}}
+          />}
         {openCarousel && (
-        <Carousel items={navLinks} setOpenCarousel={setOpenCarousel} />
-
+        <Carousel items={navLinks} />
         )}
+
+
+      {/* <img src="/main-menu/backFaceCard.png" alt="backCard" 
+        className='z-10 fixed top-32 left-12 h-44 nes-pointer hover:scale-105 transition-all duration-300 pixelated'
+        onClick={() => {
+          setOpenCarousel(true)
+          selectSound()}}/> */}
+
+    <button className="nes-btn focus:outline-none"
+      onClick={() => {setOpenCarousel(true); selectSound();}}>Draw Cards</button>
       </div>
     </div>
   );

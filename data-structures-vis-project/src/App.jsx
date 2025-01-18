@@ -37,7 +37,7 @@ const App = () => {
   }, [location]);
 
   return (
-    <div className="h-full w-full pt-[64px] text-[11px] 2xl:text-[14px] text-border">
+    <div className="h-full w-full pt-[64px] text-[11px]">
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />

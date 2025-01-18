@@ -17,6 +17,12 @@ html, body, #root {
   color: white;
 }
 
+p {
+  margin: 0;
+  padding: 0;
+  font-size: 11px;
+}
+
 a {
   text-decoration: none;
 }
@@ -36,7 +42,7 @@ a:hover {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom CSS for text border */
+/* Custom CSS for text border
 .text-border {
   text-shadow:
     -1px -1px 0 #000,
@@ -47,7 +53,7 @@ a:hover {
 
 .no-text-border {
   text-shadow: none;
-}
+} */
 
 @keyframes walk{
   0% {
