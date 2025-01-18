@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import StackOverlay from '../components/StacksComponents/StackOverlay.jsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCarSide } from '@fortawesome/free-solid-svg-icons';
+import { faCarSide, faMinus, faSquareMinus } from '@fortawesome/free-solid-svg-icons';
 import { faTableList } from '@fortawesome/free-solid-svg-icons';
 import Modal from '../components/StackQueueModal/Modal.jsx';
 import Tooltip from '../components/Tooltip/Tooltip.jsx';
@@ -269,26 +269,29 @@ const Stacks = () => {
   return (
     <div className='w-full h-full bg-[url("/stacks/city-bg.png")] bg-center bg-cover pixelated'>
       <div className='flex gap-2 justify-center top-20 left-0 absolute w-full h-fit'>
-        <button onClick={handleArrivalClick} className="nes-btn is-primary rounded z-50">
-          Arrival
-        </button>
-
-        <button onClick={handleDepartureClick} className="nes-btn is-error rounded z-50">
-          Departure
-        </button>
-
-        <button onClick={() => clearStack()} className="nes-btn z-50">
-          Clear
-        </button>
-      </div>
 
       {stack &&
         <button
           onClick={() => setIsTooltipClosed(!isTooltipClosed)}
-          className="fixed top-20 left-5 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 active:opacity-80 z-40">
-          {isTooltipClosed ? <FontAwesomeIcon icon={faTableList} /> : 'Hide Tooltip'}
+          className="nes-btn absolute top-0 left-5 h-10 w-[56px] bg-gray-500 text-black rounded hover:bg-gray-600 hover:text-white active:opacity-80 z-40">
+          {isTooltipClosed ? <FontAwesomeIcon icon={faTableList} className='h-full ' /> : <FontAwesomeIcon icon={faSquareMinus} className='h-full w-full' />}
         </button>
       }
+
+
+        <button onClick={handleArrivalClick} className="nes-btn is-primary rounded z-50 h-10 ">
+          Arrival
+        </button>
+
+        <button onClick={handleDepartureClick} className="nes-btn is-error rounded z-50 h-10">
+          Departure
+        </button>
+
+        <button onClick={() => clearStack()} className="nes-btn z-50 h-10">
+          Clear
+        </button>
+      </div>
+
 
       <div className="fixed w-fit min-w-fit -translate-x-20 left-1/2 top-0 h-full pb-16 overflow-visible">
         <div className='flex flex-col pl-5 h-full items-end justify-end mt-4 relative'>
