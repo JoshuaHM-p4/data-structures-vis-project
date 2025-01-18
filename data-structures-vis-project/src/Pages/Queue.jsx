@@ -32,6 +32,7 @@ const Queue = () => {
 
   const [isTooltipClosed, setisTooltipClosed] = useState(true);
 
+  const [showOverlay, setShowOverlay] = useState(false);
   const { playSound } = useSound();
 
   // Add a car to the queue
@@ -133,6 +134,7 @@ const Queue = () => {
         playSound(randomRevSound);
         playSound(successSound);
         setPoppedItem(removedCar);
+        setShowOverlay(true);
         console.log(removedCar.plateNumber, "has been removed");
         break;
       } else {
@@ -170,6 +172,7 @@ const Queue = () => {
     setQueue([]);
     setTempContainer([]);
     setPastCars([]);
+    setShowOverlay(false);
   };
 
   // Color classes for the cars
@@ -279,7 +282,7 @@ const Queue = () => {
 
       <QueueCanvas queue={queue} />
 
-      {poppedItem && <StackOverlay car={poppedItem} />}
+      {showOverlay && <StackOverlay car={poppedItem} setShowOverlay={setShowOverlay} />}
 
       <Modal
         isModalOpen={isModalOpen}

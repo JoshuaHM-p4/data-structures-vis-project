@@ -186,6 +186,7 @@ const Stacks = () => {
     setStack([]);
     setTempContainer([]);
     setPastCars([]);
+    setShowOverlay(false);
   };
 
   // Color classes for the cars
