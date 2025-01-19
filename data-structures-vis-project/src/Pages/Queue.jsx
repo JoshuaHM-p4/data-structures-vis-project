@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import StackOverlay from '../components/StacksComponents/StackOverlay.jsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCarSide } from '@fortawesome/free-solid-svg-icons';
-import { faQuestion } from '@fortawesome/free-solid-svg-icons';
+import { faCarSide, faTableList, faSquareMinus, faClockRotateLeft } from '@fortawesome/free-solid-svg-icons';
+
 
 import Modal from '../components/StackQueueModal/Modal.jsx';
 import Tooltip from '../components/Tooltip/Tooltip.jsx';
@@ -20,6 +20,8 @@ import resetSound from "../assets/sounds/thud.wav";
 import errorSound from "../assets/sounds/damage.mp3";
 import successSound from "../assets/sounds/complete.wav";
 
+import History from '../components/History/History.jsx';
+
 
 const Queue = () => {
   const [queue, setQueue] = useState([]);
@@ -34,6 +36,9 @@ const Queue = () => {
 
   const [showOverlay, setShowOverlay] = useState(false);
   const { playSound } = useSound();
+
+  const [history, setHistorty] = useState([]);
+  const [isOpenHistory, setIsOpenHistory] = useState(false);
 
   // Add a car to the queue
   const addQueue = (plateNumber) => {
@@ -90,6 +95,8 @@ const Queue = () => {
 
     // Add the new car to the queue
     setQueue([...queue, newCar]);
+    // Add the new car to the history
+    setHistorty([...history, newCar]);
     // Reset the plate number and close the modal
     setPlateNumber('');
     setIsModalOpen(false);
@@ -173,6 +180,8 @@ const Queue = () => {
     setTempContainer([]);
     setPastCars([]);
     setShowOverlay(false);
+    setHistorty([]);
+    setIsOpenHistory(false);
   };
 
   // Color classes for the cars
@@ -237,28 +246,38 @@ const Queue = () => {
   };
 
   return (
-    <div className="w-full h-full">
-      <div className='flex gap-2 justify-center top-20 left-0 absolute w-full h-fit'>
-        <button onClick={handleArrivalClick} className="nes-btn is-primary">
+    <div className="w-full h-full relative">
+
+      {isOpenHistory && <History history={history} />}
+      
+      <div className='flex gap-2 justify-center top-2 left-0 absolute w-full z-10'>
+
+        <button onClick={() => setIsOpenHistory(!isOpenHistory)} className="nes-btn flex justify-center items-center absolute top-0 left-3 is-warning rounded z-50 h-10 w-[56px]">
+          <FontAwesomeIcon icon={faClockRotateLeft} className='h-full' />
+        </button>
+
+        {queue &&
+        <button
+          onClick={() => setisTooltipClosed(!isTooltipClosed)}
+          className="nes-btn flex justify-center items-center absolute top-0 right-3 h-10 w-[56px] bg-gray-500 text-black rounded hover:bg-gray-600 hover:text-white active:opacity-80 z-40">
+          {isTooltipClosed ? <FontAwesomeIcon icon={faTableList} className='h-full ' /> : <FontAwesomeIcon icon={faSquareMinus} className='h-full w-full' />}
+        </button>
+      }
+
+        <button onClick={handleArrivalClick} className="nes-btn flex justify-center items-center is-primary rounded z-50 h-10 w-32 ">
           Arrival
         </button>
 
-        <button onClick={handleDepartureClick} className="nes-btn is-error">
+        <button onClick={handleDepartureClick} className="nes-btn flex justify-center items-center is-error rounded z-50 h-10 w-40">
           Departure
         </button>
 
-        <button onClick={() => clearQueue()} className="nes-btn">
+        <button onClick={() => clearQueue()} className="nes-btn flex justify-center items-center z-50 h-10 w-28">
           Clear
         </button>
       </div>
 
-      {queue &&
-        <button
-          onClick={() => setisTooltipClosed(!isTooltipClosed)}
-          className="fixed top-20 left-5 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 active:opacity-80">
-          {isTooltipClosed ? <FontAwesomeIcon icon={faQuestion} /> : 'Hide Tooltip'}
-        </button>
-      }
+
 
       <div className={`fixed w-fit min-w-32 top-1/2 left-0 h-full`}>
         <div className='grid grid-cols-10 flex-grow relative'>
