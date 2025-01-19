@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import StackOverlay from '../components/StacksComponents/StackOverlay.jsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCarSide, faMinus, faSquareMinus } from '@fortawesome/free-solid-svg-icons';
+import { faCarSide, faMinus, faSquareMinus, faClockRotateLeft } from '@fortawesome/free-solid-svg-icons';
 import { faTableList } from '@fortawesome/free-solid-svg-icons';
 import Modal from '../components/StackQueueModal/Modal.jsx';
 import Tooltip from '../components/Tooltip/Tooltip.jsx';
@@ -30,6 +30,8 @@ const Stacks = () => {
   const [isTooltipClosed, setIsTooltipClosed] = useState(true);
   const [showOverlay, setShowOverlay] = useState(false);
   const { playSound } = useSound();
+  const [history, setHistory] = useState([]);
+  const [isOpenHistory, setIsOpenHistory] = useState(false);
 
   // Add a car to the stack
   const addStack = (plateNumber) => {
@@ -91,6 +93,8 @@ const Stacks = () => {
 
     // Add the new car to the stack
     setStack([newCar, ...stack]);
+    // Add the new car to the history
+    setHistory([...history, newCar]);
     // Reset the plate number and close the modal
     setPlateNumber('');
     setIsModalOpen(false);
@@ -187,6 +191,8 @@ const Stacks = () => {
     setTempContainer([]);
     setPastCars([]);
     setShowOverlay(false);
+    setHistory([]);
+    setIsOpenHistory(false);
   };
 
   // Color classes for the cars
@@ -267,27 +273,54 @@ const Stacks = () => {
   };
 
   return (
-    <div className='w-full h-full bg-[url("/stacks/city-bg.png")] bg-center bg-cover pixelated'>
-      <div className='flex gap-2 justify-center top-20 left-0 absolute w-full h-fit'>
+    <div className='w-full h-full bg-[url("/stacks/city-bg.png")] bg-center bg-cover pixelated relative'>
+      {isOpenHistory && 
+        <div className='absolute top-0 left-0 pt-3 rounded-e-lg h-full bg-black bg-opacity-70 z-40'>
+          <div className='flex flex-col gap-2 p-2 h-full relative'>
+            <h1 className='text-white text-lg text-center mb-2'>History</h1>
+            <div className='overflow-y-auto h-full '>
+              {history.map((car, index) => (
+                <div key={index} className='flex flex-col md:flex-row justify-center md:justify-start m-1 items-center rounded-lg border bg-black bg-opacity-60 text-white relative'>
+                  <img src={getImagePath(car?.type, car?.color, car?.isUtility)} alt={car?.type} className='w-20 h-20 mx-2' />
+                  <div className='flex flex-col gap-1 p-1 text-center md:text-start'>
+                      <p>Plate #: {car.plateNumber}</p>
+                      <p>{!car.isUtility ? car.color + ' ' : ''}{car.type}</p>
+                      <p>Arrival: {car.arrivalCount} </p>
+                      <p>Departure: {car.departureCount}</p>
+                    </div>
+                </div>
+
+              ))}
+
+
+            </div>
+          </div>
+        </div>}
+      <div className='flex gap-2 justify-center top-2 left-0 absolute w-full'>
+
+        <button onClick={() => setIsOpenHistory(!isOpenHistory)} className="nes-btn flex justify-center items-center absolute top-0 left-3 is-warning rounded z-50 h-10 w-[56px]">
+          <FontAwesomeIcon icon={faClockRotateLeft} className='h-full' />
+        </button>
+
 
       {stack &&
         <button
           onClick={() => setIsTooltipClosed(!isTooltipClosed)}
-          className="nes-btn absolute top-0 left-5 h-10 w-[56px] bg-gray-500 text-black rounded hover:bg-gray-600 hover:text-white active:opacity-80 z-40">
+          className="nes-btn flex justify-center items-center absolute top-0 right-3 h-10 w-[56px] bg-gray-500 text-black rounded hover:bg-gray-600 hover:text-white active:opacity-80 z-40">
           {isTooltipClosed ? <FontAwesomeIcon icon={faTableList} className='h-full ' /> : <FontAwesomeIcon icon={faSquareMinus} className='h-full w-full' />}
         </button>
       }
 
 
-        <button onClick={handleArrivalClick} className="nes-btn is-primary rounded z-50 h-10 ">
+        <button onClick={handleArrivalClick} className="nes-btn flex justify-center items-center is-primary rounded z-50 h-10 w-32 ">
           Arrival
         </button>
 
-        <button onClick={handleDepartureClick} className="nes-btn is-error rounded z-50 h-10">
+        <button onClick={handleDepartureClick} className="nes-btn flex justify-center items-center is-error rounded z-50 h-10 w-40">
           Departure
         </button>
 
-        <button onClick={() => clearStack()} className="nes-btn z-50 h-10">
+        <button onClick={() => clearStack()} className="nes-btn flex justify-center items-center z-50 h-10 w-28">
           Clear
         </button>
       </div>
