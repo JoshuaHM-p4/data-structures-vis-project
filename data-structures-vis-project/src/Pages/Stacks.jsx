@@ -8,6 +8,8 @@ import Tooltip from '../components/Tooltip/Tooltip.jsx';
 import StacksCanvas from '../components/StacksCanvas/StacksCanvas.jsx';
 import useSound from '../hooks/useSound.js';
 
+import History from '../components/History/History.jsx';
+
 import carArrival from "../assets/sounds/car-arrival.mp3";
 import carRev1 from "../assets/sounds/car-rev-1.mp3";
 import carRev2 from "../assets/sounds/car-rev-2.mp3";
@@ -274,29 +276,9 @@ const Stacks = () => {
 
   return (
     <div className='w-full h-full bg-[url("/stacks/city-bg.png")] bg-center bg-cover pixelated relative'>
-      {isOpenHistory && 
-        <div className='absolute top-0 left-0 pt-3 rounded-e-lg h-full bg-black bg-opacity-70 z-40'>
-          <div className='flex flex-col gap-2 p-2 h-full relative'>
-            <h1 className='text-white text-lg text-center mb-2'>History</h1>
-            <div className='overflow-y-auto h-full '>
-              {history.map((car, index) => (
-                <div key={index} className='flex flex-col md:flex-row justify-center md:justify-start m-1 items-center rounded-lg border bg-black bg-opacity-60 text-white relative'>
-                  <img src={getImagePath(car?.type, car?.color, car?.isUtility)} alt={car?.type} className='w-20 h-20 mx-2' />
-                  <div className='flex flex-col gap-1 p-1 text-center md:text-start'>
-                      <p>Plate #: {car.plateNumber}</p>
-                      <p>{!car.isUtility ? car.color + ' ' : ''}{car.type}</p>
-                      <p>Arrival: {car.arrivalCount} </p>
-                      <p>Departure: {car.departureCount}</p>
-                    </div>
-                </div>
-
-              ))}
-
-
-            </div>
-          </div>
-        </div>}
-      <div className='flex gap-2 justify-center top-2 left-0 absolute w-full'>
+      {isOpenHistory && <History history={history} />}
+        
+      <div className='flex gap-2 justify-center top-2 left-0 absolute w-full z-10'>
 
         <button onClick={() => setIsOpenHistory(!isOpenHistory)} className="nes-btn flex justify-center items-center absolute top-0 left-3 is-warning rounded z-50 h-10 w-[56px]">
           <FontAwesomeIcon icon={faClockRotateLeft} className='h-full' />
