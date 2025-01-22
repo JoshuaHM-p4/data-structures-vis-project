@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import 'snes.css/dist/snes.min.css';
 import MarioBlock from '../components/MarioComponent/MarioBlocks.jsx';
 import { use } from 'react';
+import { height } from '@fortawesome/free-brands-svg-icons/fa42Group';
 
 const TowerOfHanoi = () => {
   class TowersOfHanoi{
@@ -105,6 +106,7 @@ const TowerOfHanoi = () => {
           endTower.push(disk)
           setNoticeBoard("Move Successful!!!")
           setMoves(m => m + 1)
+          setMovingDisk(disk)
         }
 
       switch(temporarySelected){
@@ -171,15 +173,15 @@ const TowerOfHanoi = () => {
   const determineDisk = (disk) => {
     switch(disk){
       case "A":
-        return <div>5</div>
+        return <DiskA/>
       case "B":
-        return <div>4</div>
+        return <DiskB/>
       case "C":
-        return <div>3</div>
+        return <DiskC/>
       case "D":
-        return <div>2</div>
+        return <DiskD/>
       case "E":
-        return <div>1</div>
+        return <DiskE/>
     }
   }
 
@@ -192,7 +194,12 @@ const TowerOfHanoi = () => {
     setActiveThirdTower('bg-emerald-500')
     setActiveFirstTower2('bg-red-600')
     setActiveSecondTower2('bg-gray-600')
-    setActiveThirdTower2('bg-emerald-500')  
+    setActiveThirdTower2('bg-emerald-500')
+    setDiskAAnimaState('paused')
+    setDiskBAnimaState('paused')
+    setDiskCAnimaState('paused')
+    setDiskDAnimaState('paused')
+    setDiskEAnimaState('paused')
     if(from && to){
       tower.moveDisk(from,to)
       const newTower = new TowersOfHanoi();
@@ -218,16 +225,22 @@ const TowerOfHanoi = () => {
         setActiveFirstTower('bg-red-800')
         setActiveSecondTower('bg-gray-600')
         setActiveThirdTower('bg-emerald-500')
+        determineDiskAnima(tower.firstTower)
+        setMovingDisk(null)
         break
       case tower.secondTower:
         setActiveFirstTower('bg-red-600')
         setActiveSecondTower('bg-gray-800')
         setActiveThirdTower('bg-emerald-500')
+        determineDiskAnima(tower.secondTower)
+        setMovingDisk(null)
         break
       case tower.thirdTower:
         setActiveFirstTower('bg-red-600')
         setActiveSecondTower('bg-gray-600')
         setActiveThirdTower('bg-emerald-700')
+        determineDiskAnima(tower.thirdTower)
+        setMovingDisk(null)
         break
     }
     if(value.length == 0){
@@ -286,36 +299,181 @@ const TowerOfHanoi = () => {
   const [activeFirstTower2, setActiveFirstTower2] = useState('bg-red-600')
   const [activeSecondTower2, setActiveSecondTower2] = useState('bg-gray-600')
   const [activeThirdTower2, setActiveThirdTower2] = useState('bg-emerald-500')
+  const [diskAAnimaState, setDiskAAnimaState] = useState('paused')
+  const [diskBAnimaState, setDiskBAnimaState] = useState('paused')
+  const [diskCAnimaState, setDiskCAnimaState] = useState('paused')
+  const [diskDAnimaState, setDiskDAnimaState] = useState('paused')
+  const [diskEAnimaState, setDiskEAnimaState] = useState('paused')
+  const [movingDisk, setMovingDisk] = useState(null)
+
+  const determineDiskAnima = (disk) => {
+    switch(disk[disk.length-1]){
+      case "A":
+        setDiskAAnimaState('running')
+        setDiskBAnimaState('paused')
+        setDiskCAnimaState('paused')
+        setDiskDAnimaState('paused')
+        setDiskEAnimaState('paused')
+        break
+      case "B":
+        setDiskBAnimaState('running')
+        setDiskAAnimaState('paused')
+        setDiskCAnimaState('paused')
+        setDiskDAnimaState('paused')
+        setDiskEAnimaState('paused')
+        break
+      case "C":
+        setDiskCAnimaState('running')
+        setDiskAAnimaState('paused')
+        setDiskBAnimaState('paused')
+        setDiskDAnimaState('paused')
+        setDiskEAnimaState('paused')
+        break
+      case "D":
+        setDiskDAnimaState('running')
+        setDiskAAnimaState('paused')
+        setDiskBAnimaState('paused')
+        setDiskCAnimaState('paused')
+        setDiskEAnimaState('paused')
+        break
+      case "E":
+        setDiskEAnimaState('running')
+        setDiskAAnimaState('paused')
+        setDiskBAnimaState('paused')
+        setDiskCAnimaState('paused')
+        setDiskDAnimaState('paused')
+        break
+    }
+  }
+
+  const DiskA = () => {
+    return (
+      <>
+        <div className='h-[15%] w-[86%] bg-[#313130] mx-auto' style={{ boxShadow: "12px 0px #313130, -12px 0px #313130, -6px 6px #313130, 6px 6px #313130, 6px -6px #313130, -6px -6px #313130, 0px 11px #313130, 0px -11px #313130", animation: `blink 0.5s infinite ${diskAAnimaState}${movingDisk === "A" ? ", fall 0.5s ease-out" : ""}`,
+            '@keyframes blink': {
+              '0%, 100%': { opacity: 1 },
+              '50%': { opacity: 0 }}
+          }}>
+        </div>
+      </>
+    ) 
+  }
+
+  const DiskB = () => {
+    return (
+      <>
+        <div className='h-[15%] w-[76%] bg-[#313130] mx-auto' style={{ boxShadow: "12px 0px #313130, -12px 0px #313130, -6px 6px #313130, 6px 6px #313130, 6px -6px #313130, -6px -6px #313130, 0px 11px #313130, 0px -11px #313130", animation: `blink 0.5s infinite ${diskBAnimaState}${movingDisk === "B" ? ", fall 0.5s ease-out" : ""}`,
+            '@keyframes blink': {
+              '0%, 100%': { opacity: 1 },
+              '50%': { opacity: 0 }}
+          }}>
+        </div>
+      </>
+    ) 
+  }
+
+  const DiskC = () => {
+    return (
+      <>
+        <div className='h-[15%] w-[66%] bg-[#313130] mx-auto' style={{ boxShadow: "12px 0px #313130, -12px 0px #313130, -6px 6px #313130, 6px 6px #313130, 6px -6px #313130, -6px -6px #313130, 0px 11px #313130, 0px -11px #313130", animation: `blink 0.5s infinite ${diskCAnimaState}${movingDisk === "C" ? ", fall 0.5s ease-out" : ""}`,
+            '@keyframes blink': {
+              '0%, 100%': { opacity: 1 },
+              '50%': { opacity: 0 }}
+          }}>
+        </div>
+      </>
+    ) 
+  }
+
+  const DiskD = () => {
+    return (
+      <>
+        <div className='h-[15%] w-[56%] bg-[#313130] mx-auto' style={{ boxShadow: "12px 0px #313130, -12px 0px #313130, -6px 6px #313130, 6px 6px #313130, 6px -6px #313130, -6px -6px #313130, 0px 11px #313130, 0px -11px #313130", animation: `blink 0.5s infinite ${diskDAnimaState}${movingDisk === "D" ? ", fall 0.5s ease-out" : ""}`,
+            '@keyframes blink': {
+              '0%, 100%': { opacity: 1 },
+              '50%': { opacity: 0 }}
+          }}>
+        </div>
+      </>
+    ) 
+  }
+
+  const DiskE = () => {
+    return (
+      <>
+        <div className='h-[15%] w-[46%] bg-[#313130] mx-auto' style={{ boxShadow: "12px 0px #313130, -12px 0px #313130, -6px 6px #313130, 6px 6px #313130, 6px -6px #313130, -6px -6px #313130, 0px 11px #313130, 0px -11px #313130", animation: `blink 0.5s infinite ${diskEAnimaState}${movingDisk === "E" ? ", fall 0.5s ease-out" : ""}`,
+            '@keyframes blink': {
+              '0%, 100%': { opacity: 1 },
+              '50%': { opacity: 0 }}
+          }}>
+        </div>
+      </>
+    ) 
+  }
+
+  const resetGame = () => {
+    const newTower = new TowersOfHanoi();
+    setTower(newTower)
+    setMoves(0)
+    setFromVar(null)
+    setToVar(null)
+    setNoticeBoard("Welcome to Towers of Hanoi!!!")
+    setDiskAAnimaState('paused')
+    setDiskBAnimaState('paused')
+    setDiskCAnimaState('paused')
+    setDiskDAnimaState('paused')
+    setDiskEAnimaState('paused')
+    setActiveFirstTower('bg-red-600')
+    setActiveSecondTower('bg-gray-600')
+    setActiveThirdTower('bg-emerald-500')
+    setActiveFirstTower2('bg-red-600')
+    setActiveSecondTower2('bg-gray-600')
+    setActiveThirdTower2('bg-emerald-500')
+  }
 
   return (
     <>
+      <style>
+        {`
+          @keyframes fall {
+            0% { transform: translateY(-100%); opacity: 1; }
+            100% { transform: translateY(0); opacity: 1; }
+          }
+        `}
+      </style>
+
       {/* PARENT */}
       <div className='h-full w-full flex flex-col md:flex-row bg-[#d2cfca]'>
         {/* LEFT */}
-        <div className=' bg-[#C1BEB9] md:border-r-4 lg:border-r-4 sm:max-md:border-b-4 border-[#d2cfca] h-full w-full place-content-center flex-shrink-0 lg:max-w-[70%] md:max-w-[70%] aspect-video'>
-          <div className='h-[97%] w-[97%] bg-blue-500 mx-auto flex'>
-            <div className='w-1/3 h-full bg-yellow-400 flex flex-col'> <FirstTower/> </div>
-            <div className='w-1/3 h-full bg-pink-500 flex flex-col'> <SecondTower/> </div>
-            <div className='w-1/3 h-full bg-slate-300 flex flex-col'> <ThirdTower/> </div>
+        <div className=' bg-[#C1BEB9] md:border-r-4 lg:border-r-4 sm:max-md:border-b-4 border-[#d2cfca] h-[70%] lg:h-full md:h-full w-full place-content-center flex-shrink-0 lg:max-w-[70%] md:max-w-[70%]'>
+          <div className='h-[95%] w-[95%] bg-[#899d58] mx-auto flex snes-blockquote'>
+            <div className='w-full h-full flex flex-row gap-1 justify-between bg-[#384849]'>
+              <div className='w-1/3 h-full flex flex-col bg-[#899d58] justify-end gap-8 lg:gap-6'> <FirstTower/> </div>
+              <div className='w-1/3 h-full flex flex-col bg-[#899d58] justify-end gap-8 lg:gap-6'> <SecondTower/> </div>
+              <div className='w-1/3 h-full flex flex-col bg-[#899d58] justify-end gap-8 lg:gap-6'> <ThirdTower/> </div>
+            </div>
           </div>
         {/* LEFT */}
         </div>
-        {/* RIGHT */}
+        {/* RIGHT */} 
         <div className=' bg-[#C1BEB9] h-full w-full p-5 flex flex-col gap-1 justify-between flex-shrink-0 lg:max-w-[30%] md:max-w-[30%]'>
           <div className='w-full h-[30%] bg-[#899d58] p-2 snes-blockquote text-[#52686A] place-content-center'>{noticeBoard}</div>
           <p className='text-white'>Moves:</p>
-          <div className='w-full h-[11%] bg-[#899d58] p-2 snes-blockquote text-[#52686A]'>{moves}</div>
+          <div className='w-full h-[11%] flex justify-evenly gap-6'>
+            <div className='w-[60%] h-full bg-[#899d58] p-2 snes-blockquote text-[#52686A]'>{moves}</div>
+            <button className=' bg-[#807B81] snes-button w-[40%] h-full focus:outline-none hover:bg-[#a39ca4] text-white text-base lg:text-lg flex justify-center' onClick={ () => resetGame()}>Reset</button>
+          </div>
           <p className='text-white'>From:</p> 
           <div className='w-full h-[11%] flex p-1 gap-5 justify-evenly'>
-            <button  className={`${activeFirstTower} w-full md:max-lg:w-[18%] snes-button focus:outline-none hover:bg-red-400 text-white`} onClick={ () => changeFromVar(tower.firstTower)}>1</button>
-            <button  className={`${activeSecondTower} w-full md:max-lg:w-[18%] snes-button focus:outline-none hover:bg-gray-400 text-white`} onClick={ () => changeFromVar(tower.secondTower)}>2</button>  
-            <button  className={`${activeThirdTower} w-full md:max-lg:w-[18%] snes-button focus:outline-none hover:bg-emerald-400 text-white`} onClick={ () => changeFromVar(tower.thirdTower)}>3</button>  
+            <button  className={`${activeFirstTower} w-full md:max-lg:w-[18%] snes-button focus:outline-none hover:bg-red-400 text-white flex justify-center`} onClick={ () => changeFromVar(tower.firstTower)}>1</button>
+            <button  className={`${activeSecondTower} w-full md:max-lg:w-[18%] snes-button focus:outline-none hover:bg-gray-400 text-white flex justify-center`} onClick={ () => changeFromVar(tower.secondTower)}>2</button>  
+            <button  className={`${activeThirdTower} w-full md:max-lg:w-[18%] snes-button focus:outline-none hover:bg-emerald-400 text-white flex justify-center`} onClick={ () => changeFromVar(tower.thirdTower)}>3</button>  
           </div>  
           <p className='text-white'>To:</p>
           <div className='w-full h-[11%] flex p-1 gap-5 justify-evenly'>
-            <button  className={`${activeFirstTower2} w-full md:max-lg:w-[18%] snes-button focus:outline-none hover:bg-red-400 text-white`}onClick={ () => changeToVar(tower.firstTower)}>1</button>
-            <button  className={`${activeSecondTower2} w-full md:max-lg:w-[18%] snes-button focus:outline-none hover:bg-gray-400 text-white`} onClick={ () => changeToVar(tower.secondTower)}>2</button>
-            <button  className={`${activeThirdTower2} w-full md:max-lg:w-[18%] snes-button focus:outline-none hover:bg-emerald-400 text-white`} onClick={ () => changeToVar(tower.thirdTower)}>3</button>
+            <button  className={`${activeFirstTower2} w-full md:max-lg:w-[18%] snes-button focus:outline-none hover:bg-red-400 text-white flex justify-center`} onClick={ () => changeToVar(tower.firstTower)}>1</button>
+            <button  className={`${activeSecondTower2} w-full md:max-lg:w-[18%] snes-button focus:outline-none hover:bg-gray-400 text-white flex justify-center`} onClick={ () => changeToVar(tower.secondTower)}>2</button>
+            <button  className={`${activeThirdTower2} w-full md:max-lg:w-[18%] snes-button focus:outline-none hover:bg-emerald-400 text-white flex justify-center`} onClick={ () => changeToVar(tower.thirdTower)}>3</button>
           </div>  
           <div className='w-full h-[11%] p-2 margin-top-2'>  
             <button className=' bg-[#807B81] w-full h-full snes-button focus:outline-none hover:bg-[#a39ca4] text-white' onClick={ () => confirmAction(fromVar, toVar)}>Confirm</button>
