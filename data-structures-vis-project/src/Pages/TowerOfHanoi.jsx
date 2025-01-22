@@ -106,6 +106,7 @@ const TowerOfHanoi = () => {
           endTower.push(disk)
           setNoticeBoard("Move Successful!!!")
           setMoves(m => m + 1)
+          setMovingDisk(disk)
         }
 
       switch(temporarySelected){
@@ -193,7 +194,12 @@ const TowerOfHanoi = () => {
     setActiveThirdTower('bg-emerald-500')
     setActiveFirstTower2('bg-red-600')
     setActiveSecondTower2('bg-gray-600')
-    setActiveThirdTower2('bg-emerald-500')  
+    setActiveThirdTower2('bg-emerald-500')
+    setDiskAAnimaState('paused')
+    setDiskBAnimaState('paused')
+    setDiskCAnimaState('paused')
+    setDiskDAnimaState('paused')
+    setDiskEAnimaState('paused')
     if(from && to){
       tower.moveDisk(from,to)
       const newTower = new TowersOfHanoi();
@@ -219,16 +225,22 @@ const TowerOfHanoi = () => {
         setActiveFirstTower('bg-red-800')
         setActiveSecondTower('bg-gray-600')
         setActiveThirdTower('bg-emerald-500')
+        determineDiskAnima(tower.firstTower)
+        setMovingDisk(null)
         break
       case tower.secondTower:
         setActiveFirstTower('bg-red-600')
         setActiveSecondTower('bg-gray-800')
         setActiveThirdTower('bg-emerald-500')
+        determineDiskAnima(tower.secondTower)
+        setMovingDisk(null)
         break
       case tower.thirdTower:
         setActiveFirstTower('bg-red-600')
         setActiveSecondTower('bg-gray-600')
         setActiveThirdTower('bg-emerald-700')
+        determineDiskAnima(tower.thirdTower)
+        setMovingDisk(null)
         break
     }
     if(value.length == 0){
@@ -287,11 +299,62 @@ const TowerOfHanoi = () => {
   const [activeFirstTower2, setActiveFirstTower2] = useState('bg-red-600')
   const [activeSecondTower2, setActiveSecondTower2] = useState('bg-gray-600')
   const [activeThirdTower2, setActiveThirdTower2] = useState('bg-emerald-500')
+  const [diskAAnimaState, setDiskAAnimaState] = useState('paused')
+  const [diskBAnimaState, setDiskBAnimaState] = useState('paused')
+  const [diskCAnimaState, setDiskCAnimaState] = useState('paused')
+  const [diskDAnimaState, setDiskDAnimaState] = useState('paused')
+  const [diskEAnimaState, setDiskEAnimaState] = useState('paused')
+  const [movingDisk, setMovingDisk] = useState(null)
+
+  const determineDiskAnima = (disk) => {
+    switch(disk[disk.length-1]){
+      case "A":
+        setDiskAAnimaState('running')
+        setDiskBAnimaState('paused')
+        setDiskCAnimaState('paused')
+        setDiskDAnimaState('paused')
+        setDiskEAnimaState('paused')
+        break
+      case "B":
+        setDiskBAnimaState('running')
+        setDiskAAnimaState('paused')
+        setDiskCAnimaState('paused')
+        setDiskDAnimaState('paused')
+        setDiskEAnimaState('paused')
+        break
+      case "C":
+        setDiskCAnimaState('running')
+        setDiskAAnimaState('paused')
+        setDiskBAnimaState('paused')
+        setDiskDAnimaState('paused')
+        setDiskEAnimaState('paused')
+        break
+      case "D":
+        setDiskDAnimaState('running')
+        setDiskAAnimaState('paused')
+        setDiskBAnimaState('paused')
+        setDiskCAnimaState('paused')
+        setDiskEAnimaState('paused')
+        break
+      case "E":
+        setDiskEAnimaState('running')
+        setDiskAAnimaState('paused')
+        setDiskBAnimaState('paused')
+        setDiskCAnimaState('paused')
+        setDiskDAnimaState('paused')
+        break
+    }
+  }
 
   const DiskA = () => {
     return (
       <>
-        <div className='h-[15%] w-[86%] bg-[#313130] mx-auto' style={{ boxShadow: "12px 0px #313130, -12px 0px #313130, -6px 6px #313130, 6px 6px #313130, 6px -6px #313130, -6px -6px #313130, 0px 11px #313130, 0px -11px #313130"}}></div>
+        <div className='h-[15%] w-[86%] bg-[#313130] mx-auto' style={{ boxShadow: "12px 0px #313130, -12px 0px #313130, -6px 6px #313130, 6px 6px #313130, 6px -6px #313130, -6px -6px #313130, 0px 11px #313130, 0px -11px #313130", animation: `blink 0.5s infinite ${diskAAnimaState}${movingDisk === "A" ? ", fall 0.5s ease-out" : ""}`,
+            '@keyframes blink': {
+              '0%, 100%': { opacity: 1 },
+              '50%': { opacity: 0 }}
+          }}>
+        </div>
       </>
     ) 
   }
@@ -299,7 +362,12 @@ const TowerOfHanoi = () => {
   const DiskB = () => {
     return (
       <>
-        <div className='h-[15%] w-[76%] bg-[#313130] mx-auto' style={{ boxShadow: "12px 0px #313130, -12px 0px #313130, -6px 6px #313130, 6px 6px #313130, 6px -6px #313130, -6px -6px #313130, 0px 11px #313130, 0px -11px #313130"}}></div>
+        <div className='h-[15%] w-[76%] bg-[#313130] mx-auto' style={{ boxShadow: "12px 0px #313130, -12px 0px #313130, -6px 6px #313130, 6px 6px #313130, 6px -6px #313130, -6px -6px #313130, 0px 11px #313130, 0px -11px #313130", animation: `blink 0.5s infinite ${diskBAnimaState}${movingDisk === "B" ? ", fall 0.5s ease-out" : ""}`,
+            '@keyframes blink': {
+              '0%, 100%': { opacity: 1 },
+              '50%': { opacity: 0 }}
+          }}>
+        </div>
       </>
     ) 
   }
@@ -307,7 +375,12 @@ const TowerOfHanoi = () => {
   const DiskC = () => {
     return (
       <>
-        <div className='h-[15%] w-[66%] bg-[#313130] mx-auto' style={{ boxShadow: "12px 0px #313130, -12px 0px #313130, -6px 6px #313130, 6px 6px #313130, 6px -6px #313130, -6px -6px #313130, 0px 11px #313130, 0px -11px #313130"}}></div>
+        <div className='h-[15%] w-[66%] bg-[#313130] mx-auto' style={{ boxShadow: "12px 0px #313130, -12px 0px #313130, -6px 6px #313130, 6px 6px #313130, 6px -6px #313130, -6px -6px #313130, 0px 11px #313130, 0px -11px #313130", animation: `blink 0.5s infinite ${diskCAnimaState}${movingDisk === "C" ? ", fall 0.5s ease-out" : ""}`,
+            '@keyframes blink': {
+              '0%, 100%': { opacity: 1 },
+              '50%': { opacity: 0 }}
+          }}>
+        </div>
       </>
     ) 
   }
@@ -315,7 +388,12 @@ const TowerOfHanoi = () => {
   const DiskD = () => {
     return (
       <>
-        <div className='h-[15%] w-[56%] bg-[#313130] mx-auto' style={{ boxShadow: "12px 0px #313130, -12px 0px #313130, -6px 6px #313130, 6px 6px #313130, 6px -6px #313130, -6px -6px #313130, 0px 11px #313130, 0px -11px #313130"}}></div>
+        <div className='h-[15%] w-[56%] bg-[#313130] mx-auto' style={{ boxShadow: "12px 0px #313130, -12px 0px #313130, -6px 6px #313130, 6px 6px #313130, 6px -6px #313130, -6px -6px #313130, 0px 11px #313130, 0px -11px #313130", animation: `blink 0.5s infinite ${diskDAnimaState}${movingDisk === "D" ? ", fall 0.5s ease-out" : ""}`,
+            '@keyframes blink': {
+              '0%, 100%': { opacity: 1 },
+              '50%': { opacity: 0 }}
+          }}>
+        </div>
       </>
     ) 
   }
@@ -323,7 +401,12 @@ const TowerOfHanoi = () => {
   const DiskE = () => {
     return (
       <>
-        <div className='h-[15%] w-[46%] bg-[#313130] mx-auto' style={{ boxShadow: "12px 0px #313130, -12px 0px #313130, -6px 6px #313130, 6px 6px #313130, 6px -6px #313130, -6px -6px #313130, 0px 11px #313130, 0px -11px #313130"}}></div>
+        <div className='h-[15%] w-[46%] bg-[#313130] mx-auto' style={{ boxShadow: "12px 0px #313130, -12px 0px #313130, -6px 6px #313130, 6px 6px #313130, 6px -6px #313130, -6px -6px #313130, 0px 11px #313130, 0px -11px #313130", animation: `blink 0.5s infinite ${diskEAnimaState}${movingDisk === "E" ? ", fall 0.5s ease-out" : ""}`,
+            '@keyframes blink': {
+              '0%, 100%': { opacity: 1 },
+              '50%': { opacity: 0 }}
+          }}>
+        </div>
       </>
     ) 
   }
@@ -335,10 +418,30 @@ const TowerOfHanoi = () => {
     setFromVar(null)
     setToVar(null)
     setNoticeBoard("Welcome to Towers of Hanoi!!!")
+    setDiskAAnimaState('paused')
+    setDiskBAnimaState('paused')
+    setDiskCAnimaState('paused')
+    setDiskDAnimaState('paused')
+    setDiskEAnimaState('paused')
+    setActiveFirstTower('bg-red-600')
+    setActiveSecondTower('bg-gray-600')
+    setActiveThirdTower('bg-emerald-500')
+    setActiveFirstTower2('bg-red-600')
+    setActiveSecondTower2('bg-gray-600')
+    setActiveThirdTower2('bg-emerald-500')
   }
 
   return (
     <>
+      <style>
+        {`
+          @keyframes fall {
+            0% { transform: translateY(-100%); opacity: 1; }
+            100% { transform: translateY(0); opacity: 1; }
+          }
+        `}
+      </style>
+
       {/* PARENT */}
       <div className='h-full w-full flex flex-col md:flex-row bg-[#d2cfca]'>
         {/* LEFT */}
