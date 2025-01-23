@@ -4,6 +4,7 @@ import useSound from "../hooks/useSound.js"
 import winSound from "../assets/sounds/ToH-stageclear.mp3"
 import moveSound from "../assets/sounds/ToH-move.mp3"
 import bgSound from "../assets/sounds/ToH-bg.mp3"
+import wrongSound from "../assets/sounds/ToH-wrong.mp3"
 
 const TowerOfHanoi = () => {
   class TowersOfHanoi{
@@ -70,6 +71,7 @@ const TowerOfHanoi = () => {
             return true
         }else{
           setNoticeBoard("Invalid Move!!!")
+          new Audio(wrongSound).play()
           console.log("isBigger false")
           return false}
     }
@@ -231,6 +233,7 @@ const TowerOfHanoi = () => {
       console.log("thirdTower:", tower.thirdTower)
     }else{
       setNoticeBoard("Invalid Move!!!")
+      new Audio(wrongSound).play()
     }
   }
 
@@ -260,6 +263,7 @@ const TowerOfHanoi = () => {
     }
     if(value.length == 0){
       setNoticeBoard("Invalid Move!!!")
+      new Audio(wrongSound).play()
       return
     }
     console.log("from raw:", value)
