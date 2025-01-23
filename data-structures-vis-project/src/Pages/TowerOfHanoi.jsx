@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import 'snes.css/dist/snes.min.css';
-import MarioBlock from '../components/MarioComponent/MarioBlocks.jsx';
-import { use } from 'react';
-import { height } from '@fortawesome/free-brands-svg-icons/fa42Group';
+import useSound from "../hooks/useSound.js"
+import winSound from "../assets/sounds/ToH-stageclear.mp3"
+import moveSound from "../assets/sounds/ToH-move.mp3"
+import bgSound from "../assets/sounds/ToH-bg.mp3"
 
 const TowerOfHanoi = () => {
   class TowersOfHanoi{
@@ -107,6 +108,7 @@ const TowerOfHanoi = () => {
           setNoticeBoard("Move Successful!!!")
           setMoves(m => m + 1)
           setMovingDisk(disk)
+          new Audio(moveSound).play()
         }
 
       switch(temporarySelected){
@@ -129,15 +131,28 @@ const TowerOfHanoi = () => {
         case "TT":
           this.thirdTower = endTower
       }
-    }
-
-    isFinished(){
-        if(this.thirdTower == this.initialValues){
-            return true
-        }
-    }
-        
+    }        
   }
+
+  const { playSound} = useSound()
+  const audioRef = useRef(null)
+
+  const playBG = () => {
+    audioRef.current = playSound(bgSound, {volume: 0.3, loop: true })
+  }
+
+  const stopMusic = () => {
+    if (audioRef.current) {
+      audioRef.current.pause()
+      audioRef.current.currentTime = 0
+      audioRef.current = null
+    }
+  }
+
+  useEffect(() => {
+    playBG()
+    return () => {stopMusic()}
+  }, [])
 
   const [tower, setTower] = useState(new TowersOfHanoi());
   const [fromVar, setFromVar] = useState(null);
@@ -281,15 +296,25 @@ const TowerOfHanoi = () => {
   useEffect(() => {
     if(tower.thirdTower.length == 5){
       setNoticeBoard("Congratulations!!! You have won!!!")
-      const newTower = new TowersOfHanoi();
-      setTower(newTower)
-      setMoves(0)
+      setResetLabel("Play Again")
+      setDiskAAnimaState('running')
+      setDiskBAnimaState('running')
+      setDiskCAnimaState('running')
+      setDiskDAnimaState('running')
+      setDiskEAnimaState('running')
+      new Audio(winSound).play()
     }
   }, [tower.thirdTower])
 
   useEffect(() => {
-    if(moves == 1){
+    if(moves == 0){
       setNoticeBoard("Welcome to Towers of Hanoi!!!")
+      setResetLabel("Reset")
+      setDiskAAnimaState('paused')
+      setDiskBAnimaState('paused')
+      setDiskCAnimaState('paused')
+      setDiskDAnimaState('paused')
+      setDiskEAnimaState('paused')
     }
   }, [tower.moveDisk])
 
@@ -411,6 +436,8 @@ const TowerOfHanoi = () => {
     ) 
   }
 
+  const [resetLabel, setResetLabel] = useState("Reset")
+
   const resetGame = () => {
     const newTower = new TowersOfHanoi();
     setTower(newTower)
@@ -429,6 +456,7 @@ const TowerOfHanoi = () => {
     setActiveFirstTower2('bg-red-600')
     setActiveSecondTower2('bg-gray-600')
     setActiveThirdTower2('bg-emerald-500')
+    setMovingDisk(null)
   }
 
   return (
@@ -457,11 +485,11 @@ const TowerOfHanoi = () => {
         </div>
         {/* RIGHT */} 
         <div className=' bg-[#C1BEB9] h-full w-full p-5 flex flex-col gap-1 justify-between flex-shrink-0 lg:max-w-[30%] md:max-w-[30%]'>
-          <div className='w-full h-[30%] bg-[#899d58] p-2 snes-blockquote text-[#52686A] place-content-center'>{noticeBoard}</div>
+          <div className='w-full h-[30%] bg-[#899d58] p-2 snes-blockquote text-[#52686A] place-content-center text-lg'>{noticeBoard}</div>
           <p className='text-white'>Moves:</p>
           <div className='w-full h-[11%] flex justify-evenly gap-6'>
-            <div className='w-[60%] h-full bg-[#899d58] p-2 snes-blockquote text-[#52686A]'>{moves}</div>
-            <button className=' bg-[#807B81] snes-button w-[40%] h-full focus:outline-none hover:bg-[#a39ca4] text-white text-base lg:text-lg flex justify-center' onClick={ () => resetGame()}>Reset</button>
+            <div className='w-[60%] h-full bg-[#899d58] p-2 snes-blockquote text-[#52686A] text-base flex justify-center'>{moves}</div>
+            <button className=' bg-[#807B81] snes-button w-[40%] h-full focus:outline-none hover:bg-[#a39ca4] text-white text-base flex justify-center md:text-sm' onClick={ () => resetGame()}>{resetLabel}</button>
           </div>
           <p className='text-white'>From:</p> 
           <div className='w-full h-[11%] flex p-1 gap-5 justify-evenly'>
