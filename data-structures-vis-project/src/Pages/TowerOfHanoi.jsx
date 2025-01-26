@@ -477,12 +477,12 @@ const TowerOfHanoi = () => {
       {/* PARENT */}
       <div className='h-full w-full flex flex-col md:flex-row bg-[#d2cfca]'>
         {/* LEFT */}
-        <div className=' bg-[#C1BEB9] md:border-r-4 lg:border-r-4 sm:max-md:border-b-4 border-[#d2cfca] h-[70%] lg:h-full md:h-full w-full place-content-center flex-shrink-0 lg:max-w-[70%] md:max-w-[70%]'>
-          <div className='h-[95%] w-[95%] bg-[#899d58] mx-auto flex snes-blockquote'>
-            <div className='w-full h-full flex flex-row gap-1 justify-between bg-[#384849]'>
-              <div className='w-1/3 h-full flex flex-col bg-[#899d58] justify-end gap-8 lg:gap-6'> <FirstTower/> </div>
-              <div className='w-1/3 h-full flex flex-col bg-[#899d58] justify-end gap-8 lg:gap-6'> <SecondTower/> </div>
-              <div className='w-1/3 h-full flex flex-col bg-[#899d58] justify-end gap-8 lg:gap-6'> <ThirdTower/> </div>
+        <div className=' flex justify-center items-center bg-[#C1BEB9] md:border-r-4 lg:border-r-4 sm:max-md:border-b-4 border-[#d2cfca] h-[70%] lg:h-full md:h-full w-full place-content-center flex-shrink-0 lg:max-w-[70%] md:max-w-[70%]'>
+          <div className='h-[95%] w-[95%] bg-[#899d58] flex snes-blockquote'>
+            <div className='w-full h-full gap-1 flex flex-row justify-between bg-[#384849]'>
+              <div className='w-full h-full pr-5 md:pr-7 lg:pr-10 flex items-center flex-col bg-[#899d58] justify-end gap-8 lg:gap-6'> <FirstTower/> </div>
+              <div className='w-full h-full  px-5 md:pl-7 lg:px-10  flex items-center flex-col bg-[#899d58] justify-end gap-8 lg:gap-6'> <SecondTower/> </div>
+              <div className='w-full h-full pl-5 md:pl-7 lg:pl-10 flex items-center flex-col bg-[#899d58] justify-end gap-8 lg:gap-6'> <ThirdTower/> </div>
             </div>
           </div>
         {/* LEFT */}
@@ -492,7 +492,7 @@ const TowerOfHanoi = () => {
           <div className='w-full h-[30%] bg-[#899d58] p-2 snes-blockquote text-[#52686A] place-content-center text-lg'>{noticeBoard}</div>
           <p className='text-white'>Moves:</p>
           <div className='w-full h-[11%] flex justify-evenly gap-6'>
-            <div className='w-[60%] h-full bg-[#899d58] p-2 snes-blockquote text-[#52686A] text-base flex justify-center'>{moves}</div>
+            <div className='w-[60%] h-full bg-[#899d58] p-2 snes-blockquote text-[#52686A] text-base flex justify-center items-center '>{moves}</div>
             <button className=' bg-[#807B81] snes-button w-[40%] h-full focus:outline-none hover:bg-[#a39ca4] text-white text-base flex justify-center md:text-sm' onClick={ () => resetGame()}>{resetLabel}</button>
           </div>
           <p className='text-white'>From:</p> 
@@ -508,7 +508,7 @@ const TowerOfHanoi = () => {
             <button  className={`${activeThirdTower2} w-full md:max-lg:w-[18%] snes-button focus:outline-none hover:bg-emerald-400 text-white flex justify-center`} onClick={ () => changeToVar(tower.thirdTower)}>3</button>
           </div>  
           <div className='w-full h-[11%] p-2 margin-top-2'>  
-            <button className=' bg-[#807B81] w-full h-full snes-button focus:outline-none hover:bg-[#a39ca4] text-white' onClick={ () => confirmAction(fromVar, toVar)}>Confirm</button>
+            <button className='flex justify-center items-center bg-[#807B81] w-full h-full snes-button focus:outline-none hover:bg-[#a39ca4] text-white' onClick={ () => confirmAction(fromVar, toVar)}>Confirm</button>
           </div>
         {/* RIGHT */}
         </div>
