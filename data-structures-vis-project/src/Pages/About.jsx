@@ -1,11 +1,35 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
+import aboutMusic from '/music/stardew_valley.mp3';
+import useSound from '../hooks/useSound.js';
+
 
 const About = () => {
+  const { playSound } = useSound();
+  const aboutMusicRef = useRef(null);
+  
+    const playAboutMusic = () => {
+      aboutMusicRef.current = playSound(aboutMusic, { volume: 0.3, loop: true });
+    }
+  
+    const stopMapMusic = () => {
+      if (aboutMusicRef.current) {
+        aboutMusicRef.current.pause();
+        aboutMusicRef.current.currentTime = 0;
+        aboutMusicRef.current = null;
+      }
+    };
+  
+    useEffect(() => {
+      playAboutMusic();
+      return () => {
+        stopMapMusic();
+      }
+    }, []);
 
   const MeetTheTeamCard = () => {
     return (
       <>
-        <div className='h-[30%] w-[70%] mx-auto my-1 bg-[url("/about-page/MeetTheTeam.png")] bg-contain bg-no-repeat bg-center'></div>
+        <div className='h-[30%] w-[67%] mx-auto my-1 bg-[url("/about-page/MeetTheTeam.png")] bg-contain bg-no-repeat bg-center'></div>
       </>
     )
   }
