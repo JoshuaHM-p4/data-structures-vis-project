@@ -305,7 +305,7 @@ const TicTacToe = () => {
           <h1 className="text-xl font-bold pl-2">Player X</h1>
         </div>
         {/* Middle */}
-        <div className="flex flex-col items-center w-3/4 justify-center">
+        <div className="hidden md:flex flex-col items-center w-3/4 justify-center">
           <h1 className="text-2xl font-bold">Tic Tac Toe</h1>
           <p className="text-lg">{gameStatus}</p>
           <p className="text-lg">Round: {round}</p>
@@ -323,7 +323,8 @@ const TicTacToe = () => {
         </div>
       </div>
       {/* Game Board */}
-      <div className="flex flex-col h-full w-full items-center justify-center relative">
+      <div className="flex flex-col h-full w-full items-center justify-evenly lg:justify-center relative">
+      <p className="block md:hidden text-lg">Round: {round}</p>
         <div className="grid grid-cols-3 ">
           {board.map((cell, index) => (
             <button
@@ -354,8 +355,8 @@ const TicTacToe = () => {
           ))}
         </div>
 
-        <img src="/tictactoe/character-1.gif" className="absolute bottom-0 left-20 w-[300px]" />
-        <img src="/tictactoe/character-3.gif" className="absolute bottom-0 right-20 w-[300px]" />
+        <img src="/tictactoe/character-1.gif" className="hidden md:block absolute bottom-0 left-20 w-[300px]" />
+        <img src="/tictactoe/character-3.gif" className="hidden md:block absolute bottom-0 right-20 w-[300px]" />
       </div>
       {/* {gameStatus.includes("wins") && <Confetti className="w-full h-full"/>} */}
 
