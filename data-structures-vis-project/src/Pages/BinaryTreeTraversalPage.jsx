@@ -357,7 +357,7 @@ const BinaryTreeTraversalPage = () => {
                   {showTraversalResult ? '-' : '☰'}
                 </button>
                 <p className="title">{traversalText(traversal)} Traversal Result</p>
-                <p>{traversalResult.join(', ')}</p>
+                <p>{traversalResult.join(' ')}</p>
                 <span className='nes-text is-success w-full d-flex flex-row-reverse'>(Length: {traversalResult.length})</span>
               </div>
             </div>
