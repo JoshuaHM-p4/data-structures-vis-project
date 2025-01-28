@@ -32,7 +32,7 @@ class BinarySearchTree {
     }
     let current = this.root;
     while (true) {
-      if (newNode.value < current.value) { // Use newNode.value for comparison
+      if (newNode.value <= current.value) { // Use newNode.value for comparison
         if (!current.left) {
           current.left = newNode;
           break;
