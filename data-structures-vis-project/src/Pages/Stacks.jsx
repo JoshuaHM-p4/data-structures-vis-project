@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import StackOverlay from '../components/StacksComponents/StackOverlay.jsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCarSide, faMinus, faSquareMinus, faClockRotateLeft } from '@fortawesome/free-solid-svg-icons';
@@ -7,6 +7,8 @@ import Modal from '../components/StackQueueModal/Modal.jsx';
 import Tooltip from '../components/Tooltip/Tooltip.jsx';
 import StacksCanvas from '../components/StacksCanvas/StacksCanvas.jsx';
 import useSound from '../hooks/useSound.js';
+
+import stackMusic from '/music/viridian_city.mp3';
 
 import History from '../components/History/History.jsx';
 
@@ -34,6 +36,27 @@ const Stacks = () => {
   const { playSound } = useSound();
   const [history, setHistory] = useState([]);
   const [isOpenHistory, setIsOpenHistory] = useState(false);
+
+  const stackMusicAudioRef = useRef(null);
+
+  const playStackMusic = () => {
+    stackMusicAudioRef.current = playSound(stackMusic, { volume: 0.2, loop: true });
+  }
+
+  const stopMapMusic = () => {
+    if (stackMusicAudioRef.current) {
+      stackMusicAudioRef.current.pause();
+      stackMusicAudioRef.current.currentTime = 0;
+      stackMusicAudioRef.current = null;
+    }
+  };
+
+  useEffect(() => {
+    playStackMusic();
+    return () => {
+      stopMapMusic();
+    }
+  }, []);
 
   // Add a car to the stack
   const addStack = (plateNumber) => {
@@ -277,7 +300,7 @@ const Stacks = () => {
   return (
     <div className='w-full h-full bg-[url("/stacks/city-bg.png")] bg-center bg-cover pixelated relative'>
       {isOpenHistory && <History history={history} />}
-        
+
       <div className='flex gap-2 justify-center top-2 left-0 absolute w-full z-10'>
 
         <button onClick={() => setIsOpenHistory(!isOpenHistory)} className="nes-btn flex justify-center items-center absolute top-0 left-3 is-warning rounded z-50 h-10 w-[56px]">
