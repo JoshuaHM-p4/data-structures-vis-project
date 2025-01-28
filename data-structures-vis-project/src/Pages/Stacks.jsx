@@ -40,7 +40,7 @@ const Stacks = () => {
   const stackMusicAudioRef = useRef(null);
 
   const playStackMusic = () => {
-    stackMusicAudioRef.current = playSound(stackMusic, { volume: 0.2, loop: true });
+    stackMusicAudioRef.current = playSound(stackMusic, { volume: 0.3, loop: true });
   }
 
   const stopMapMusic = () => {

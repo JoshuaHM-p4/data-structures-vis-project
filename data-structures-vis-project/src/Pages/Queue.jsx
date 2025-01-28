@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import StackOverlay from '../components/StacksComponents/StackOverlay.jsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCarSide, faTableList, faSquareMinus, faClockRotateLeft } from '@fortawesome/free-solid-svg-icons';
@@ -21,6 +21,7 @@ import errorSound from "../assets/sounds/damage.mp3";
 import successSound from "../assets/sounds/complete.wav";
 
 import History from '../components/History/History.jsx';
+import queueMusic from '/music/gasgasgas.mp3';
 
 
 const Queue = () => {
@@ -39,6 +40,28 @@ const Queue = () => {
 
   const [history, setHistorty] = useState([]);
   const [isOpenHistory, setIsOpenHistory] = useState(false);
+
+  const queueMusicRef = useRef(null);
+  
+    const playQueueMusic = () => {
+      queueMusicRef.current = playSound(queueMusic, { volume: 0.3, loop: true });
+    }
+  
+    const stopMapMusic = () => {
+      if (queueMusicRef.current) {
+        queueMusicRef.current.pause();
+        queueMusicRef.current.currentTime = 0;
+        queueMusicRef.current = null;
+      }
+    };
+  
+    useEffect(() => {
+      playQueueMusic();
+      return () => {
+        stopMapMusic();
+      }
+    }, []);
+  
 
   // Add a car to the queue
   const addQueue = (plateNumber) => {
