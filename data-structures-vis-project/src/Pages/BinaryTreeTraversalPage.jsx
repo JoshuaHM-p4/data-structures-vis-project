@@ -214,17 +214,39 @@ const BinaryTreeTraversalPage = () => {
     setShowTraversalResult(!showTraversalResult);
   };
 
-  const handleAddNode = (expression) => {
+  const handleAddNode = (input, useAlphabets = false) => {
     playSound(addNodeSound);
     const newTree = new BinarySearchTree();
-    const root = parseExpressionToTree(expression);
 
-    newTree.root = root;
+    if (isNaN(input)) {
+      // Input is an expression
+      const root = parseExpressionToTree(input);
+      newTree.root = root;
+    } else {
+      // Input is a level
+      generateTreeByLevel(newTree, parseInt(input), useAlphabets);
+    }
+
     setTree(newTree);
     setIsModalOpen(false);
     setTraversalResult([]);
     setTraversal('');
-    // console.log(newTree);
+  };
+
+  const generateTreeByLevel = (tree, level, useAlphabets = false) => {
+    if (level === 0) return; // No nodes to add for level 0
+
+    const addNodes = (node, currentLevel) => {
+      if (currentLevel < level) {
+        node.left = new Node(useAlphabets ? String.fromCharCode(65 + Math.floor(Math.random() * 26)) : Math.floor(Math.random() * 100).toString());
+        node.right = new Node(useAlphabets ? String.fromCharCode(65 + Math.floor(Math.random() * 26)) : Math.floor(Math.random() * 100).toString());
+        addNodes(node.left, currentLevel + 1);
+        addNodes(node.right, currentLevel + 1);
+      }
+    };
+
+    tree.root = new Node(useAlphabets ? String.fromCharCode(65 + Math.floor(Math.random() * 26)) : Math.floor(Math.random() * 100).toString());
+    addNodes(tree.root, 1);
   };
 
   useEffect(() => {
@@ -253,11 +275,10 @@ const BinaryTreeTraversalPage = () => {
   }, [traversal, tree]);
 
   const generateTree = () => {
-    // const newTree = new BinarySearchTree();
+
     // generate tree with an expression
     const expression = '1+2*3-4/5';
     handleAddNode(expression);
-
   };
 
   const traversalText = (traversal) => {
@@ -292,7 +313,7 @@ const BinaryTreeTraversalPage = () => {
     <div className='w-full h-full overflow-hidden bg-[url("/background/smb3-map.png")] bg-cover pixelated'>
       <div className='flex gap-2 justify-center top-20 left-0 absolute w-full h-fit'>
         <button onClick={() => setIsModalOpen(true)} className="nes-btn is-primary">
-          Add Expression
+          Generate Tree
         </button>
 
         <div className="nes-select flex flex-col justify-center w-fit p-0">
@@ -336,7 +357,7 @@ const BinaryTreeTraversalPage = () => {
                   {showTraversalResult ? '-' : '☰'}
                 </button>
                 <p className="title">{traversalText(traversal)} Traversal Result</p>
-                <p>{traversalResult.join(', ')}</p>
+                <p>{traversalResult.join(' ')}</p>
                 <span className='nes-text is-success w-full d-flex flex-row-reverse'>(Length: {traversalResult.length})</span>
               </div>
             </div>

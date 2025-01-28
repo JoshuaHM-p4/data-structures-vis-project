@@ -42,7 +42,7 @@ const BSTCanvas = ({ tree, traversal, mode }) => {
 
   useEffect(() => {
 
-    const xScale = 0.75;
+    const xScale = 0.9;
     const yGap = 100;
 
     const loadImageFrames = (imagePaths, filename, numFrames) => {
