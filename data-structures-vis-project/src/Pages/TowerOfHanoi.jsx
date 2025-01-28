@@ -291,6 +291,7 @@ const TowerOfHanoi = () => {
     }
     console.log("to raw:", value)
     setToVar(value)
+    setMovingDisk(null)
     console.log("to altered:",toVar, "\n")
   }
 
@@ -306,6 +307,7 @@ const TowerOfHanoi = () => {
       setDiskCAnimaState('running')
       setDiskDAnimaState('running')
       setDiskEAnimaState('running')
+      setDisableVar(true)
       new Audio(winSound).play()
     }
   }, [tower.thirdTower])
@@ -319,6 +321,7 @@ const TowerOfHanoi = () => {
       setDiskCAnimaState('paused')
       setDiskDAnimaState('paused')
       setDiskEAnimaState('paused')
+      setDisableVar(false)
     }
   }, [tower.moveDisk])
 
@@ -441,6 +444,7 @@ const TowerOfHanoi = () => {
   }
 
   const [resetLabel, setResetLabel] = useState("Reset")
+  const [disableVar, setDisableVar] = useState(false)
 
   const resetGame = () => {
     const newTower = new TowersOfHanoi();
@@ -461,6 +465,7 @@ const TowerOfHanoi = () => {
     setActiveSecondTower2('bg-gray-600')
     setActiveThirdTower2('bg-emerald-500')
     setMovingDisk(null)
+    setDisableVar(false)
   }
 
   return (
@@ -497,18 +502,18 @@ const TowerOfHanoi = () => {
           </div>
           <p className='text-white'>From:</p> 
           <div className='w-full h-[11%] flex p-1 gap-5 justify-evenly'>
-            <button  className={`${activeFirstTower} w-full md:max-lg:w-[18%] snes-button focus:outline-none hover:bg-red-400 text-white flex justify-center`} onClick={ () => changeFromVar(tower.firstTower)}>1</button>
-            <button  className={`${activeSecondTower} w-full md:max-lg:w-[18%] snes-button focus:outline-none hover:bg-gray-400 text-white flex justify-center`} onClick={ () => changeFromVar(tower.secondTower)}>2</button>  
-            <button  className={`${activeThirdTower} w-full md:max-lg:w-[18%] snes-button focus:outline-none hover:bg-emerald-400 text-white flex justify-center`} onClick={ () => changeFromVar(tower.thirdTower)}>3</button>  
+            <button  className={`${activeFirstTower} w-full md:max-lg:w-[18%] snes-button focus:outline-none hover:bg-red-400 text-white flex justify-center`} onClick={ () => changeFromVar(tower.firstTower)} disabled={disableVar} >1</button>
+            <button  className={`${activeSecondTower} w-full md:max-lg:w-[18%] snes-button focus:outline-none hover:bg-gray-400 text-white flex justify-center`} onClick={ () => changeFromVar(tower.secondTower)} disabled={disableVar} >2</button>  
+            <button  className={`${activeThirdTower} w-full md:max-lg:w-[18%] snes-button focus:outline-none hover:bg-emerald-400 text-white flex justify-center`} onClick={ () => changeFromVar(tower.thirdTower)} disabled={disableVar} >3</button>  
           </div>  
           <p className='text-white'>To:</p>
           <div className='w-full h-[11%] flex p-1 gap-5 justify-evenly'>
-            <button  className={`${activeFirstTower2} w-full md:max-lg:w-[18%] snes-button focus:outline-none hover:bg-red-400 text-white flex justify-center`} onClick={ () => changeToVar(tower.firstTower)}>1</button>
-            <button  className={`${activeSecondTower2} w-full md:max-lg:w-[18%] snes-button focus:outline-none hover:bg-gray-400 text-white flex justify-center`} onClick={ () => changeToVar(tower.secondTower)}>2</button>
-            <button  className={`${activeThirdTower2} w-full md:max-lg:w-[18%] snes-button focus:outline-none hover:bg-emerald-400 text-white flex justify-center`} onClick={ () => changeToVar(tower.thirdTower)}>3</button>
+            <button  className={`${activeFirstTower2} w-full md:max-lg:w-[18%] snes-button focus:outline-none hover:bg-red-400 text-white flex justify-center`} onClick={ () => changeToVar(tower.firstTower)} disabled={disableVar} >1</button>
+            <button  className={`${activeSecondTower2} w-full md:max-lg:w-[18%] snes-button focus:outline-none hover:bg-gray-400 text-white flex justify-center`} onClick={ () => changeToVar(tower.secondTower)} disabled={disableVar} >2</button>
+            <button  className={`${activeThirdTower2} w-full md:max-lg:w-[18%] snes-button focus:outline-none hover:bg-emerald-400 text-white flex justify-center`} onClick={ () => changeToVar(tower.thirdTower)} disabled={disableVar} >3</button>
           </div>  
           <div className='w-full h-[11%] p-2 margin-top-2'>  
-            <button className='flex justify-center items-center bg-[#807B81] w-full h-full snes-button focus:outline-none hover:bg-[#a39ca4] text-white' onClick={ () => confirmAction(fromVar, toVar)}>Confirm</button>
+            <button className='flex justify-center items-center bg-[#807B81] w-full h-full snes-button focus:outline-none hover:bg-[#a39ca4] text-white' onClick={ () => confirmAction(fromVar, toVar)} disabled={disableVar} >Confirm</button>
           </div>
         {/* RIGHT */}
         </div>
