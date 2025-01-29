@@ -107,7 +107,7 @@ const About = () => {
 
   return (
     <>
-      <div className='h-full w-full mx-auto bg-[url("/about-page/stardew.jpg")] bg-center bg-contain gap-4 overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-red [&::-webkit-scrollbar-thumb]:bg-[url("/background/smb3-map.png")] pixelated'>
+      <div className='h-full w-full mx-auto bg-[url("/about-page/stardew.jpg")] bg-center bg-cover gap-4 overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-red [&::-webkit-scrollbar-thumb]:bg-[url("/background/smb3-map.png")] pixelated'>
         <MeetTheTeamCard/>
         <GeroCard/>
         <GeraldCard/>
