@@ -29,7 +29,7 @@ const About = () => {
   const MeetTheTeamCard = () => {
     return (
       <>
-        <div className='h-[30%] w-[67%] mx-auto my-1 bg-[url("/about-page/MeetTheTeam.png")] bg-contain bg-no-repeat bg-center'></div>
+        <div className='h-[30%] w-[67%] mx-auto my-1 bg-[url("/about-page/MeetTheTeam.png")] bg-contain bg-no-repeat bg-center pixelated'></div>
       </>
     )
   }
@@ -37,7 +37,7 @@ const About = () => {
   const GeroCard = () => {
     return (
       <>
-        <div className='h-full w-[80%] mx-auto my-3 bg-[url("/about-page/GeroCard.png")] bg-contain bg-no-repeat bg-center gap-4'></div>
+        <div className='h-full w-[80%] mx-auto my-3 bg-[url("/about-page/GeroCard.png")] bg-contain bg-no-repeat bg-center gap-4 pixelated'></div>
       </>
     )
   }
@@ -45,7 +45,7 @@ const About = () => {
   const GeraldCard = () => {
     return (
       <>
-        <div className='h-full w-[80%] mx-auto my-3 bg-[url("/about-page/GeraldCard.png")] bg-contain bg-no-repeat bg-center'></div>
+        <div className='h-full w-[80%] mx-auto my-3 bg-[url("/about-page/GeraldCard.png")] bg-contain bg-no-repeat bg-center pixelated'></div>
       </>
     )
   }
@@ -53,7 +53,7 @@ const About = () => {
   const EdwardCard = () => {
     return (
       <>
-        <div className='h-full w-[80%] mx-auto my-3 bg-[url("/about-page/EdwardCard.png")] bg-contain bg-no-repeat bg-center'></div>
+        <div className='h-full w-[80%] mx-auto my-3 bg-[url("/about-page/EdwardCard.png")] bg-contain bg-no-repeat bg-center pixelated'></div>
       </>
     )
   }
@@ -61,7 +61,7 @@ const About = () => {
   const JoshuaCard = () => {
     return (
       <>
-        <div className='h-full w-[80%] mx-auto my-3 bg-[url("/about-page/JoshuaCard.png")] bg-contain bg-no-repeat bg-center'></div>
+        <div className='h-full w-[80%] mx-auto my-3 bg-[url("/about-page/JoshuaCard.png")] bg-contain bg-no-repeat bg-center pixelated'></div>
       </>
     )
   }
@@ -107,7 +107,7 @@ const About = () => {
 
   return (
     <>
-      <div className='h-full w-full mx-auto bg-[url("/about-page/stardew.jpg")] bg-center bg-cover gap-4 overflow-y-auto [&::-webkit-scrollbar]:w-0 [&::-webkit-scrollbar-track]:bg-red [&::-webkit-scrollbar-thumb]:bg-[url("/background/smb3-map.png")]'>
+      <div className='h-full w-full mx-auto bg-[url("/about-page/stardew.jpg")] bg-center bg-contain gap-4 overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-red [&::-webkit-scrollbar-thumb]:bg-[url("/background/smb3-map.png")] pixelated'>
         <MeetTheTeamCard/>
         <GeroCard/>
         <GeraldCard/>

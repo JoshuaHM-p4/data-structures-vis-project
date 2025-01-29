@@ -178,7 +178,7 @@ const TicTacToe = () => {
           } else {
             // reset board after delay post-combo
             setTimeout(() => {
-              resetBoard();
+              resetBoard(winner);
             }, 1000);
           }
         }
@@ -204,20 +204,20 @@ const TicTacToe = () => {
     playSound(winTheme, { volume: 0.5 });
     setTimeout(() => playSound(youWinSound), 2000);
     setTimeout(() => {
-      nextRound();
+      nextRound(winner);
     }, 5000);
   };
 
   // Change Round
-  const nextRound = () => {
+  const nextRound = (winner) => {
     setXHealth(100);
     setOHealth(100);
 
     playMusic();
 
     changeBackgroundImage(backgroundImages[round % 6]);
-    setCurrentPlayer("X"); // Set X as the starting player
-    setGameStatus("Player X's Turn"); // Reset the game status
+    setCurrentPlayer(winner === "X" ? "O" : "X"); // Set the current player to the winner of the previous round
+    setGameStatus(`Player ${winner === "X" ? "O" : "X"}'s Turn`); // Reset the game status
 
     setBoard(Array(9).fill(null)); // Reset the board
     setWinningCombo([]); // Reset the winning combination
@@ -227,14 +227,16 @@ const TicTacToe = () => {
     playSound(resetSound);
   };
 
-  const resetBoard = () => {
-    setBoard(Array(9).fill(null)); // Reset the board
-    setCurrentPlayer("X"); // Set X as the starting player
-    setGameStatus("Player X's Turn"); // Reset the game status
-    setWinningCombo([]); // Reset the winning combination
-    setPressedState(Array(9).fill(false)); // Reset the pressed state
+  const resetBoard = (winner) => {
+    setBoard(Array(9).fill(null));
+    const nextPlayer = winner === "X" ? "O" : "X"; // Ensure first player changes
+    setCurrentPlayer(nextPlayer);
+    setGameStatus(`Player ${nextPlayer}'s Turn`);
+    setWinningCombo([]); // Reset winning combination
+    setPressedState(Array(9).fill(false)); // Reset button state
     playSound(resetSound);
   };
+  
 
   // Modal functions
   const handleModalClose = () => {
