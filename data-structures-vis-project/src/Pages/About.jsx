@@ -66,6 +66,45 @@ const About = () => {
     )
   }
 
+  const ContactUsCard = () => {
+    return (
+      <>
+        <div className='h-[86%] w-[80%] mx-auto my-3 bg-contain bg-no-repeat bg-center'>
+          <div className='mt-20'>
+            <img className='mx-auto my-5' src="/about-page/contact-us .png" alt="" />
+            <div className='flex flex-row w-full h-auto gap-40 mt-10'>
+
+              <div className='flex flex-col h-full w-full'>
+                <img className='w-full my-2' src="/about-page/gero contacts profile.png" alt="" />
+                <a href="https://github.com/Gero-B-Anonuevo" target='_blank'><img className='w-[94%] my-2' src="/about-page/github.png" alt="" /></a>
+                <a href="https://www.linkedin.com/in/gero-a%C3%B1onuevo-1224aa296/" target='_blank'><img className='w-full my-2' src="/about-page/linkedin.png" alt="" /></a>
+              </div>
+
+              <div className='flex flex-col h-full w-full'>
+                <img className='w-full my-2' src="/about-page/gerald contacts profile.png" alt="" />
+                <a href="https://github.com/geraldsberongoy" target='_blank'><img className='w-[94%] my-2' src="/about-page/github.png" alt="" /></a>
+                <a href="https://www.linkedin.com/in/gerald-berongoy-88a9b8306" target='_blank'><img className='w-full my-2' src="/about-page/linkedin.png" alt="" /></a>
+              </div>
+
+              <div className='flex flex-col h-full w-full'>
+                <img className='w-full my-2' src="/about-page/edward contacts profile.png" alt="" />
+                <a href="https://github.com/EdwardMaverickBorboran" target='_blank'><img className='w-[94%] my-2' src="/about-page/github.png" alt="" /></a>
+                <a href="https://www.linkedin.com/in/borboran-edward-maverick-c-b15833329" target='_blank'><img className='w-full my-2' src="/about-page/linkedin.png" alt="" /></a>
+              </div>
+
+              <div className='flex flex-col h-full w-full'>
+                <img className='w-full my-2' src="/about-page/joshua contacts profile.png" alt="" />
+                <a href="https://github.com/JoshuaHM-p4" target='_blank'><img className='w-[94%] my-2' src="/about-page/github.png" alt="" /></a>
+                <a href="https://www.linkedin.com/in/joshua-h-mistal-3a5aab294" target='_blank'><img className='w-full my-2' src="/about-page/linkedin.png" alt="" /></a>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </>
+    )
+  }
+
   return (
     <>
       <div className='h-full w-full mx-auto bg-[url("/about-page/stardew.jpg")] bg-center bg-contain gap-4 overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-red [&::-webkit-scrollbar-thumb]:bg-[url("/background/smb3-map.png")] pixelated'>
@@ -74,6 +113,7 @@ const About = () => {
         <GeraldCard/>
         <EdwardCard/>
         <JoshuaCard/>
+        <ContactUsCard/>
       </div>
     </>
   )
