@@ -83,7 +83,7 @@ const Navbar = () => {
             setIsActive('/');
           }}
         >
-          <h1 className="text-neutral-50 hover:text-cyan-400">MyApp.dev</h1>
+            <div className="h-[35px] w-[35px] mx-auto bg-cover bg-center" style={{ backgroundImage: "url('/navbar-img/rscsLogoBorderless.png')" }}></div>
         </Link>
 
         {/* Smaller Screens */}
