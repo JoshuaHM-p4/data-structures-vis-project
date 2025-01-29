@@ -253,7 +253,7 @@ const Sorting = () => {
         {/* Left Section */}
         <div className='flex flex-col gap-2 p-2 w-full h-full justify-center items-start'>
           <div className='flex gap-2 justify-start items-center'>
-            <p className='pr-2'>Array Size: </p>
+            <p className='pr-2 text-border'>Array Size: </p>
             <Slider
               min={10}
               max={30}
@@ -324,7 +324,7 @@ const Sorting = () => {
         {/* Right Section */}
         <div className='flex flex-col gap-2 justify-center items-end w-full h-full'>
           <div className='relative'>
-            <p className='mr-5'>Delay: {delay}ms</p>
+            <p className='mr-5 text-border'>Delay: {delay}ms</p>
             <button
               className='absolute right-1 -top-1.5 focus:outline-none'
 
@@ -341,7 +341,7 @@ const Sorting = () => {
                 onClick={decreaseDelay} />
             </button>
           </div>
-          <p className='p-2'>Timer: {formattedTimer} secs</p>
+          <p className='p-2 text-border'>Timer: {formattedTimer} secs</p>
         </div>
       </div>
 
