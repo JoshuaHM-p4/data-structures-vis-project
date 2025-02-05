@@ -1,4 +1,6 @@
 # DSA Project
+TRY IT OUT HERE: 
+https://rs-cs.vercel.app/
 
 ## Prerequisites (Download)
 - [Node.js](https://nodejs.org/en/download/prebuilt-installer)
@@ -10,6 +12,29 @@
 - Material Icon Theme
 - Tailwind Shades
 - Unused CSS Classes for Javascript/Angular/React
+
+## Credits and Attributions
+- [Car Assets](https://minzinn.itch.io/pixelvehicles) by Minzinn under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).  
+- [Gamepad UI / Controller Assets](https://greatdocbrown.itch.io/gamepad-ui) by greatdocbrown are in the public domain (CC0 1.0).  
+- About Page Assets and Music from Stardew Valley by ConcernedApe
+- Mario and Pokemon Franchise Assets and Music by Nintendo 
+- Streetfighter Assets by CAPCOM
+
+## Screenshots 
+<div align="center">
+  <table>
+    <tr>
+      <td><img src="./screenshots/1.png" width="300px" /></td>
+      <td><img src="./screenshots/2.png" width="300px" /></td>
+      <td><img src="./screenshots/3.png" width="300px" /></td>
+    </tr>
+    <tr>
+      <td><img src="./screenshots/4.png" width="300px" /></td>
+      <td><img src="./screenshots/5.png" width="300px" /></td>
+      <td><img src="./screenshots/6.png" width="300px" /></td>
+    </tr>
+  </table>
+</div>
 
 ## Installation
 
