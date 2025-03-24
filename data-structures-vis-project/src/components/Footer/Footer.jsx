@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGithub } from "@fortawesome/free-brands-svg-icons";
+
 import {
   faGamepad,
   faCode,
@@ -80,27 +82,66 @@ const Footer = () => {
                   BST
                 </Link>
               </li>
+              <li>
+                <Link
+                  to="/towers-of-hanoi"
+                  className="text-white hover:text-cyan-400"
+                >
+                  Towers of Hanoi
+                </Link>
+              </li>
+              <li>
+                <Link to="/sorting" className="text-white hover:text-cyan-400">
+                  Sorting
+                </Link>
+              </li>
             </ul>
           </div>
 
           {/* Social Links */}
           <div className="flex flex-col items-center md:items-end">
             <h3 className="mb-3 text-yellow-300 text-lg nes-text">Connect</h3>
-            <div className="flex space-x-4">
-              <a
-                href="https://github.com/Gero-B-Anonuevo"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-white hover:text-cyan-400 text-2xl"
-              >
-                <FontAwesomeIcon icon={faLink} />
-              </a>
+            <div className="flex flex-col ">
+              <div className="flex space-x-2">
+                <a
+                  href="https://github.com/Gero-B-Anonuevo"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white hover:text-cyan-400 text-2xl"
+                >
+                  <FontAwesomeIcon icon={faGithub} />
+                </a>
+                <a
+                  href="https://github.com/Gero-B-Anonuevo"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white hover:text-cyan-400 text-2xl"
+                >
+                  <FontAwesomeIcon icon={faGithub} />
+                </a>
+                <a
+                  href="https://github.com/Gero-B-Anonuevo"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white hover:text-cyan-400 text-2xl"
+                >
+                  <FontAwesomeIcon icon={faGithub} />
+                </a>
+                <a
+                  href="https://github.com/Gero-B-Anonuevo"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white hover:text-cyan-400 text-2xl"
+                >
+                  <FontAwesomeIcon icon={faGithub} />
+                </a>
+              </div>
 
               <a
-                href="https://github.com/geraldsberongoy"
+                href="https://github.com/JoshuaHM-p4/data-structures-vis-project"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-white hover:text-cyan-400 text-2xl"
+                className="text-white hover:text-cyan-400 text-2xl text-end"
               >
                 <FontAwesomeIcon icon={faCode} />
               </a>
@@ -109,7 +150,15 @@ const Footer = () => {
         </div>
 
         {/* Bottom copyright section with pixel art */}
-        <div className="mt-6 pt-6 border-t border-gray-700 text-center">
+        <div className="mt-6 border-t border-gray-700 text-center">
+          <div className="flex justify-center p-3">
+            <img
+              src="/navbar-img/rscsLogoBorder.png"
+              alt="RS:CS Logo"
+              style={{ width: "64px", height: "64px" }}
+            />
+          </div>
+
           <div className="mb-4 flex justify-center">
             <div className="flex space-x-2">
               {[...Array(8)].map((_, i) => (
