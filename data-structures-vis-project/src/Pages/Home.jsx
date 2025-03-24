@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Footer from "../components/Footer/Footer.jsx";
+
 import {
   faX,
   faGamepad,
@@ -18,7 +20,7 @@ import { useNavigate } from "react-router-dom"; //
 const Home = () => {
   const [openCarousel, setOpenCarousel] = useState(false);
   const aboutSectionRef = useRef(null);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const { playSound } = useSound();
   const selectSound = () => {
@@ -212,6 +214,7 @@ const Home = () => {
           </div>
         </>
       )}
+      <Footer />
     </div>
   );
 };
