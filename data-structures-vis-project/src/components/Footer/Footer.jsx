@@ -8,6 +8,7 @@ import {
   faCode,
   faUsers,
   faLink,
+  faHome,
 } from "@fortawesome/free-solid-svg-icons";
 import Tooltip from "../Tooltip/Tooltip";
 
@@ -37,7 +38,7 @@ const Footer = () => {
                   to="/"
                   className="text-white hover:text-cyan-400 flex items-center"
                 >
-                  <FontAwesomeIcon icon={faGamepad} className="mr-2" /> Home
+                  <FontAwesomeIcon icon={faHome} className="mr-2" /> Home
                 </Link>
               </li>
               <li>
@@ -46,6 +47,14 @@ const Footer = () => {
                   className="text-white hover:text-cyan-400 flex items-center"
                 >
                   <FontAwesomeIcon icon={faUsers} className="mr-2" /> About
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/play"
+                  className="text-white hover:text-cyan-400 flex items-center"
+                >
+                  <FontAwesomeIcon icon={faGamepad} className="mr-2" /> Play
                 </Link>
               </li>
             </ul>
@@ -57,6 +66,14 @@ const Footer = () => {
               Data Structures
             </h3>
             <ul className="flex flex-col gap-2 items-center ">
+              <li>
+                <Link
+                  to="/tic-tac-toe"
+                  className="text-white hover:text-cyan-400"
+                >
+                  Tic Tac Toe
+                </Link>
+              </li>
               <li>
                 <Link to="/stacks" className="text-white hover:text-cyan-400">
                   Stacks
@@ -105,56 +122,56 @@ const Footer = () => {
             <div className="flex flex-col ">
               <div className="flex flex-col">
                 <Tooltip text="Gero B Anonuevo" position="left">
-                <a
-                  href="https://github.com/Gero-B-Anonuevo"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-white hover:text-cyan-400 text-2xl"
-                >
-                  <FontAwesomeIcon icon={faGithub} />
-                </a>
+                  <a
+                    href="https://github.com/Gero-B-Anonuevo"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white hover:text-cyan-400 text-2xl"
+                  >
+                    <FontAwesomeIcon icon={faGithub} />
+                  </a>
                 </Tooltip>
                 <Tooltip text="Gerald Berongoy" position="left">
-                <a
-                  href="https://github.com/Gero-B-Anonuevo"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-white hover:text-cyan-400 text-2xl"
-                >
-                  <FontAwesomeIcon icon={faGithub} />
-                </a>
+                  <a
+                    href="https://github.com/Gero-B-Anonuevo"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white hover:text-cyan-400 text-2xl"
+                  >
+                    <FontAwesomeIcon icon={faGithub} />
+                  </a>
                 </Tooltip>
                 <Tooltip text="Edward Borboran" position="left">
-                <a
-                  href="https://github.com/Gero-B-Anonuevo"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-white hover:text-cyan-400 text-2xl"
-                >
-                  <FontAwesomeIcon icon={faGithub} />
-                </a>
+                  <a
+                    href="https://github.com/Gero-B-Anonuevo"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white hover:text-cyan-400 text-2xl"
+                  >
+                    <FontAwesomeIcon icon={faGithub} />
+                  </a>
                 </Tooltip>
                 <Tooltip text="Joshua Mistal" position="left">
-                <a
-                  href="https://github.com/Gero-B-Anonuevo"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-white hover:text-cyan-400 text-2xl"
-                >
-                  <FontAwesomeIcon icon={faGithub} />
-                </a>
+                  <a
+                    href="https://github.com/Gero-B-Anonuevo"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white hover:text-cyan-400 text-2xl"
+                  >
+                    <FontAwesomeIcon icon={faGithub} />
+                  </a>
                 </Tooltip>
               </div>
 
               <Tooltip text="Visit our GitHub repository" position="left">
-              <a
-                href="https://github.com/JoshuaHM-p4/data-structures-vis-project"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-white hover:text-cyan-400 text-2xl text-end"
-              >
-                <FontAwesomeIcon icon={faCode} />
-              </a>
+                <a
+                  href="https://github.com/JoshuaHM-p4/data-structures-vis-project"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white hover:text-cyan-400 text-2xl text-end"
+                >
+                  <FontAwesomeIcon icon={faCode} />
+                </a>
               </Tooltip>
             </div>
           </div>
