@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Footer from "../components/Footer/Footer.jsx";
+import { ParallaxProvider, Parallax } from "react-scroll-parallax";
 
 import {
   faX,
@@ -104,7 +105,8 @@ const Home = () => {
   return (
     <div className="h-full w-full overflow-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-300">
       {/* Hero Section */}
-      <div className="h-screen w-full bg-[url('/main-menu/mainBGv1.png')] bg-center bg-cover bg-no-repeat pixelated relative flex flex-col items-center justify-center">
+      <div className="h-[calc(100vh-64px)] w-full bg-[url('/main-menu/mainBG.png')] bg-center bg-cover bg-no-repeat pixelated relative flex flex-col items-center justify-center">
+        <div className="h-60 w-full -bottom-36 absolute bg-gradient-to-b from-transparent from-0% via-green-900/90 via-50% to-transparent to-100% " />
         <div className="text-center px-4 py-8 bg-black bg-opacity-60 rounded-lg border-4 border-white shadow-xl max-w-3xl">
           <h1 className="text-3xl md:text-4xl mb-6 text-white animate-pulse">
             Data Structures Visualization
@@ -130,7 +132,6 @@ const Home = () => {
             </button>
           </div>
         </div>
-
         <div
           className="absolute bottom-20 animate-bounce"
           onClick={scrollToGames}
@@ -145,7 +146,7 @@ const Home = () => {
       {/* Games Showcase Section */}
       <div
         ref={aboutSectionRef}
-        className="min-h-screen w-full bg-[url('/main-menu/bg-landing.jpg')] bg-cover bg-center pixelated py-10 px-20"
+        className="min-h-screen w-full bg-[url('/main-menu/bg-landing.jpg')] bg-cover bg-center pixelated py-12 px-20"
       >
         <div className="container mx-auto">
           <div className="nes-container is-dark with-title mb-16">
@@ -195,7 +196,6 @@ const Home = () => {
           </div>
         </div>
       </div>
-
       {/* Carousel Overlay */}
       {openCarousel && (
         <>
