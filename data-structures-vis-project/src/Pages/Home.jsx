@@ -60,6 +60,7 @@ const Home = () => {
       description:
         "Array application with the use of column and row coordinates.",
       image: "/main-menu/tictactoeCard.png",
+      ss: "/main-menu/screenshot/ttt.png",
     },
     {
       Link: "/stacks",
@@ -67,6 +68,7 @@ const Home = () => {
       description:
         "Simulation of a Stack using the 10-vehicle CEA garage as the model.",
       image: "/main-menu/stacksCard.png",
+      ss: "/main-menu/screenshot/stack.png",
     },
     {
       Link: "/queue",
@@ -74,24 +76,28 @@ const Home = () => {
       description:
         "Simulation of a Queue using the 10-vehicle CEA garage as the model.",
       image: "/main-menu/queueCard.png",
+      ss: "/main-menu/screenshot/queue.png",
     },
     {
       Link: "/binary-tree-traversal",
       title: "Binary Tree",
       description: "Binary Tree Navigator (LTR, TLR, LRT).",
       image: "/main-menu/bttCard.png",
+      ss: "/main-menu/screenshot/btt.png",
     },
     {
       Link: "/binary-search-tree",
       title: "BST",
       description: "Binary Search Tree generator and navigator.",
       image: "/main-menu/bstCard.png",
+      ss: "/main-menu/screenshot/bst.png",
     },
     {
       Link: "/towers-of-hanoi",
       title: "Towers of Hanoi",
       description: "Random Towers of Hanoi problem generator.",
       image: "/main-menu/tohCard.png",
+      ss: "/main-menu/screenshot/toh.png",
     },
     {
       Link: "/sorting",
@@ -99,6 +105,7 @@ const Home = () => {
       description:
         "Integers Sorter (Bubble, Insertion, Selection, Merge, Shell, Quick, Heap).",
       image: "/main-menu/sortingCard.png",
+      ss: "/main-menu/screenshot/sorting.png",
     },
   ];
 
@@ -107,22 +114,25 @@ const Home = () => {
       {/* Hero Section */}
       <div className="h-[calc(100vh-64px)] w-full bg-[url('/main-menu/mainBG.png')] bg-center bg-cover bg-no-repeat pixelated relative flex flex-col items-center justify-center">
         <div className="h-60 w-full -bottom-36 absolute bg-gradient-to-b from-transparent from-0% via-green-900/90 via-50% to-transparent to-100% " />
-        <div className="text-center px-4 py-8 bg-black bg-opacity-60 rounded-lg border-4 border-white shadow-xl max-w-3xl">
-          <h1 className="text-3xl md:text-4xl mb-6 text-white animate-pulse">
-            Data Structures Visualization
+        <div className="text-center px-4 py-8 bg-black bg-opacity-60 border-4 border-white shadow-xl max-w-3xl">
+          <h1 className="text-3xl md:text-4xl mb-6 text-white animate-pulse flex flex-col items-center gap-1">
+            <span>Data Structures</span> 
+            <span>and</span>
+            <span>Algorithms </span> 
+            <span>Visualization</span>
           </h1>
           <p className="text-lg text-yellow-300 mb-8">
             Explore and learn with interactive visualizations
           </p>
           <div className="flex gap-6 justify-center">
             <button
-              className="nes-btn is-primary pulse-effect px-6 py-3 text-lg font-bold"
+              className="nes-btn is-primary pulse-effect px-6 py-3 text-md font-bold"
               onClick={scrollToGames}
             >
               Explore Games
             </button>
             <button
-              className="nes-btn is-warning pulse-effect px-6 py-3 text-lg font-bold"
+              className="nes-btn is-warning pulse-effect px-6 py-3 text-md font-bold"
               onClick={() => {
                 setOpenCarousel(true);
                 selectSound();
@@ -133,7 +143,7 @@ const Home = () => {
           </div>
         </div>
         <div
-          className="absolute bottom-20 animate-bounce"
+          className="absolute bottom-10 animate-bounce"
           onClick={scrollToGames}
         >
           <FontAwesomeIcon
@@ -173,15 +183,27 @@ const Home = () => {
                 key={index}
                 className="nes-container bg-black/35 with-title relative hover:transform hover:scale-105 transition-all duration-300"
               >
-                <p className="text-center text-lg p-2">{game.title}</p>
-                <div className="overflow-hidden mb-4 border-4 border-gray-800 flex justify-center">
-                  <img
-                    src={game.image}
-                    alt={game.title}
-                    className="h-1/5 pixelated"
-                  />
+                {/* <p className="text-center text-lg p-2">{game.title}</p> */}
+                <div className="flip-card mb-4 h-96 ">
+                  <div className="flip-card-inner">
+                    <div className="flip-card-front overflow-hidden  flex justify-center items-center">
+                      <img
+                        src={game.image}
+                        alt={game.title}
+                        className="h-full object-cover pixelated"
+                      />
+                    </div>
+                    <div className="flip-card-back  bg-gray-900 flex flex-col justify-center items-center p-4">
+                      <img src={game.ss} alt="Game screenshot" />
+                      <p className="text-yellow-300 my-2 text-lg">
+                        {game.title}
+                      </p>
+                      <p className="text-white  text-center">
+                        {game.description}
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <p className="mb-4">{game.description}</p>
                 <button
                   className="nes-btn is-primary w-full"
                   onClick={() => {
