@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Footer from "../components/Footer/Footer.jsx";
-import { ParallaxProvider, Parallax } from "react-scroll-parallax";
 
 import {
   faX,
