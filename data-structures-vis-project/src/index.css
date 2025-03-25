@@ -3,21 +3,21 @@
 @tailwind utilities;
 
 @layer components {
-    .pixelated{
-        image-rendering: pixelated;
-    }
+  .pixelated {
+    image-rendering: pixelated;
   }
+}
 
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
   width: 100%;
   margin: 0;
   padding: 0;
-  background-color: rgb(0,0,0);
+  background-color: rgb(0, 0, 0);
   color: white;
 }
-
-
 
 a {
   text-decoration: none;
@@ -40,11 +40,8 @@ a:hover {
 
 /* Custom CSS for text border */
 .text-border {
-  text-shadow:
-    -1px -1px 0 #000,
-     1px -1px 0 #000,
-    -1px  1px 0 #000,
-     1px  1px 0 #000;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
+    1px 1px 0 #000;
 }
 
 .no-text-border {
@@ -55,14 +52,11 @@ p {
   margin: 0;
   padding: 0;
   font-size: 11px;
-  text-shadow:
-  -1px -1px 0 #000,
-   1px -1px 0 #000,
-  -1px  1px 0 #000,
-   1px  1px 0 #000;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
+    1px 1px 0 #000;
 }
 
-@keyframes walk{
+@keyframes walk {
   0% {
     transform: translateX(-580%);
   }
@@ -97,3 +91,49 @@ p {
   }
 }
 
+/* Add to your existing index.css file */
+@keyframes pulse-effect {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.pulse-effect {
+  animation: pulse-effect 2s infinite;
+}
+
+.flip-card {
+  perspective: 1000px;
+  width: 100%;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.flip-card-back {
+  transform: rotateY(180deg);
+}
