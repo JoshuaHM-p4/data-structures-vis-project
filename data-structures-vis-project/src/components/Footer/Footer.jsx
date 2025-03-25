@@ -9,6 +9,7 @@ import {
   faUsers,
   faLink,
 } from "@fortawesome/free-solid-svg-icons";
+import Tooltip from "../Tooltip/Tooltip";
 
 const Footer = () => {
   return (
@@ -55,7 +56,7 @@ const Footer = () => {
             <h3 className="mb-3 text-yellow-300 text-lg nes-text">
               Data Structures
             </h3>
-            <ul className="space-y-2">
+            <ul className="flex flex-col gap-2 items-center ">
               <li>
                 <Link to="/stacks" className="text-white hover:text-cyan-400">
                   Stacks
@@ -102,7 +103,8 @@ const Footer = () => {
           <div className="flex flex-col items-center md:items-end">
             <h3 className="mb-3 text-yellow-300 text-lg nes-text">Connect</h3>
             <div className="flex flex-col ">
-              <div className="flex space-x-2">
+              <div className="flex flex-col">
+                <Tooltip text="Gero B Anonuevo" position="left">
                 <a
                   href="https://github.com/Gero-B-Anonuevo"
                   target="_blank"
@@ -111,6 +113,8 @@ const Footer = () => {
                 >
                   <FontAwesomeIcon icon={faGithub} />
                 </a>
+                </Tooltip>
+                <Tooltip text="Gerald Berongoy" position="left">
                 <a
                   href="https://github.com/Gero-B-Anonuevo"
                   target="_blank"
@@ -119,6 +123,8 @@ const Footer = () => {
                 >
                   <FontAwesomeIcon icon={faGithub} />
                 </a>
+                </Tooltip>
+                <Tooltip text="Edward Borboran" position="left">
                 <a
                   href="https://github.com/Gero-B-Anonuevo"
                   target="_blank"
@@ -127,6 +133,8 @@ const Footer = () => {
                 >
                   <FontAwesomeIcon icon={faGithub} />
                 </a>
+                </Tooltip>
+                <Tooltip text="Joshua Mistal" position="left">
                 <a
                   href="https://github.com/Gero-B-Anonuevo"
                   target="_blank"
@@ -135,8 +143,10 @@ const Footer = () => {
                 >
                   <FontAwesomeIcon icon={faGithub} />
                 </a>
+                </Tooltip>
               </div>
 
+              <Tooltip text="Visit our GitHub repository" position="left">
               <a
                 href="https://github.com/JoshuaHM-p4/data-structures-vis-project"
                 target="_blank"
@@ -145,6 +155,7 @@ const Footer = () => {
               >
                 <FontAwesomeIcon icon={faCode} />
               </a>
+              </Tooltip>
             </div>
           </div>
         </div>
