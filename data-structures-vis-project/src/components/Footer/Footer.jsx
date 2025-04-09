@@ -133,7 +133,7 @@ const Footer = () => {
                 </Tooltip>
                 <Tooltip text="Gerald Berongoy" position="left">
                   <a
-                    href="https://github.com/Gero-B-Anonuevo"
+                    href="https://github.com/geraldsberongoy"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-white hover:text-cyan-400 text-2xl"
@@ -143,7 +143,7 @@ const Footer = () => {
                 </Tooltip>
                 <Tooltip text="Edward Borboran" position="left">
                   <a
-                    href="https://github.com/Gero-B-Anonuevo"
+                    href="https://github.com/EdwardMaverickBorboran"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-white hover:text-cyan-400 text-2xl"
@@ -153,7 +153,7 @@ const Footer = () => {
                 </Tooltip>
                 <Tooltip text="Joshua Mistal" position="left">
                   <a
-                    href="https://github.com/Gero-B-Anonuevo"
+                    href="https://github.com/JoshuaHM-p4"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-white hover:text-cyan-400 text-2xl"
