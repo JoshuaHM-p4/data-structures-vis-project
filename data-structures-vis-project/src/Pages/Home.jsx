@@ -7,7 +7,10 @@ import {
   faGamepad,
   faChevronDown,
   faPlay,
+  faArrowDown,
 } from "@fortawesome/free-solid-svg-icons";
+
+import { faYoutube } from "@fortawesome/free-brands-svg-icons";
 import Carousel from "../components/Carousel/Carousel.jsx";
 import useSound from "../hooks/useSound.js";
 import select from "../assets/sounds/select.mp3";
@@ -113,11 +116,11 @@ const Home = () => {
       {/* Hero Section */}
       <div className="h-[calc(100vh-64px)] w-full bg-[url('/main-menu/mainBG.png')] bg-center bg-cover bg-no-repeat pixelated relative flex flex-col items-center justify-center">
         <div className="h-60 w-full -bottom-36 absolute bg-gradient-to-b from-transparent from-0% via-green-900/90 via-50% to-transparent to-100% " />
-        <div className="text-center px-4 py-8 bg-black bg-opacity-60 border-4 border-white shadow-xl max-w-3xl">
+        <div className="text-center px-4 py-8 bg-black bg-opacity-60 border-4 border-white shadow-xl max-w-4xl">
           <h1 className="text-3xl md:text-4xl mb-6 text-white animate-pulse flex flex-col items-center gap-1">
-            <span>Data Structures</span> 
+            <span>Data Structures</span>
             <span>and</span>
-            <span>Algorithms </span> 
+            <span>Algorithms </span>
             <span>Visualization</span>
           </h1>
           <p className="text-lg text-yellow-300 mb-8">
@@ -128,6 +131,7 @@ const Home = () => {
               className="nes-btn is-primary pulse-effect px-6 py-3 text-md font-bold"
               onClick={scrollToGames}
             >
+              <FontAwesomeIcon icon={faArrowDown} className="mr-2" size="xl" />
               Explore Games
             </button>
             <button
@@ -137,8 +141,18 @@ const Home = () => {
                 selectSound();
               }}
             >
-              <FontAwesomeIcon icon={faGamepad} className="mr-2" /> Play Now
+              <FontAwesomeIcon icon={faGamepad} className="mr-2" size="xl" />
+              Play Now
             </button>
+            <a
+              href="https://l.messenger.com/l.php?u=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DYO8nOmbCn-o&h=AT1v3aDUvoCLlbH4X-3rVqY543WtpvZG5v6QWpjk1ZgJfddNaLlo_V38wJTJzX5tzwPMeX5KFwhSACnIdXeGoOm7pYB1OHDVdJ19ZupqZg1M_1Ku9SzK--QZXBpf2XCc81r9vA"
+              target="_blank"
+            >
+              <button className="nes-btn is-error pulse-effect px-6 py-3 text-md font-bold">
+                <FontAwesomeIcon icon={faYoutube} className="mr-2" size="xl" />
+                See Demo Video
+              </button>
+            </a>
           </div>
         </div>
         <div
