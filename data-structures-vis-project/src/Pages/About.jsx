@@ -77,7 +77,7 @@ const About = () => {
               <div className='flex flex-col h-full w-full'>
                 <img className='w-full my-2' src="/about-page/gero contacts profile.png" alt="" />
                 <a href="https://github.com/Gero-B-Anonuevo" target='_blank'><img className='w-[94%] my-2' src="/about-page/github.png" alt="" /></a>
-                <a href="https://www.linkedin.com/in/gero-a%C3%B1onuevo-1224aa296/" target='_blank'><img className='w-full my-2' src="/about-page/linkedin.png" alt="" /></a>
+                <a href="https://www.linkedin.com/in/gero-a%C3%B1onuevo-99258a296/" target='_blank'><img className='w-full my-2' src="/about-page/linkedin.png" alt="" /></a>
               </div>
 
               <div className='flex flex-col h-full w-full'>
