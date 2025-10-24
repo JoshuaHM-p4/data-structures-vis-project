@@ -112,7 +112,7 @@ const Home = () => {
   ];
 
   return (
-    <div className="h-full w-full overflow-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-300">
+    <div className="h-full w-full overflow-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-300 overflow-y-auto [&::-webkit-scrollbar]:w-0 [&::-webkit-scrollbar-track]:bg-red [&::-webkit-scrollbar-thumb]:bg-[url('/background/smb3-map.png')]">
       {/* Hero Section */}
       <div className="h-[calc(100vh-64px)] w-full bg-[url('/main-menu/mainBG.png')] bg-center bg-cover bg-no-repeat pixelated relative flex flex-col items-center justify-center">
         <div className="h-60 w-full -bottom-36 absolute bg-gradient-to-b from-transparent from-0% via-green-900/90 via-50% to-transparent to-100% " />
